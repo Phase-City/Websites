@@ -181,8 +181,8 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 .rv.vis{opacity:1;transform:translateY(0)}
 
 /* HAMBURGER */
-.ham{display:none;background:0;border:0;padding:8px;cursor:pointer;z-index:101}
-.ham span{display:block;width:20px;height:2px;background:var(--t2);margin:4px 0;transition:.3s;border-radius:1px}
+.ham{display:none;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:10px;cursor:pointer;z-index:101;width:44px;height:44px;align-items:center;justify-content:center;flex-direction:column}
+.ham span{display:block;width:22px;height:2.5px;background:var(--vl);margin:3px 0;transition:.3s;border-radius:2px}
 .ham.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
 .ham.active span:nth-child(2){opacity:0}
 .ham.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
@@ -216,7 +216,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 
 @media(max-width:640px){
   .n-links{display:none}
-  .ham{display:block}
+  .ham{display:flex}
   .rh{padding:16px 18px}
   .rb-in{padding:0 18px 16px}
   section{padding:70px 0}
