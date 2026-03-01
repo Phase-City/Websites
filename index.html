@@ -14,6 +14,7 @@
 <meta name="twitter:description" content="Your city. Your rules. Phase City is a community-governed City built from the ground up. We're built different. Are you ready?">
 <meta name="twitter:image" content="https://www.phasecity.net/img/logo.png">
 <meta name="theme-color" content="#8B5CF6">
+<link rel="canonical" href="https://www.phasecity.net">
 <title>Phase City — Rules & Community Guidelines</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -179,13 +180,50 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 .rv{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
 .rv.vis{opacity:1;transform:translateY(0)}
 
+/* HAMBURGER */
+.ham{display:none;background:0;border:0;padding:8px;cursor:pointer;z-index:101}
+.ham span{display:block;width:20px;height:2px;background:var(--t2);margin:4px 0;transition:.3s;border-radius:1px}
+.ham.active span:nth-child(1){transform:rotate(45deg) translate(4px,4px)}
+.ham.active span:nth-child(2){opacity:0}
+.ham.active span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px)}
+.mob-nav{display:none;position:fixed;inset:0;top:64px;background:rgba(5,2,15,.95);backdrop-filter:blur(24px);z-index:99;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:40px}
+.mob-nav.open{display:flex}
+.mob-nav a{color:var(--t2);font-family:'Syne',sans-serif;font-size:18px;font-weight:700;padding:14px 24px;border-radius:8px;transition:.3s;letter-spacing:.04em}
+.mob-nav a:hover{background:rgba(139,92,246,.12);color:var(--vl)}
+
+/* RULE SEARCH */
+.rule-search{position:relative;max-width:480px;margin:0 auto 36px}
+.rule-search input{width:100%;background:var(--card);border:1px solid var(--bdr);border-radius:12px;padding:14px 18px 14px 46px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t1);outline:0;transition:.3s}
+.rule-search input:focus{border-color:var(--bdr-h);box-shadow:0 0 20px rgba(139,92,246,.1)}
+.rule-search input::placeholder{color:var(--tm)}
+.rule-search .s-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--tm);pointer-events:none}
+.rule-search .s-clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:0;border:0;color:var(--tm);cursor:pointer;font-size:18px;display:none;padding:4px}
+.rule-search .s-clear.show{display:block}
+.rc.filtered-out{display:none}
+.no-results{text-align:center;color:var(--tm);font-size:14px;padding:24px;display:none}
+.no-results.show{display:block}
+
+/* COPY LINK */
+.copy-link{background:0;border:0;padding:4px 8px;cursor:pointer;opacity:0;transition:.3s;color:var(--tm);border-radius:4px;margin-right:4px}
+.rh:hover .copy-link{opacity:.6}
+.copy-link:hover{opacity:1!important;color:var(--vl);background:rgba(139,92,246,.1)}
+.copy-link.copied{opacity:1;color:var(--gr)}
+
+/* BACK TO TOP */
+.btt{position:fixed;bottom:28px;right:28px;width:44px;height:44px;border-radius:12px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.25);backdrop-filter:blur(12px);color:var(--vl);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:90;opacity:0;transform:translateY(20px);transition:.3s;pointer-events:none}
+.btt.show{opacity:1;transform:translateY(0);pointer-events:auto}
+.btt:hover{background:rgba(139,92,246,.25);border-color:rgba(139,92,246,.4);transform:translateY(-2px)}
+
 @media(max-width:640px){
   .n-links{display:none}
+  .ham{display:block}
   .rh{padding:16px 18px}
   .rb-in{padding:0 18px 16px}
   section{padding:70px 0}
   .jc{padding:40px 24px}
   .lc{padding:24px 20px}
+  .rule-search{margin-bottom:24px}
+  .btt{bottom:20px;right:20px;width:40px;height:40px}
 }
 </style>
 </head>
@@ -208,7 +246,16 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
     <a href="#guidelines">Guidelines</a>
     <a href="#join">Join</a>
   </div>
+  <button class="ham" onclick="toggleMob()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
+<div class="mob-nav" id="mob-nav">
+  <a href="#about" onclick="closeMob()">About</a>
+  <a href="#lore" onclick="closeMob()">Lore</a>
+  <a href="#warnings" onclick="closeMob()">Warnings</a>
+  <a href="#rules" onclick="closeMob()">Rules</a>
+  <a href="#guidelines" onclick="closeMob()">Guidelines</a>
+  <a href="#join" onclick="closeMob()">Join</a>
+</div>
 
 <!-- HERO -->
 <section class="hero" id="hero">
@@ -317,6 +364,13 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
   <p class="slbl" style="color:var(--ro)">KNOW THE LAW</p>
   <h2 class="stit">Server Rules</h2>
   <p class="sdsc">These rules protect your experience. Violations are handled through the Warning Point System.</p>
+
+  <div class="rule-search">
+    <svg class="s-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+    <input type="text" id="rule-filter" placeholder="Search rules..." autocomplete="off">
+    <button class="s-clear" id="s-clear" onclick="clearSearch()">×</button>
+  </div>
+  <p class="no-results" id="no-results">No rules match your search.</p>
 
   <!-- BASIC REQUIREMENTS -->
   <div class="rc" id="r1">
@@ -646,6 +700,10 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 </div>
 </section>
 
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg>
+</button>
+
 <!-- FOOTER -->
 <footer>
   <div class="fl">
@@ -694,6 +752,130 @@ const navObs=new IntersectionObserver(e=>{
   });
 },{threshold:.3});
 sections.forEach(s=>navObs.observe(s));
+
+// Mobile menu
+function toggleMob(){
+  document.getElementById('mob-nav').classList.toggle('open');
+  document.querySelector('.ham').classList.toggle('active');
+  document.body.style.overflow=document.getElementById('mob-nav').classList.contains('open')?'hidden':'';
+}
+function closeMob(){
+  document.getElementById('mob-nav').classList.remove('open');
+  document.querySelector('.ham').classList.remove('active');
+  document.body.style.overflow='';
+}
+
+// Rule search filter
+(function(){
+  const input=document.getElementById('rule-filter');
+  const clear=document.getElementById('s-clear');
+  const noRes=document.getElementById('no-results');
+  const cards=document.querySelectorAll('#rules .rc');
+  input.addEventListener('input',function(){
+    const q=this.value.toLowerCase().trim();
+    clear.classList.toggle('show',q.length>0);
+    let found=0;
+    cards.forEach(c=>{
+      const match=!q||c.textContent.toLowerCase().includes(q);
+      c.classList.toggle('filtered-out',!match);
+      if(match)found++;
+    });
+    noRes.classList.toggle('show',found===0&&q.length>0);
+  });
+  window.clearSearch=function(){
+    input.value='';
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+  };
+})();
+
+// Copy link buttons
+document.querySelectorAll('.rc').forEach(rc=>{
+  const rh=rc.querySelector('.rh');
+  const chev=rh.querySelector('.rchev');
+  const btn=document.createElement('button');
+  btn.className='copy-link';
+  btn.title='Copy link to this section';
+  btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.8 1.8"/><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.8-1.8"/></svg>';
+  btn.onclick=function(e){
+    e.stopPropagation();
+    const url=window.location.origin+window.location.pathname+'#'+rc.id;
+    navigator.clipboard.writeText(url).then(()=>{
+      btn.classList.add('copied');
+      btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>';
+      setTimeout(()=>{
+        btn.classList.remove('copied');
+        btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.5.5l3-3a5 5 0 00-7-7l-1.8 1.8"/><path d="M14 11a5 5 0 00-7.5-.5l-3 3a5 5 0 007 7l1.8-1.8"/></svg>';
+      },2000);
+    });
+  };
+  rh.insertBefore(btn,chev);
+});
+
+// Back to top
+(function(){
+  const btt=document.getElementById('btt');
+  window.addEventListener('scroll',()=>{
+    btt.classList.toggle('show',window.scrollY>600);
+  },{passive:true});
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"What are the basic requirements to join Phase City?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Phase City is an 18+ community. You need a decent quality microphone and must run GTA 5 on at least minimum settings (Intel Core 2 Q6600 or AMD Phenom 9850, 8GB RAM, NVIDIA 9800 GT 1GB or AMD HD 4870)."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"What is Phase City's zero tolerance policy?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Phase City has zero tolerance for sexism, racism, homophobia, transphobia, harassment, exploiting, cheating, hacking, and DDoS attacks. These result in permanent removal from the community."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"How does the warning point system work?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Warning points accumulate and carry consequences: 0-3 points is a verbal warning, 4-5 is a 1 day ban, 6-9 is a 3 day ban, 10-14 is a 7+ day ban, 15-19 is a 30 day ban, and 20+ results in full removal. Points fall off after 30 days."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"What is metagaming in Phase City?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Metagaming is using out-of-character knowledge in-character, relaying info through external platforms, or watching someone's stream while in-server. You cannot be in a Discord voice channel or Twitch stream while in-server."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"What are the criminal group size limits?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Criminal activity is limited to 4 players maximum with 1 additional spotter. Exceptions allow 6 players for Prison Breaks, Power Grid Knockouts, Yacht/Casino Heists, and Pacific Standard Bank Robberies."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"How do gang wars work in Phase City?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"You must declare a formal war with both gang leaders agreeing. In marked gang territories, the defensive party may have up to 6 individuals. Other gangs may assist, but the standard 4-man rule applies unless both gangs agree to 6 during a declared war."
+      }
+    }
+  ]
+}
 </script>
 </body>
 </html>
