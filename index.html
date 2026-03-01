@@ -18,8 +18,9 @@
 <title>Phase City — Rules & Community Guidelines</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="preload" as="image" href="img/moon.png">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" type="image/webp" href="img/moon.webp">
+<link rel="preload" as="image" type="image/webp" href="img/logo.webp">
 <style>
 :root {
   --bg: #05020F;
@@ -54,7 +55,8 @@ code{font-family:'JetBrains Mono',monospace;font-size:.88em;background:rgba(139,
 @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
 .stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d) var(--dl) ease-in-out infinite}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d) var(--dl) ease-in-out infinite;will-change:opacity;contain:strict}
+@media(prefers-reduced-motion:reduce){.star,.hero-moon,.hero .grtxt{animation:none!important}}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,2,15,.88);backdrop-filter:blur(24px);border-bottom:1px solid rgba(139,92,246,.1);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px)}
@@ -64,11 +66,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(5,2,15,.88);
 .n-logo .ac{color:var(--v)}
 .n-links{display:flex;gap:4px;flex-wrap:wrap}
 .n-links a{color:var(--tm);font-size:13px;font-weight:500;padding:6px 14px;border-radius:6px;border:1px solid transparent;transition:.3s}
-.n-links a:hover{background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.25);color:var(--vl)}
+.n-links a:hover,.n-links a.nav-on{background:rgba(139,92,246,.12);border-color:rgba(139,92,246,.25);color:var(--vl)}
 
 /* CONTAINERS */
 .wrap{max-width:920px;margin:0 auto;padding:0 clamp(16px,4vw,32px);position:relative;z-index:1}
-section{padding:100px 0}
+section{padding:100px 0;content-visibility:auto;contain-intrinsic-size:auto 800px}
 
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px;position:relative}
@@ -235,7 +237,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 <!-- Nav -->
 <nav>
   <a href="#hero" class="n-logo">
-    <img src="img/logo.png" alt="" style="width:24px;height:24px;filter:drop-shadow(0 0 8px rgba(139,92,246,.4))">
+    <picture><source srcset="img/logo.webp" type="image/webp"><img src="img/logo.png" alt="" width="48" height="44" style="width:24px;height:24px;filter:drop-shadow(0 0 8px rgba(139,92,246,.4))"></picture>
     <span>PHASE<span class="ac">CITY</span></span>
   </a>
   <div class="n-links">
@@ -261,7 +263,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 <section class="hero" id="hero">
   <div class="hero-glow"></div>
   <div class="hero-moon">
-    <img src="img/moon.png" alt="Phase City" width="360" height="360" style="width:clamp(200px,40vw,360px);height:auto;filter:drop-shadow(0 0 40px rgba(139,92,246,.4))">
+    <picture><source srcset="img/moon.webp" type="image/webp"><img src="img/moon.png" alt="Phase City" width="360" height="360" fetchpriority="high" decoding="sync" style="width:clamp(200px,40vw,360px);height:auto;filter:drop-shadow(0 0 40px rgba(139,92,246,.4))"></picture>
   </div>
   <h1><span class="grtxt">PHASE CITY</span></h1>
   <p class="hero-sub">Rules &amp; Community Guidelines</p>
@@ -298,7 +300,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
   <p class="sdsc" style="font-style:italic">Where shadows hold secrets and every corner has a price</p>
 
   <div class="lc"><div class="bar" style="background:linear-gradient(to bottom,var(--v),var(--cy))"></div>
-    <div class="lc-hd"><img src="img/chapter.png" alt="" loading="lazy" style="width:28px;height:28px"><div><span class="num">CHAPTER 01</span><h3>The Founding</h3></div></div>
+    <div class="lc-hd"><picture><source srcset="img/chapter.webp" type="image/webp"><img src="img/chapter.png" alt="" loading="lazy" decoding="async" width="56" height="51" style="width:28px;height:28px"></picture><div><span class="num">CHAPTER 01</span><h3>The Founding</h3></div></div>
     <p>Phase City wasn't built — it was forged. In the aftermath of San Andreas' economic collapse, a consortium of power brokers, underground kingpins, and visionary politicians carved out a new jurisdiction from the bones of Los Santos. They called it Phase City — a place where reinvention wasn't just possible, it was required. The old rules didn't apply here. The city operated under its own charter, its own law enforcement, its own economy. What emerged was something between a utopia and a powder keg: a city where anyone could become anything, if they had the nerve to survive the climb.</p>
   </div>
 
@@ -686,7 +688,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 <div class="wrap rv">
   <div class="jc">
     <div class="glow"></div>
-    <img src="img/join.png" alt="" loading="lazy" style="width:56px;height:56px;filter:drop-shadow(0 0 16px rgba(139,92,246,.4))">
+    <picture><source srcset="img/join.webp" type="image/webp"><img src="img/join.png" alt="" loading="lazy" decoding="async" width="112" height="102" style="width:56px;height:56px;filter:drop-shadow(0 0 16px rgba(139,92,246,.4))"></picture>
     <h2>Ready to Enter Phase City?</h2>
     <p>Join our Discord to apply for whitelist, meet the community, and begin writing your story.</p>
     <div class="jbtns">
@@ -707,28 +709,26 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 <!-- FOOTER -->
 <footer>
   <div class="fl">
-    <img src="img/footer-logo.png" alt="" loading="lazy" style="width:18px;height:18px">
+    <picture><source srcset="img/footer-logo.webp" type="image/webp"><img src="img/footer-logo.png" alt="" loading="lazy" decoding="async" width="36" height="33" style="width:18px;height:18px"></picture>
     <span>PHASE<span class="ac">CITY</span></span>
   </div>
   <p class="cp">PHASECITY.NET &copy; 2026 &mdash; ALL RIGHTS RESERVED</p>
 </footer>
 
 <script>
-// Stars
-(function(){
-  const c=document.getElementById('stars');
-  for(let i=0;i<80;i++){
+// Stars — deferred with DocumentFragment to avoid blocking LCP
+(typeof requestIdleCallback==='function'?requestIdleCallback:setTimeout)(function(){
+  const c=document.getElementById('stars'),f=document.createDocumentFragment();
+  const n=window.innerWidth<640?40:80;
+  for(let i=0;i<n;i++){
     const s=document.createElement('div');
     s.className='star';
-    s.style.left=Math.random()*100+'%';
-    s.style.top=Math.random()*100+'%';
     const sz=Math.random()*2+.5;
-    s.style.width=sz+'px';s.style.height=sz+'px';
-    s.style.setProperty('--d',(Math.random()*3+2)+'s');
-    s.style.setProperty('--dl',(Math.random()*4)+'s');
-    c.appendChild(s);
+    s.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+sz+'px;height:'+sz+'px;--d:'+(Math.random()*3+2)+'s;--dl:'+(Math.random()*4)+'s';
+    f.appendChild(s);
   }
-})();
+  c.appendChild(f);
+});
 
 // Toggle rule accordion
 function tog(id){document.getElementById(id).classList.toggle('open')}
@@ -737,17 +737,17 @@ function tog(id){document.getElementById(id).classList.toggle('open')}
 const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.1});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
-// Nav highlight
+// Nav highlight — optimized with single class toggle instead of 3 inline style changes per link
 const sections=document.querySelectorAll('section[id]');
 const navLinks=document.querySelectorAll('.n-links a');
+let activeNav=null;
 const navObs=new IntersectionObserver(e=>{
   e.forEach(x=>{
     if(x.isIntersecting){
-      navLinks.forEach(a=>{
-        a.style.background=a.getAttribute('href')==='#'+x.target.id?'rgba(139,92,246,.12)':'';
-        a.style.borderColor=a.getAttribute('href')==='#'+x.target.id?'rgba(139,92,246,.25)':'transparent';
-        a.style.color=a.getAttribute('href')==='#'+x.target.id?'#C4B5FD':'';
-      });
+      const id='#'+x.target.id;
+      if(activeNav)activeNav.classList.remove('nav-on');
+      const link=[...navLinks].find(a=>a.getAttribute('href')===id);
+      if(link){link.classList.add('nav-on');activeNav=link;}
     }
   });
 },{threshold:.3});
@@ -765,22 +765,28 @@ function closeMob(){
   document.body.style.overflow='';
 }
 
-// Rule search filter
+// Rule search filter — debounced to reduce INP
 (function(){
   const input=document.getElementById('rule-filter');
   const clear=document.getElementById('s-clear');
   const noRes=document.getElementById('no-results');
   const cards=document.querySelectorAll('#rules .rc');
+  // Pre-cache text content to avoid repeated DOM reads
+  const cardTexts=Array.from(cards).map(c=>c.textContent.toLowerCase());
+  let timer;
   input.addEventListener('input',function(){
-    const q=this.value.toLowerCase().trim();
-    clear.classList.toggle('show',q.length>0);
-    let found=0;
-    cards.forEach(c=>{
-      const match=!q||c.textContent.toLowerCase().includes(q);
-      c.classList.toggle('filtered-out',!match);
-      if(match)found++;
-    });
-    noRes.classList.toggle('show',found===0&&q.length>0);
+    clear.classList.toggle('show',this.value.length>0);
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      const q=input.value.toLowerCase().trim();
+      let found=0;
+      cards.forEach((c,i)=>{
+        const match=!q||cardTexts[i].includes(q);
+        c.classList.toggle('filtered-out',!match);
+        if(match)found++;
+      });
+      noRes.classList.toggle('show',found===0&&q.length>0);
+    },150);
   });
   window.clearSearch=function(){
     input.value='';
