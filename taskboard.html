@@ -461,7 +461,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
           <input type="checkbox" id="cfg-notify-done" checked style="accent-color:var(--c)"> Task Done
         </label>
         <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--vlight);cursor:pointer">
-          <input type="checkbox" id="cfg-notify-critical" checked style="accent-color:var(--c)"> Critical Only
+          <input type="checkbox" id="cfg-notify-critical" style="accent-color:var(--c)"> Critical Only
         </label>
       </div>
     </div>
@@ -510,6 +510,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     </div>
     <div class="cl-footer">
       <div class="cl-footer-left">
+        <button class="btn btn-ghost" onclick="saveChangelogDraft()" title="Save draft locally">&#128190; SAVE DRAFT</button>
+        <button class="btn btn-ghost" onclick="loadChangelogDraft()" title="Load saved draft">&#128194; LOAD DRAFT</button>
         <button class="btn btn-ghost" onclick="copyChangelog()">&#128203; COPY TEXT</button>
         <button class="btn btn-primary" onclick="postChangelogToDiscord()">&#128640; POST TO DISCORD</button>
       </div>
@@ -540,6 +542,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     </div>
     <div class="cl-footer">
       <div class="cl-footer-left">
+        <button class="btn btn-ghost" onclick="saveRoadmapDraft()" title="Save draft locally">&#128190; SAVE DRAFT</button>
+        <button class="btn btn-ghost" onclick="loadRoadmapDraft()" title="Load saved draft">&#128194; LOAD DRAFT</button>
         <button class="btn btn-ghost" onclick="copyRoadmap()">&#128203; COPY TEXT</button>
         <button class="btn btn-primary" onclick="postRoadmapToDiscord()">&#128640; POST TO DISCORD</button>
       </div>
@@ -564,11 +568,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 const STATUSES=['Backlog','In Progress','Review','Done'];
 const STATUS_CFG={'Backlog':{color:'#555',border:'rgba(100,100,120,0.3)',bg:'rgba(60,60,80,0.12)'},'In Progress':{color:'#7B68EE',border:'rgba(123,104,238,0.35)',bg:'rgba(123,104,238,0.08)'},'Review':{color:'#ff9f43',border:'rgba(255,159,67,0.35)',bg:'rgba(255,159,67,0.08)'},'Done':{color:'#5CE1E6',border:'rgba(92,225,230,0.3)',bg:'rgba(92,225,230,0.06)'}};
 const PRIO_CFG={'Critical':{color:'#ff4d6d',glow:'rgba(255,77,109,0.35)'},'High':{color:'#ff9f43',glow:'rgba(255,159,67,0.35)'},'Medium':{color:'#5CE1E6',glow:'rgba(92,225,230,0.35)'},'Low':{color:'#7B68EE',glow:'rgba(123,104,238,0.35)'}};
+const PC_LOGO='https://www.phasecity.net/img/logo.png';
 const DEFAULT_CATS=["[ogz]", "[dependencies]", "[root]", "[qbx]", "[ox]", "[g-scripts]", "[jobs]", "[illegal]", "[crm]", "[phone]", "[business]", "[housing]", "[envi]", "[mike]", "[minigames]", "[fuel]", "[consumables]", "[renewed]", "[voice]", "[standalone]", "[bcs]", "[clothing]", "[vehicles]", "[weapons]"];
 const DEFAULT_RES=[{id:'r001',name:'ogz_blipz',category:'[ogz]'},{id:'r002',name:'ogz_cribz',category:'[ogz]'},{id:'r003',name:'ogz_illegaladmin',category:'[ogz]'},{id:'r004',name:'ogz_pedlife_v2',category:'[ogz]'},{id:'r005',name:'ogz_propmanager',category:'[ogz]'},{id:'r006',name:'ogz_rentals',category:'[ogz]'},{id:'r007',name:'ogz_resources',category:'[ogz]'},{id:'r008',name:'ogz_fitbit',category:'[dependencies]'},{id:'r009',name:'ogz_minigame_bridge',category:'[dependencies]'},{id:'r010',name:'ogz_skillsrep',category:'[dependencies]'},{id:'r011',name:'bl_dialog',category:'[dependencies]'},{id:'r012',name:'cdev_lib',category:'[dependencies]'},{id:'r013',name:'community_bridge',category:'[dependencies]'},{id:'r014',name:'Dm-throwitems',category:'[dependencies]'},{id:'r015',name:'evo_sound_player',category:'[dependencies]'},{id:'r016',name:'fmLib',category:'[dependencies]'},{id:'r017',name:'jg-vehiclemileage',category:'[dependencies]'},{id:'r018',name:'kimi_callbacks',category:'[dependencies]'},{id:'r019',name:'lc_utils',category:'[dependencies]'},{id:'r020',name:'loaf_lib',category:'[dependencies]'},{id:'r021',name:'menuv',category:'[dependencies]'},{id:'r022',name:'prompt_anim_core_2_new',category:'[dependencies]'},{id:'r023',name:'RageUI',category:'[dependencies]'},{id:'r024',name:'sn_lib',category:'[dependencies]'},{id:'r025',name:'wasabi_bridge',category:'[dependencies]'},{id:'r026',name:'xsound',category:'[dependencies]'},{id:'r027',name:'qbx_core',category:'[root]'},{id:'r028',name:'jg-hud',category:'[root]'},{id:'r029',name:'vertex-hub',category:'[root]'},{id:'r030',name:'qbx_binoculars',category:'[qbx]'},{id:'r031',name:'qbx_density',category:'[qbx]'},{id:'r032',name:'qbx_divegear',category:'[qbx]'},{id:'r033',name:'qbx_management',category:'[qbx]'},{id:'r034',name:'qbx_radialmenu',category:'[qbx]'},{id:'r035',name:'qbx_smallresources',category:'[qbx]'},{id:'r036',name:'qbx_vehicles',category:'[qbx]'},{id:'r037',name:'oxmysql',category:'[ox]'},{id:'r038',name:'ox_compat',category:'[ox]'},{id:'r039',name:'ox_doorlock',category:'[ox]'},{id:'r040',name:'ox_inventory',category:'[ox]'},{id:'r041',name:'ox_lib',category:'[ox]'},{id:'r042',name:'ox_target',category:'[ox]'},{id:'r043',name:'g-adv-paycheck',category:'[g-scripts]'},{id:'r044',name:'g-bossmenu',category:'[g-scripts]'},{id:'r045',name:'g-dutyV2',category:'[g-scripts]'},{id:'r046',name:'g-multijob',category:'[g-scripts]'},{id:'r047',name:'g-order-system',category:'[g-scripts]'},{id:'r048',name:'gg_busjob',category:'[jobs]'},{id:'r049',name:'gg_electricianjob',category:'[jobs]'},{id:'r050',name:'gg_garbagejob',category:'[jobs]'},{id:'r051',name:'gg_gruppejob',category:'[jobs]'},{id:'r052',name:'gg_taxijob',category:'[jobs]'},{id:'r053',name:'lation_detecting',category:'[jobs]'},{id:'r054',name:'lation_diving',category:'[jobs]'},{id:'r055',name:'kub_trucking',category:'[jobs]'},{id:'r056',name:'RxMining',category:'[jobs]'},{id:'r057',name:'RxZ_Smelters',category:'[jobs]'},{id:'r058',name:'r14-evidence',category:'[jobs]'},{id:'r059',name:'wasabi_ambulance',category:'[jobs]'},{id:'r060',name:'wasabi_crutch',category:'[jobs]'},{id:'r061',name:'wasabi_gps',category:'[jobs]'},{id:'r062',name:'wasabi_police',category:'[jobs]'},{id:'r063',name:'gg_boosting',category:'[illegal]'},{id:'r064',name:'lation_selling',category:'[illegal]'},{id:'r065',name:'tk_drugs',category:'[illegal]'},{id:'r066',name:'projectx-burner',category:'[illegal]'},{id:'r067',name:'projectx-masks',category:'[illegal]'},{id:'r068',name:'projectx-tasks',category:'[illegal]'},{id:'r069',name:'projectx-atmrobbery',category:'[illegal]'},{id:'r070',name:'projectx-houserobbery-v2',category:'[illegal]'},{id:'r071',name:'projectx-storerobbery-fm',category:'[illegal]'},{id:'r072',name:'crm-appearance',category:'[crm]'},{id:'r073',name:'crm-banking',category:'[crm]'},{id:'r074',name:'crm-core',category:'[crm]'},{id:'r075',name:'crm-loadingscreen',category:'[crm]'},{id:'r076',name:'crm-multicharacter',category:'[crm]'},{id:'r077',name:'crm-pausemenu',category:'[crm]'},{id:'r078',name:'crm-tattoos',category:'[crm]'},{id:'r079',name:'eatgo-app',category:'[phone]'},{id:'r080',name:'lb-newsapp',category:'[phone]'},{id:'r081',name:'lb-phone',category:'[phone]'},{id:'r082',name:'lb-phoneprop',category:'[phone]'},{id:'r083',name:'lbphone-insurance',category:'[phone]'},{id:'r084',name:'slrn_groups',category:'[phone]'},{id:'r085',name:'ws_emergency',category:'[phone]'},{id:'r086',name:'jg-advancedgarages',category:'[business]'},{id:'r087',name:'jg-dealerships',category:'[business]'},{id:'r088',name:'jg-mechanic',category:'[business]'},{id:'r089',name:'sn_furniture',category:'[housing]'},{id:'r090',name:'sn_properties',category:'[housing]'},{id:'r091',name:'envi-bridge',category:'[envi]'},{id:'r092',name:'envi-computer',category:'[envi]'},{id:'r093',name:'envi-hack-minigames-computer-edition',category:'[envi]'},{id:'r094',name:'envi-interact',category:'[envi]'},{id:'r095',name:'envi-pawnshop',category:'[envi]'},{id:'r096',name:'envi-zone-tool',category:'[envi]'},{id:'r097',name:'eagle_radar',category:'[mike]'},{id:'r098',name:'pc_economy',category:'[mike]'},{id:'r099',name:'pc_membership',category:'[mike]'},{id:'r100',name:'pc_queue',category:'[mike]'},{id:'r101',name:'ws_dispatch',category:'[mike]'},{id:'r102',name:'ws_gov',category:'[mike]'},{id:'r103',name:'ws_mdt',category:'[mike]'},{id:'r104',name:'bl_ui',category:'[minigames]'},{id:'r105',name:'tgg-minigames',category:'[minigames]'},{id:'r106',name:'lc_fuel',category:'[fuel]'},{id:'r107',name:'pixel-consumables',category:'[consumables]'},{id:'r108',name:'Renewed-Lib',category:'[renewed]'},{id:'r109',name:'Renewed-Vehiclekeys',category:'[renewed]'},{id:'r110',name:'Renewed-Weathersync',category:'[renewed]'},{id:'r111',name:'pma-voice',category:'[voice]'},{id:'r112',name:'zerio-radio',category:'[voice]'},{id:'r113',name:'AdvancedParking',category:'[standalone]'},{id:'r114',name:'amzn_admin_classic',category:'[standalone]'},{id:'r115',name:'bob74_ipl',category:'[standalone]'},{id:'r116',name:'cdev_chat',category:'[standalone]'},{id:'r117',name:'chowhathair',category:'[standalone]'},{id:'r118',name:'cr-stopmusic',category:'[standalone]'},{id:'r119',name:'fd_laptop',category:'[standalone]'},{id:'r120',name:'fivem-base-vehicle-handling',category:'[standalone]'},{id:'r121',name:'jg-handling',category:'[standalone]'},{id:'r122',name:'jg-stress-addon',category:'[standalone]'},{id:'r123',name:'kxCamera',category:'[standalone]'},{id:'r124',name:'Levi-Forceffp',category:'[standalone]'},{id:'r125',name:'lvc',category:'[standalone]'},{id:'r126',name:'MarkoMods-Menu',category:'[standalone]'},{id:'r127',name:'mnr_sitanywhere',category:'[standalone]'},{id:'r128',name:'MrNewbCustomPlates',category:'[standalone]'},{id:'r129',name:'MugShotBase64',category:'[standalone]'},{id:'r130',name:'object_gizmo',category:'[standalone]'},{id:'r131',name:'PolyZone',category:'[standalone]'},{id:'r132',name:'rpemotes',category:'[standalone]'},{id:'r133',name:'screenshot-basic',category:'[standalone]'},{id:'r134',name:'sd-dumpsters',category:'[standalone]'},{id:'r135',name:'snipe-menu',category:'[standalone]'},{id:'r136',name:'bcs_licensemanager',category:'[bcs]'},{id:'r137',name:'King-Greenscreen',category:'[bcs]'},{id:'r138',name:'cfx_onx_mp_faces',category:'[clothing]'},{id:'r139',name:'cfx_onx_mp_faces_replace',category:'[clothing]'},{id:'r140',name:'cfx_onx_mp_faces_replace_v2',category:'[clothing]'},{id:'r141',name:'fd_missing_textures',category:'[clothing]'},{id:'r142',name:'cfx-sent6-jakers',category:'[vehicles]'},{id:'r143',name:'sr1x',category:'[vehicles]'},{id:'r144',name:'beanbagshotgun',category:'[weapons]'},{id:'r145',name:'GlizzyWeaponsv1',category:'[weapons]'},{id:'r146',name:'MarkoMods-2011',category:'[weapons]'},{id:'r147',name:'MarkoMods-2S',category:'[weapons]'},{id:'r148',name:'MarkoMods-A45',category:'[weapons]'},{id:'r149',name:'MarkoMods-AGC',category:'[weapons]'},{id:'r150',name:'MarkoMods-KVR',category:'[weapons]'},{id:'r151',name:'MarkoMods-M320',category:'[weapons]'},{id:'r152',name:'MarkoMods-MB47',category:'[weapons]'},{id:'r153',name:'MarkoMods-P5',category:'[weapons]'},{id:'r154',name:'MarkoMods-PM4',category:'[weapons]'},{id:'r155',name:'MarkoMods-Shared',category:'[weapons]'},{id:'r156',name:'MarkoMods-TacticalSniper',category:'[weapons]'},{id:'r157',name:'MarkoMods-X17-Addon',category:'[weapons]'},{id:'r158',name:'MarkoMods-X17-Replace',category:'[weapons]'},{id:'r159',name:'PolarsArmoury_Glizzy',category:'[weapons]'}];
 
 let tasks=[],categories=[...DEFAULT_CATS],resources=[...DEFAULT_RES];
-let cfg={apikey:'',binid:'',password:'phasecity2026',members:['The OG KiLLz','Mike','Unassigned'],devhook:'https://discord.com/api/webhooks/1480042376423669800/NbacBKO0NxC2ZuTBnwaQjHoL88xUYLgGffm9L0IKUSgofiL6QcfodhbJ3lFnAHe6rT2B',notifyCreate:true,notifyDone:true,notifyCritical:true};
+let cfg={apikey:'',binid:'',password:'phasecity2026',members:['The OG KiLLz','Mike','Unassigned'],devhook:'https://discord.com/api/webhooks/1480042376423669800/NbacBKO0NxC2ZuTBnwaQjHoL88xUYLgGffm9L0IKUSgofiL6QcfodhbJ3lFnAHe6rT2B',notifyCreate:true,notifyDone:true,notifyCritical:false};
 let currentView='kanban',editId=null,selectedRes=null,rmTabCurrent='res';
 
 const genId=()=>'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
@@ -650,43 +655,93 @@ function saveCfg(){
 }
 
 // DISCORD TASK NOTIFICATIONS
+// Helper: Convert base64 to Blob for Discord upload
+function base64ToBlob(base64){
+  const parts=base64.split(',');
+  const mime=parts[0].match(/:(.*?);/)?.[1]||'image/png';
+  const binary=atob(parts[1]);
+  const arr=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)arr[i]=binary.charCodeAt(i);
+  return new Blob([arr],{type:mime});
+}
+
 async function notifyDiscord(type, task, oldStatus=null){
   if(!cfg.devhook||!cfg.devhook.startsWith('https://discord.com/api/webhooks/'))return;
   // Check notification settings
   if(type==='create'&&!cfg.notifyCreate)return;
   if(type==='done'&&!cfg.notifyDone)return;
+  // If "Critical Only" is checked, skip non-critical tasks for all notification types
   if(cfg.notifyCritical&&task.priority!=='Critical')return;
   
-  const colors={create:0x7B68EE,update:0xFF9F43,done:0x5CE1E6,critical:0xFF4D6D};
-  const icons={create:'📋',update:'🔄',done:'✅',critical:'🚨'};
+  const colors={create:0x7B68EE,status:0xFF9F43,done:0x5CE1E6,critical:0xFF4D6D};
+  const icons={create:'📋',status:'🔄',done:'✅',critical:'🚨'};
   const color=task.priority==='Critical'?colors.critical:colors[type];
-  const icon=task.priority==='Critical'?icons.critical:icons[type];
+  const icon=task.priority==='Critical'?icons.critical:(icons[type]||'📋');
   
   let title,desc;
+  const taskDesc=task.description?`\n\n📝 ${task.description}`:'';
+  
   if(type==='create'){
     title=`${icon} New Task Created`;
-    desc=`**${task.title}**\n\n📁 ${task.resourceName||'No resource'}\n👤 ${task.assignee}\n⚡ ${task.priority}`;
+    desc=`**${task.title}**${taskDesc}\n\n📁 ${task.resourceName||'No resource'}\n👤 ${task.assignee}\n⚡ ${task.priority}`;
   }else if(type==='done'){
     title=`${icon} Task Completed!`;
-    desc=`**${task.title}**\n\n📁 ${task.resourceName||'No resource'}\n👤 ${task.assignee}`;
+    desc=`**${task.title}**${taskDesc}\n\n📁 ${task.resourceName||'No resource'}\n👤 ${task.assignee}`;
   }else if(type==='status'){
     title=`${icon} Status Changed`;
-    desc=`**${task.title}**\n\n${oldStatus} → **${task.status}**\n📁 ${task.resourceName||'No resource'}`;
+    desc=`**${task.title}**${taskDesc}\n\n${oldStatus} → **${task.status}**\n📁 ${task.resourceName||'No resource'}`;
+  }
+  
+  // Build embed
+  const embed={
+    title,description:desc,color,
+    footer:{text:'Phase City - The city that builds itself.!',icon_url:PC_LOGO},
+    thumbnail:{url:PC_LOGO},
+    timestamp:new Date().toISOString()
+  };
+  
+  // Check for image attachments
+  let hasBase64Image=false;
+  let base64Data=null;
+  let imageName='image.png';
+  
+  if(task.attachments&&task.attachments.length>0){
+    const images=task.attachments.filter(a=>a.type==='image');
+    if(images.length>0){
+      const firstImg=images[0];
+      if(firstImg.url.startsWith('data:')){
+        // Base64 image - will upload with embed
+        hasBase64Image=true;
+        base64Data=firstImg.url;
+        imageName=firstImg.name||'image.png';
+        embed.image={url:`attachment://${imageName}`};
+      }else{
+        // Already a URL
+        embed.image={url:firstImg.url};
+      }
+    }
+    // Show attachment count
+    desc+=`\n\n📎 ${task.attachments.length} attachment${task.attachments.length>1?'s':''}`;
+    embed.description=desc;
   }
   
   try{
-    await fetch(cfg.devhook,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        embeds:[{
-          title,description:desc,color,
-          footer:{text:'Phase City Dev Board'},
-          timestamp:new Date().toISOString()
-        }]
-      })
-    });
-  }catch(e){console.warn('Discord notification failed');}
+    if(hasBase64Image&&base64Data){
+      // Post with FormData to include image file with embed
+      const blob=base64ToBlob(base64Data);
+      const formData=new FormData();
+      formData.append('file',blob,imageName);
+      formData.append('payload_json',JSON.stringify({embeds:[embed]}));
+      await fetch(cfg.devhook,{method:'POST',body:formData});
+    }else{
+      // No image file, just post embed
+      await fetch(cfg.devhook,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({embeds:[embed]})
+      });
+    }
+  }catch(e){console.warn('Discord notification failed',e);}
 }
 
 // RESOURCE MANAGER
@@ -870,7 +925,7 @@ function getYouTubeEmbed(url){const id=getYouTubeId(url);return id?`https://www.
 function renderAttachGrid(){
   const grid=$('attach-grid');
   grid.innerHTML=currentAttachments.map((a,i)=>{
-    const vid=isVideo(a.url);
+    const vid=a.type==='video'||isVideo(a.url);
     const yt=isYouTube(a.url);
     const thumb=yt?getYouTubeThumb(a.url):a.url;
     return`<div class="attach-thumb" onclick="openLightbox(${i},'modal')">
@@ -885,22 +940,36 @@ function renderAttachGrid(){
 function addAttachUrl(){
   const url=$('attach-url').value.trim();
   if(!url){toast('Enter a URL','err');return;}
-  currentAttachments.push({url,addedAt:new Date().toISOString()});
+  const type=isVideo(url)?'video':'image';
+  currentAttachments.push({url,type,addedAt:new Date().toISOString()});
   $('attach-url').value='';
   renderAttachGrid();
   toast('Attachment added');
 }
-function handleAttachFiles(files){
+
+async function handleAttachFiles(files){
   for(const f of files){
     if(f.size>5*1024*1024){toast(`${f.name} too large (max 5MB)`,'err');continue;}
-    const reader=new FileReader();
-    reader.onload=e=>{
-      currentAttachments.push({url:e.target.result,name:f.name,addedAt:new Date().toISOString()});
-      renderAttachGrid();
-    };
-    reader.readAsDataURL(f);
+    
+    const isVid=f.type.startsWith('video/');
+    
+    // Read as base64 and store directly
+    const base64=await new Promise((resolve)=>{
+      const reader=new FileReader();
+      reader.onload=e=>resolve(e.target.result);
+      reader.readAsDataURL(f);
+    });
+    
+    currentAttachments.push({
+      url:base64,
+      type:isVid?'video':'image',
+      name:f.name,
+      isBase64:true,
+      addedAt:new Date().toISOString()
+    });
+    renderAttachGrid();
+    toast(`Added: ${f.name}`);
   }
-  toast('File(s) added');
 }
 function removeAttach(i){currentAttachments.splice(i,1);renderAttachGrid();}
 
@@ -974,10 +1043,15 @@ function openChangelog(){
 }
 function closeChangelog(){$('cl-modal').style.display='none';}
 
+let dragClTaskId=null;
 function renderClTaskList(){
   const relevantTasks=tasks.filter(t=>t.status==='Done'||t.status==='In Progress');
   $('cl-task-list').innerHTML=relevantTasks.length?relevantTasks.map(t=>`
-    <div class="cl-task-item${clSelectedTasks.has(t.id)?' selected':''}" onclick="toggleClTask('${t.id}')">
+    <div class="cl-task-item${clSelectedTasks.has(t.id)?' selected':''}" 
+         draggable="true" 
+         ondragstart="dragClTaskId='${t.id}';event.dataTransfer.effectAllowed='copy'"
+         ondragend="dragClTaskId=null"
+         onclick="toggleClTask('${t.id}')">
       <input type="checkbox" ${clSelectedTasks.has(t.id)?'checked':''} onclick="event.stopPropagation();toggleClTask('${t.id}')">
       <span class="task-name">${esc(t.title)}</span>
       <span class="task-res">${esc(t.resourceName||'')}</span>
@@ -1000,7 +1074,6 @@ function clSelectAll(mode){
 function renderClBuckets(){
   $('cl-buckets').innerHTML=CL_SECTIONS.map(sec=>{
     const placeholder=sec==='COMMUNITY CREDITS'?'@username...':'Add custom item...';
-    const addBtn=sec==='COMMUNITY CREDITS'?'+ ADD':'+ ADD SELECTED';
     return`
     <div class="cl-bucket" data-section="${sec}">
       <div class="cl-bucket-hdr" onclick="toggleBucketCollapse(this)">
@@ -1020,8 +1093,9 @@ function renderClBuckets(){
         `).join(''):'DROP TASKS OR ADD CUSTOM'}
       </div>
       <div class="cl-add-item">
-        <input placeholder="${placeholder}" onkeydown="if(event.key==='Enter'){addCustomItem('${sec}',this.value);this.value='';renderClPreview()}">
-        <button class="btn-sm btn-edit" onclick="${sec==='COMMUNITY CREDITS'?`addCustomItem('${sec}',this.previousElementSibling.value);this.previousElementSibling.value=''`:`addSelectedToBucket('${sec}')`}">${addBtn}</button>
+        <input placeholder="${placeholder}" id="cl-input-${sec.replace(/\s+/g,'-')}" onkeydown="if(event.key==='Enter'){addCustomItem('${sec}',this.value);this.value=''}">
+        <button class="btn-sm btn-edit" onclick="const inp=document.getElementById('cl-input-${sec.replace(/\s+/g,'-')}');addCustomItem('${sec}',inp.value);inp.value=''">+ ADD</button>
+        ${sec!=='COMMUNITY CREDITS'?`<button class="btn-sm btn-edit" onclick="addSelectedToBucket('${sec}')" title="Add selected tasks">+ SELECTED</button>`:''}
       </div>
     </div>
   `}).join('');
@@ -1050,6 +1124,20 @@ function dragBucketItem(e,sec,idx){dragSec=sec;dragIdx=idx;e.dataTransfer.effect
 function dropIntoBucket(e,targetSec){
   e.preventDefault();
   e.currentTarget.style.background='';
+  
+  // Handle drop from task list
+  if(dragClTaskId){
+    const t=tasks.find(x=>x.id===dragClTaskId);
+    if(t&&!clBuckets[targetSec].includes(t.title)){
+      clBuckets[targetSec].push(t.title);
+      renderClBuckets();
+      renderClPreview();
+    }
+    dragClTaskId=null;
+    return;
+  }
+  
+  // Handle reordering within buckets
   if(dragSec!==null&&dragIdx!==null){
     const item=clBuckets[dragSec].splice(dragIdx,1)[0];
     clBuckets[targetSec].push(item);
@@ -1159,7 +1247,6 @@ function copyChangelog(){
   navigator.clipboard.writeText(getPlainChangelog()).then(()=>toast('Changelog copied!')).catch(()=>toast('Copy failed','err'));
 }
 const CL_WEBHOOK='https://discord.com/api/webhooks/1480062988638621841/y3qkkH53Gw3Jc7lleinSuSgg-jV5W4hWcMZuSABjkC4cwy91w5PRa19yUMnYsZgBc-SX';
-const PC_LOGO='https://www.phasecity.net/img/logo.png';
 const CL_ICONS={'NEW FEATURES':'🆕','IMPROVEMENTS':'⚡','BUG FIXES':'🐛','TWEAKS & ADJUSTMENTS':'🔧','KNOWN ISSUES':'⚠️','COMING SOON':'🔮','COMMUNITY CREDITS':'🏆'};
 
 function getDiscordTimestamp(dateVal){
@@ -1222,6 +1309,37 @@ async function postChangelogToDiscord(){
     else{const err=await res.text();console.error(err);toast('Discord error: '+res.status,'err');$('cl-webhook-status').textContent='✗ Failed';}
   }catch(e){console.error(e);toast('Network error','err');$('cl-webhook-status').textContent='✗ Error';}
 }
+
+// CHANGELOG SAVE/LOAD DRAFTS
+function saveChangelogDraft(){
+  const draft={
+    version:$('cl-version').value,
+    date:$('cl-date').value,
+    buckets:clBuckets,
+    selectedTasks:Array.from(clSelectedTasks)
+  };
+  localStorage.setItem('pc_changelog_draft',JSON.stringify(draft));
+  toast('Draft saved!');
+  $('cl-webhook-status').textContent='✓ Saved';
+}
+function loadChangelogDraft(){
+  const saved=localStorage.getItem('pc_changelog_draft');
+  if(!saved){toast('No saved draft found','err');return;}
+  try{
+    const draft=JSON.parse(saved);
+    $('cl-version').value=draft.version||'v1.0.0';
+    $('cl-date').value=draft.date||new Date().toISOString().split('T')[0];
+    clBuckets=draft.buckets||{};
+    CL_SECTIONS.forEach(s=>{if(!clBuckets[s])clBuckets[s]=[];});
+    clSelectedTasks=new Set(draft.selectedTasks||[]);
+    renderClTaskList();
+    renderClBuckets();
+    renderClPreview();
+    toast('Draft loaded!');
+    $('cl-webhook-status').textContent='✓ Loaded';
+  }catch(e){toast('Failed to load draft','err');}
+}
+
 $('cl-version')?.addEventListener('input',renderClPreview);
 $('cl-date')?.addEventListener('input',renderClPreview);
 
@@ -1403,6 +1521,31 @@ async function postRoadmapToDiscord(){
     if(res.ok){toast('Posted to Discord!');$('rm-webhook-status').textContent='✓ Posted';}
     else{const err=await res.text();console.error(err);toast('Discord error: '+res.status,'err');$('rm-webhook-status').textContent='✗ Failed';}
   }catch(e){console.error(e);toast('Network error','err');$('rm-webhook-status').textContent='✗ Error';}
+}
+
+// ROADMAP SAVE/LOAD DRAFTS
+function saveRoadmapDraft(){
+  const draft={
+    title:$('rm-title').value,
+    phases:rmPhases
+  };
+  localStorage.setItem('pc_roadmap_draft',JSON.stringify(draft));
+  toast('Roadmap draft saved!');
+  $('rm-webhook-status').textContent='✓ Saved';
+}
+function loadRoadmapDraft(){
+  const saved=localStorage.getItem('pc_roadmap_draft');
+  if(!saved){toast('No saved roadmap draft','err');return;}
+  try{
+    const draft=JSON.parse(saved);
+    $('rm-title').value=draft.title||'Phase City Development Roadmap';
+    rmPhases=draft.phases||[{id:'p1',name:'PHASE 1',eta:'Q1 2026',items:[]}];
+    renderRmTaskPool();
+    renderRmPhases();
+    renderRmPreview();
+    toast('Roadmap draft loaded!');
+    $('rm-webhook-status').textContent='✓ Loaded';
+  }catch(e){toast('Failed to load roadmap draft','err');}
 }
 
 // KEYBOARD
