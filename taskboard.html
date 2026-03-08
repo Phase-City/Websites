@@ -436,25 +436,24 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 <!-- CONFIG MODAL -->
 <div class="overlay" id="cfg-modal" style="display:none" onclick="if(event.target===this)closeCfg()">
   <div class="modal" style="max-width:560px">
-    <div class="modal-title">&#9881; SETTINGS &amp; WEBHOOKS</div>
+    <div class="modal-title">&#9881; SETTINGS</div>
     <div class="cfg-step"><div class="cfg-step-num">JSONBIN.IO SETUP (Team Sync)</div><p>Go to <a href="https://jsonbin.io" target="_blank">jsonbin.io</a> — create free account, get API Key, create a bin with <code>{"tasks":[]}</code></p></div>
     <div class="field"><label class="label">JSONbin API Key</label><input class="inp" id="cfg-apikey" placeholder="$2b$10$...your secret key..."></div>
     <div class="field"><label class="label">Bin ID</label><input class="inp" id="cfg-binid" placeholder="64abc123...your bin id..."></div>
     <div class="field"><label class="label">Team Password (set / change)</label><input class="inp" id="cfg-pw" type="password" placeholder="Leave blank to keep current"></div>
     <div class="field"><label class="label">Team Members (comma separated)</label><input class="inp" id="cfg-members" placeholder="The OG KiLLz, Mike, Dev3"></div>
     <div class="rm-divider" style="margin:16px 0"></div>
-    <div class="cfg-step"><div class="cfg-step-num">DISCORD WEBHOOKS (Notifications)</div><p>Create webhooks in Discord: Server Settings → Integrations → Webhooks</p></div>
-    <div class="field"><label class="label">&#128276; Dev-Tasks Channel Webhook</label><input class="inp" id="cfg-devhook" placeholder="https://discord.com/api/webhooks/... (task updates)"></div>
+    <div class="cfg-step"><div class="cfg-step-num">&#128276; DISCORD NOTIFICATIONS</div><p>Task updates auto-post to #dev-tasks. Configure what triggers notifications:</p></div>
     <div class="field">
       <label class="label">Notify On:</label>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
-        <label style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);cursor:pointer">
+        <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--vlight);cursor:pointer">
           <input type="checkbox" id="cfg-notify-create" checked style="accent-color:var(--c)"> New Task
         </label>
-        <label style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);cursor:pointer">
+        <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--vlight);cursor:pointer">
           <input type="checkbox" id="cfg-notify-done" checked style="accent-color:var(--c)"> Task Done
         </label>
-        <label style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);cursor:pointer">
+        <label style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--vlight);cursor:pointer">
           <input type="checkbox" id="cfg-notify-critical" checked style="accent-color:var(--c)"> Critical Only
         </label>
       </div>
@@ -470,7 +469,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     <div class="cl-meta-row">
       <div class="field"><label class="label">Version</label><input class="inp" id="cl-version" placeholder="v1.0.1"></div>
       <div class="field"><label class="label">Release Date</label><input class="inp" id="cl-date" type="date"></div>
-      <div class="field"><label class="label">Discord Webhook</label><input class="inp" id="cl-webhook" placeholder="https://discord.com/api/webhooks/..."></div>
     </div>
     <div class="cl-body">
       <div class="cl-left">
@@ -520,7 +518,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     <div class="modal-title">&#128506; ROADMAP GENERATOR</div>
     <div class="cl-meta-row">
       <div class="field"><label class="label">Roadmap Title</label><input class="inp" id="rm-title" placeholder="Phase City Development Roadmap"></div>
-      <div class="field"><label class="label">Discord Webhook</label><input class="inp" id="rm-webhook" placeholder="https://discord.com/api/webhooks/..."></div>
     </div>
     <div class="rm-body">
       <div class="rm-left">
@@ -564,7 +561,7 @@ const DEFAULT_CATS=["[ogz]", "[dependencies]", "[root]", "[qbx]", "[ox]", "[g-sc
 const DEFAULT_RES=[{id:'r001',name:'ogz_blipz',category:'[ogz]'},{id:'r002',name:'ogz_cribz',category:'[ogz]'},{id:'r003',name:'ogz_illegaladmin',category:'[ogz]'},{id:'r004',name:'ogz_pedlife_v2',category:'[ogz]'},{id:'r005',name:'ogz_propmanager',category:'[ogz]'},{id:'r006',name:'ogz_rentals',category:'[ogz]'},{id:'r007',name:'ogz_resources',category:'[ogz]'},{id:'r008',name:'ogz_fitbit',category:'[dependencies]'},{id:'r009',name:'ogz_minigame_bridge',category:'[dependencies]'},{id:'r010',name:'ogz_skillsrep',category:'[dependencies]'},{id:'r011',name:'bl_dialog',category:'[dependencies]'},{id:'r012',name:'cdev_lib',category:'[dependencies]'},{id:'r013',name:'community_bridge',category:'[dependencies]'},{id:'r014',name:'Dm-throwitems',category:'[dependencies]'},{id:'r015',name:'evo_sound_player',category:'[dependencies]'},{id:'r016',name:'fmLib',category:'[dependencies]'},{id:'r017',name:'jg-vehiclemileage',category:'[dependencies]'},{id:'r018',name:'kimi_callbacks',category:'[dependencies]'},{id:'r019',name:'lc_utils',category:'[dependencies]'},{id:'r020',name:'loaf_lib',category:'[dependencies]'},{id:'r021',name:'menuv',category:'[dependencies]'},{id:'r022',name:'prompt_anim_core_2_new',category:'[dependencies]'},{id:'r023',name:'RageUI',category:'[dependencies]'},{id:'r024',name:'sn_lib',category:'[dependencies]'},{id:'r025',name:'wasabi_bridge',category:'[dependencies]'},{id:'r026',name:'xsound',category:'[dependencies]'},{id:'r027',name:'qbx_core',category:'[root]'},{id:'r028',name:'jg-hud',category:'[root]'},{id:'r029',name:'vertex-hub',category:'[root]'},{id:'r030',name:'qbx_binoculars',category:'[qbx]'},{id:'r031',name:'qbx_density',category:'[qbx]'},{id:'r032',name:'qbx_divegear',category:'[qbx]'},{id:'r033',name:'qbx_management',category:'[qbx]'},{id:'r034',name:'qbx_radialmenu',category:'[qbx]'},{id:'r035',name:'qbx_smallresources',category:'[qbx]'},{id:'r036',name:'qbx_vehicles',category:'[qbx]'},{id:'r037',name:'oxmysql',category:'[ox]'},{id:'r038',name:'ox_compat',category:'[ox]'},{id:'r039',name:'ox_doorlock',category:'[ox]'},{id:'r040',name:'ox_inventory',category:'[ox]'},{id:'r041',name:'ox_lib',category:'[ox]'},{id:'r042',name:'ox_target',category:'[ox]'},{id:'r043',name:'g-adv-paycheck',category:'[g-scripts]'},{id:'r044',name:'g-bossmenu',category:'[g-scripts]'},{id:'r045',name:'g-dutyV2',category:'[g-scripts]'},{id:'r046',name:'g-multijob',category:'[g-scripts]'},{id:'r047',name:'g-order-system',category:'[g-scripts]'},{id:'r048',name:'gg_busjob',category:'[jobs]'},{id:'r049',name:'gg_electricianjob',category:'[jobs]'},{id:'r050',name:'gg_garbagejob',category:'[jobs]'},{id:'r051',name:'gg_gruppejob',category:'[jobs]'},{id:'r052',name:'gg_taxijob',category:'[jobs]'},{id:'r053',name:'lation_detecting',category:'[jobs]'},{id:'r054',name:'lation_diving',category:'[jobs]'},{id:'r055',name:'kub_trucking',category:'[jobs]'},{id:'r056',name:'RxMining',category:'[jobs]'},{id:'r057',name:'RxZ_Smelters',category:'[jobs]'},{id:'r058',name:'r14-evidence',category:'[jobs]'},{id:'r059',name:'wasabi_ambulance',category:'[jobs]'},{id:'r060',name:'wasabi_crutch',category:'[jobs]'},{id:'r061',name:'wasabi_gps',category:'[jobs]'},{id:'r062',name:'wasabi_police',category:'[jobs]'},{id:'r063',name:'gg_boosting',category:'[illegal]'},{id:'r064',name:'lation_selling',category:'[illegal]'},{id:'r065',name:'tk_drugs',category:'[illegal]'},{id:'r066',name:'projectx-burner',category:'[illegal]'},{id:'r067',name:'projectx-masks',category:'[illegal]'},{id:'r068',name:'projectx-tasks',category:'[illegal]'},{id:'r069',name:'projectx-atmrobbery',category:'[illegal]'},{id:'r070',name:'projectx-houserobbery-v2',category:'[illegal]'},{id:'r071',name:'projectx-storerobbery-fm',category:'[illegal]'},{id:'r072',name:'crm-appearance',category:'[crm]'},{id:'r073',name:'crm-banking',category:'[crm]'},{id:'r074',name:'crm-core',category:'[crm]'},{id:'r075',name:'crm-loadingscreen',category:'[crm]'},{id:'r076',name:'crm-multicharacter',category:'[crm]'},{id:'r077',name:'crm-pausemenu',category:'[crm]'},{id:'r078',name:'crm-tattoos',category:'[crm]'},{id:'r079',name:'eatgo-app',category:'[phone]'},{id:'r080',name:'lb-newsapp',category:'[phone]'},{id:'r081',name:'lb-phone',category:'[phone]'},{id:'r082',name:'lb-phoneprop',category:'[phone]'},{id:'r083',name:'lbphone-insurance',category:'[phone]'},{id:'r084',name:'slrn_groups',category:'[phone]'},{id:'r085',name:'ws_emergency',category:'[phone]'},{id:'r086',name:'jg-advancedgarages',category:'[business]'},{id:'r087',name:'jg-dealerships',category:'[business]'},{id:'r088',name:'jg-mechanic',category:'[business]'},{id:'r089',name:'sn_furniture',category:'[housing]'},{id:'r090',name:'sn_properties',category:'[housing]'},{id:'r091',name:'envi-bridge',category:'[envi]'},{id:'r092',name:'envi-computer',category:'[envi]'},{id:'r093',name:'envi-hack-minigames-computer-edition',category:'[envi]'},{id:'r094',name:'envi-interact',category:'[envi]'},{id:'r095',name:'envi-pawnshop',category:'[envi]'},{id:'r096',name:'envi-zone-tool',category:'[envi]'},{id:'r097',name:'eagle_radar',category:'[mike]'},{id:'r098',name:'pc_economy',category:'[mike]'},{id:'r099',name:'pc_membership',category:'[mike]'},{id:'r100',name:'pc_queue',category:'[mike]'},{id:'r101',name:'ws_dispatch',category:'[mike]'},{id:'r102',name:'ws_gov',category:'[mike]'},{id:'r103',name:'ws_mdt',category:'[mike]'},{id:'r104',name:'bl_ui',category:'[minigames]'},{id:'r105',name:'tgg-minigames',category:'[minigames]'},{id:'r106',name:'lc_fuel',category:'[fuel]'},{id:'r107',name:'pixel-consumables',category:'[consumables]'},{id:'r108',name:'Renewed-Lib',category:'[renewed]'},{id:'r109',name:'Renewed-Vehiclekeys',category:'[renewed]'},{id:'r110',name:'Renewed-Weathersync',category:'[renewed]'},{id:'r111',name:'pma-voice',category:'[voice]'},{id:'r112',name:'zerio-radio',category:'[voice]'},{id:'r113',name:'AdvancedParking',category:'[standalone]'},{id:'r114',name:'amzn_admin_classic',category:'[standalone]'},{id:'r115',name:'bob74_ipl',category:'[standalone]'},{id:'r116',name:'cdev_chat',category:'[standalone]'},{id:'r117',name:'chowhathair',category:'[standalone]'},{id:'r118',name:'cr-stopmusic',category:'[standalone]'},{id:'r119',name:'fd_laptop',category:'[standalone]'},{id:'r120',name:'fivem-base-vehicle-handling',category:'[standalone]'},{id:'r121',name:'jg-handling',category:'[standalone]'},{id:'r122',name:'jg-stress-addon',category:'[standalone]'},{id:'r123',name:'kxCamera',category:'[standalone]'},{id:'r124',name:'Levi-Forceffp',category:'[standalone]'},{id:'r125',name:'lvc',category:'[standalone]'},{id:'r126',name:'MarkoMods-Menu',category:'[standalone]'},{id:'r127',name:'mnr_sitanywhere',category:'[standalone]'},{id:'r128',name:'MrNewbCustomPlates',category:'[standalone]'},{id:'r129',name:'MugShotBase64',category:'[standalone]'},{id:'r130',name:'object_gizmo',category:'[standalone]'},{id:'r131',name:'PolyZone',category:'[standalone]'},{id:'r132',name:'rpemotes',category:'[standalone]'},{id:'r133',name:'screenshot-basic',category:'[standalone]'},{id:'r134',name:'sd-dumpsters',category:'[standalone]'},{id:'r135',name:'snipe-menu',category:'[standalone]'},{id:'r136',name:'bcs_licensemanager',category:'[bcs]'},{id:'r137',name:'King-Greenscreen',category:'[bcs]'},{id:'r138',name:'cfx_onx_mp_faces',category:'[clothing]'},{id:'r139',name:'cfx_onx_mp_faces_replace',category:'[clothing]'},{id:'r140',name:'cfx_onx_mp_faces_replace_v2',category:'[clothing]'},{id:'r141',name:'fd_missing_textures',category:'[clothing]'},{id:'r142',name:'cfx-sent6-jakers',category:'[vehicles]'},{id:'r143',name:'sr1x',category:'[vehicles]'},{id:'r144',name:'beanbagshotgun',category:'[weapons]'},{id:'r145',name:'GlizzyWeaponsv1',category:'[weapons]'},{id:'r146',name:'MarkoMods-2011',category:'[weapons]'},{id:'r147',name:'MarkoMods-2S',category:'[weapons]'},{id:'r148',name:'MarkoMods-A45',category:'[weapons]'},{id:'r149',name:'MarkoMods-AGC',category:'[weapons]'},{id:'r150',name:'MarkoMods-KVR',category:'[weapons]'},{id:'r151',name:'MarkoMods-M320',category:'[weapons]'},{id:'r152',name:'MarkoMods-MB47',category:'[weapons]'},{id:'r153',name:'MarkoMods-P5',category:'[weapons]'},{id:'r154',name:'MarkoMods-PM4',category:'[weapons]'},{id:'r155',name:'MarkoMods-Shared',category:'[weapons]'},{id:'r156',name:'MarkoMods-TacticalSniper',category:'[weapons]'},{id:'r157',name:'MarkoMods-X17-Addon',category:'[weapons]'},{id:'r158',name:'MarkoMods-X17-Replace',category:'[weapons]'},{id:'r159',name:'PolarsArmoury_Glizzy',category:'[weapons]'}];
 
 let tasks=[],categories=[...DEFAULT_CATS],resources=[...DEFAULT_RES];
-let cfg={apikey:'',binid:'',password:'phasecity2026',members:['The OG KiLLz','Mike','Unassigned'],devhook:'',notifyCreate:true,notifyDone:true,notifyCritical:true};
+let cfg={apikey:'',binid:'',password:'phasecity2026',members:['The OG KiLLz','Mike','Unassigned'],devhook:'https://discord.com/api/webhooks/1480042376423669800/NbacBKO0NxC2ZuTBnwaQjHoL88xUYLgGffm9L0IKUSgofiL6QcfodhbJ3lFnAHe6rT2B',notifyCreate:true,notifyDone:true,notifyCritical:true};
 let currentView='kanban',editId=null,selectedRes=null,rmTabCurrent='res';
 
 const genId=()=>'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
@@ -628,7 +625,6 @@ function openCfg(){
   $('cfg-binid').value=cfg.binid;
   $('cfg-pw').value='';
   $('cfg-members').value=cfg.members.filter(m=>m!=='Unassigned').join(', ');
-  $('cfg-devhook').value=cfg.devhook||'';
   $('cfg-notify-create').checked=cfg.notifyCreate!==false;
   $('cfg-notify-done').checked=cfg.notifyDone!==false;
   $('cfg-notify-critical').checked=cfg.notifyCritical!==false;
@@ -640,7 +636,6 @@ function saveCfg(){
   cfg.binid=$('cfg-binid').value.trim();
   const pw=$('cfg-pw').value;if(pw)cfg.password=pw;
   const mr=$('cfg-members').value;if(mr.trim())cfg.members=[...mr.split(',').map(m=>m.trim()).filter(Boolean),'Unassigned'];
-  cfg.devhook=$('cfg-devhook').value.trim();
   cfg.notifyCreate=$('cfg-notify-create').checked;
   cfg.notifyDone=$('cfg-notify-done').checked;
   cfg.notifyCritical=$('cfg-notify-critical').checked;
@@ -964,7 +959,6 @@ function openChangelog(){
   CL_SECTIONS.forEach(s=>clBuckets[s]=[]);
   $('cl-version').value='v1.0.0';
   $('cl-date').value=new Date().toISOString().split('T')[0];
-  $('cl-webhook').value=localStorage.getItem('pc_cl_webhook')||'';
   renderClTaskList();
   renderClBuckets();
   renderClPreview();
@@ -1122,16 +1116,12 @@ function getPlainChangelog(){
 function copyChangelog(){
   navigator.clipboard.writeText(getPlainChangelog()).then(()=>toast('Changelog copied!')).catch(()=>toast('Copy failed','err'));
 }
+const CL_WEBHOOK='https://discord.com/api/webhooks/1480055528108458004/xKSSe6QsS6llhGf89_c8YuXM_c5kLhOV6o-3WE-XnzlM8UvFAhTqaxJOk_folffLrQRD';
 async function postChangelogToDiscord(){
-  const webhook=$('cl-webhook').value.trim();
-  if(!webhook||!webhook.startsWith('https://discord.com/api/webhooks/')){
-    toast('Invalid webhook URL','err');return;
-  }
-  localStorage.setItem('pc_cl_webhook',webhook);
   const content=getPlainChangelog();
   $('cl-webhook-status').textContent='Posting...';
   try{
-    const res=await fetch(webhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
+    const res=await fetch(CL_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
     if(res.ok){toast('Posted to Discord!');$('cl-webhook-status').textContent='✓ Posted';}
     else{toast('Discord error: '+res.status,'err');$('cl-webhook-status').textContent='✗ Failed';}
   }catch(e){toast('Network error','err');$('cl-webhook-status').textContent='✗ Error';}
@@ -1149,7 +1139,6 @@ const RM_STATUSES=['planned','development','soon'];
 
 function openRoadmap(){
   $('rm-title').value=localStorage.getItem('pc_rm_title')||'Phase City Development Roadmap';
-  $('rm-webhook').value=localStorage.getItem('pc_rm_webhook')||'';
   const saved=localStorage.getItem('pc_rm_phases');
   if(saved)try{rmPhases=JSON.parse(saved)}catch(e){}
   renderRmTaskPool();
@@ -1272,16 +1261,12 @@ function getPlainRoadmap(){
 function copyRoadmap(){
   navigator.clipboard.writeText(getPlainRoadmap()).then(()=>toast('Roadmap copied!')).catch(()=>toast('Copy failed','err'));
 }
+const RM_WEBHOOK='https://discord.com/api/webhooks/1480056241085612174/pF2JCAH1AeHhjN-zE843StEiTNSqCL0RVDoo31aZ5Ge51AImmUmvwli-dOeTFt8TsuPM';
 async function postRoadmapToDiscord(){
-  const webhook=$('rm-webhook').value.trim();
-  if(!webhook||!webhook.startsWith('https://discord.com/api/webhooks/')){
-    toast('Invalid webhook URL','err');return;
-  }
-  localStorage.setItem('pc_rm_webhook',webhook);
   const content=getPlainRoadmap();
   $('rm-webhook-status').textContent='Posting...';
   try{
-    const res=await fetch(webhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
+    const res=await fetch(RM_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
     if(res.ok){toast('Posted to Discord!');$('rm-webhook-status').textContent='✓ Posted';}
     else{toast('Discord error: '+res.status,'err');$('rm-webhook-status').textContent='✗ Failed';}
   }catch(e){toast('Network error','err');$('rm-webhook-status').textContent='✗ Error';}
