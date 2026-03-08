@@ -1,118 +1,127 @@
 <!DOCTYPE html>
-<!-- saved from url=(0052)file:///C:/Users/z4cha/Downloads/citizen-portal.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Phase City // Citizen Portal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com/">
-<link href="./citizen-portal_files/css2" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--v:#7B68EE;--c:#5CE1E6;--bg:#07070f;--bg2:#0d0d1e;--border:rgba(123,104,238,0.22);--text:#e0e0ff;--muted:#666;--red:#ff4d6d;--orange:#ff9f43;--green:#10b981}
-body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+:root{--v:#7B68EE;--vlight:#9d8df7;--c:#5CE1E6;--bg:#07070f;--bg2:#0d0d1e;--border:rgba(123,104,238,0.28);--text:#e8e8ff;--muted:#9d8df7;--red:#ff4d6d;--orange:#ff9f43;--green:#10b981}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:16px}
 ::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#0a0a12}::-webkit-scrollbar-thumb{background:var(--v);border-radius:3px}
 ::selection{background:rgba(123,104,238,0.35);color:#fff}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(123,104,238,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(123,104,238,0.04) 1px,transparent 1px);background-size:44px 44px}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 15% 0%,rgba(123,104,238,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(92,225,230,0.06) 0%,transparent 55%)}
-.container{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:30px 20px}
+.container{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:40px 24px}
 /* HEADER */
-.header{text-align:center;margin-bottom:40px}
-.logo{width:80px;height:80px;margin:0 auto 20px;border-radius:16px;overflow:hidden;box-shadow:0 0 50px rgba(123,104,238,0.5);display:flex;align-items:center;justify-content:center;background:rgba(123,104,238,0.15)}
+.header{text-align:center;margin-bottom:50px}
+.logo{width:100px;height:100px;margin:0 auto 24px;border-radius:18px;overflow:hidden;box-shadow:0 0 60px rgba(123,104,238,0.6);display:flex;align-items:center;justify-content:center;background:rgba(123,104,238,0.18)}
 .logo img{width:100%;height:100%;object-fit:contain}
-.logo-fallback{font-size:28px;font-weight:900;color:#fff}
-.title{font-size:28px;font-weight:900;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(90deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.subtitle{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--c);letter-spacing:4px}
-.tagline{margin-top:16px;font-size:13px;color:var(--muted);line-height:1.6}
+.logo-fallback{font-size:36px;font-weight:900;color:#fff}
+.title{font-size:36px;font-weight:900;letter-spacing:5px;text-transform:uppercase;background:linear-gradient(90deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;text-shadow:0 0 40px rgba(123,104,238,0.5)}
+.subtitle{font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--c);letter-spacing:5px;text-shadow:0 0 20px rgba(92,225,230,0.4)}
+.tagline{margin-top:20px;font-size:16px;color:var(--vlight);line-height:1.7}
 /* TABS */
-.tabs{display:flex;gap:8px;margin-bottom:24px;justify-content:center;flex-wrap:wrap}
-.tab{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;padding:10px 20px;border-radius:8px;border:1px solid var(--border);cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;text-transform:uppercase}
-.tab:hover{border-color:var(--v);color:var(--v)}
-.tab.on{border-color:var(--c);color:var(--c);background:rgba(92,225,230,0.08);box-shadow:0 0 20px rgba(92,225,230,0.15)}
-.tab-icon{margin-right:6px}
+.tabs{display:flex;gap:10px;margin-bottom:30px;justify-content:center;flex-wrap:wrap}
+.tab{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:2px;padding:14px 26px;border-radius:10px;border:1px solid var(--border);cursor:pointer;background:transparent;color:var(--vlight);transition:all .2s;text-transform:uppercase;font-weight:600}
+.tab:hover{border-color:var(--v);color:#fff;background:rgba(123,104,238,0.1)}
+.tab.on{border-color:var(--c);color:var(--c);background:rgba(92,225,230,0.12);box-shadow:0 0 25px rgba(92,225,230,0.2)}
+.tab-icon{margin-right:8px;font-size:16px}
 /* FORM CARD */
-.form-card{background:rgba(12,12,26,0.92);border:1px solid var(--border);border-radius:14px;padding:28px;box-shadow:0 0 50px rgba(0,0,0,0.4)}
-.form-title{font-size:16px;font-weight:700;letter-spacing:2px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
-.form-title .icon{font-size:20px}
-.form-desc{font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+.form-card{background:rgba(12,12,26,0.95);border:1px solid var(--border);border-radius:16px;padding:36px;box-shadow:0 0 60px rgba(0,0,0,0.5),inset 0 0 60px rgba(123,104,238,0.02)}
+.form-title{font-size:22px;font-weight:800;letter-spacing:3px;margin-bottom:10px;display:flex;align-items:center;gap:12px;color:#fff}
+.form-title .icon{font-size:26px}
+.form-desc{font-size:15px;color:var(--vlight);margin-bottom:30px;line-height:1.7}
 /* FIELDS */
-.field{margin-bottom:18px}
-.label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--v);letter-spacing:2.5px;text-transform:uppercase;display:block;margin-bottom:8px}
+.field{margin-bottom:22px}
+.label{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--c);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:10px;font-weight:600}
 .label .req{color:var(--red);margin-left:2px}
-.inp,.ta,.sel{width:100%;font-family:'Exo 2',sans-serif;font-size:14px;background:rgba(123,104,238,0.05);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:14px 18px;outline:none;transition:all .2s;color-scheme:dark}
-.inp:focus,.ta:focus,.sel:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(123,104,238,0.12)}
-.inp::placeholder,.ta::placeholder{color:#3a3a5a}
-.ta{resize:vertical;min-height:120px;line-height:1.6}
-.sel{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M0 0l6 7 6-7z' fill='%237B68EE'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px}
+.inp,.ta,.sel{width:100%;font-family:'Exo 2',sans-serif;font-size:16px;background:rgba(123,104,238,0.06);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:16px 20px;outline:none;transition:all .2s;color-scheme:dark}
+.inp:focus,.ta:focus,.sel:focus{border-color:var(--v);box-shadow:0 0 0 4px rgba(123,104,238,0.15)}
+.inp::placeholder,.ta::placeholder{color:var(--vlight);opacity:0.5}
+.ta{resize:vertical;min-height:130px;line-height:1.7}
+.sel{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M0 0l6 7 6-7z' fill='%237B68EE'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;padding-right:44px}
 .sel option{background:#0d0d1e;color:var(--text)}
-.hint{font-family:'Share Tech Mono',monospace;font-size:9px;color:#444;margin-top:6px;letter-spacing:1px}
+.hint{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--vlight);margin-top:8px;letter-spacing:1px;opacity:0.7}
 /* BUTTONS */
-.btn{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;border-radius:10px;border:none;cursor:pointer;transition:all .2s;width:100%}
-.btn-primary{background:linear-gradient(135deg,var(--v),#5a4fd4);color:#fff;box-shadow:0 0 24px rgba(123,104,238,0.4)}
-.btn-primary:hover{box-shadow:0 0 40px rgba(123,104,238,0.6);transform:translateY(-2px)}
+.btn{font-family:'Exo 2',sans-serif;font-size:15px;font-weight:800;letter-spacing:3px;text-transform:uppercase;padding:18px 32px;border-radius:12px;border:none;cursor:pointer;transition:all .2s;width:100%}
+.btn-primary{background:linear-gradient(135deg,var(--v),#5a4fd4);color:#fff;box-shadow:0 0 30px rgba(123,104,238,0.5)}
+.btn-primary:hover{box-shadow:0 0 50px rgba(123,104,238,0.7);transform:translateY(-3px)}
 .btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
 /* SUCCESS */
-.success-card{text-align:center;padding:50px 30px}
-.success-icon{font-size:60px;margin-bottom:20px}
-.success-title{font-size:20px;font-weight:700;color:var(--c);margin-bottom:10px}
-.success-msg{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:24px}
-.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);font-size:11px;padding:10px 20px}
-.btn-ghost:hover{border-color:var(--v);color:var(--v)}
+.success-card{text-align:center;padding:60px 36px}
+.success-icon{font-size:72px;margin-bottom:24px}
+.success-title{font-size:26px;font-weight:800;color:var(--c);margin-bottom:14px;text-shadow:0 0 30px rgba(92,225,230,0.4)}
+.success-msg{font-size:16px;color:var(--vlight);line-height:1.8;margin-bottom:30px}
+.btn-ghost{background:transparent;color:var(--vlight);border:1px solid var(--border);font-size:13px;padding:12px 24px;font-weight:600}
+.btn-ghost:hover{border-color:var(--v);color:#fff;background:rgba(123,104,238,0.1)}
 /* FOOTER */
-.footer{text-align:center;margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:10px;color:#333;letter-spacing:2px}
-.footer a{color:var(--v);text-decoration:none}
-.footer a:hover{color:var(--c)}
+.footer{text-align:center;margin-top:50px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--vlight);letter-spacing:2px;opacity:0.6}
+.footer a{color:var(--c);text-decoration:none}
+.footer a:hover{color:#fff}
 /* BUG TYPE BADGES */
-.type-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
-.type-badge{font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 12px;border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:all .15s;color:var(--muted);background:transparent}
-.type-badge:hover{border-color:var(--v);color:var(--v)}
-.type-badge.on{border-color:var(--c);color:var(--c);background:rgba(92,225,230,0.1)}
+.type-badges{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.type-badge{font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 16px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s;color:var(--vlight);background:transparent;font-weight:600}
+.type-badge:hover{border-color:var(--v);color:#fff;background:rgba(123,104,238,0.1)}
+.type-badge.on{border-color:var(--c);color:var(--c);background:rgba(92,225,230,0.12);box-shadow:0 0 15px rgba(92,225,230,0.2)}
 /* SEVERITY */
-.severity-row{display:flex;gap:8px}
-.severity-btn{flex:1;font-family:'Share Tech Mono',monospace;font-size:10px;padding:10px;border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:all .15s;text-align:center;color:var(--muted);background:transparent}
-.severity-btn:hover{border-color:var(--v)}
-.severity-btn.on.low{border-color:var(--v);color:var(--v);background:rgba(123,104,238,0.1)}
-.severity-btn.on.medium{border-color:var(--orange);color:var(--orange);background:rgba(255,159,67,0.1)}
-.severity-btn.on.high{border-color:var(--red);color:var(--red);background:rgba(255,77,109,0.1)}
+.severity-row{display:flex;gap:10px}
+.severity-btn{flex:1;font-family:'Share Tech Mono',monospace;font-size:13px;padding:14px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s;text-align:center;color:var(--vlight);background:transparent;font-weight:700}
+.severity-btn:hover{border-color:var(--v);color:#fff}
+.severity-btn.on.low{border-color:var(--v);color:var(--v);background:rgba(123,104,238,0.15);box-shadow:0 0 15px rgba(123,104,238,0.3)}
+.severity-btn.on.medium{border-color:var(--orange);color:var(--orange);background:rgba(255,159,67,0.15);box-shadow:0 0 15px rgba(255,159,67,0.3)}
+.severity-btn.on.high{border-color:var(--red);color:var(--red);background:rgba(255,77,109,0.15);box-shadow:0 0 15px rgba(255,77,109,0.3)}
 /* LOADING */
-.loading{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
+.loading{display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-right:10px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* FILE DROP */
-.file-drop{border:2px dashed var(--border);border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:all .2s}
-.file-drop:hover,.file-drop.dragover{border-color:var(--v);background:rgba(123,104,238,0.05)}
-.file-drop-icon{font-size:32px;margin-bottom:8px}
-.file-drop-text{font-family:'Share Tech Mono',monospace;font-size:11px;color:#666;letter-spacing:1px}
-.file-drop-text span{color:var(--c)}
-.file-drop-hint{font-family:'Share Tech Mono',monospace;font-size:9px;color:#444;margin-top:8px;letter-spacing:0.5px}
-.file-attached{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(92,225,230,0.08);border:1px solid rgba(92,225,230,0.25);border-radius:8px;margin-top:8px}
-.file-name{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--c);letter-spacing:1px}
-.file-remove{color:var(--red);cursor:pointer;font-size:18px;font-weight:bold;padding:0 4px}
+.file-drop{border:2px dashed var(--vlight);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(123,104,238,0.03)}
+.file-drop:hover,.file-drop.dragover{border-color:var(--c);background:rgba(123,104,238,0.08);box-shadow:0 0 20px rgba(123,104,238,0.2)}
+.file-drop-icon{font-size:40px;margin-bottom:12px}
+.file-drop-text{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--vlight);letter-spacing:1.5px}
+.file-drop-text span{color:var(--c);font-weight:600}
+.file-drop-hint{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--vlight);margin-top:10px;letter-spacing:0.5px;opacity:0.7}
+.file-attached{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(92,225,230,0.1);border:1px solid rgba(92,225,230,0.3);border-radius:10px;margin-top:10px}
+.file-name{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--c);letter-spacing:1px}
+.file-remove{color:var(--red);cursor:pointer;font-size:20px;font-weight:bold;padding:0 6px}
 .file-remove:hover{color:#ff6b8a}
-.file-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.file-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(92,225,230,0.08);border:1px solid rgba(92,225,230,0.2);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--c)}
-.file-item img{width:36px;height:36px;object-fit:cover;border-radius:4px;border:1px solid rgba(92,225,230,0.3)}
-.file-item .file-info{display:flex;flex-direction:column;gap:2px}
-.file-item .file-info span:last-child{font-size:9px;color:#666}
-.file-item .file-del{color:var(--red);cursor:pointer;font-size:14px;margin-left:4px;opacity:0.7}
+.file-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.file-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(92,225,230,0.1);border:1px solid rgba(92,225,230,0.25);border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--c)}
+.file-item img{width:44px;height:44px;object-fit:cover;border-radius:6px;border:1px solid rgba(92,225,230,0.4)}
+.file-item .file-info{display:flex;flex-direction:column;gap:3px}
+.file-item .file-info span:last-child{font-size:10px;color:var(--vlight);opacity:0.7}
+.file-item .file-del{color:var(--red);cursor:pointer;font-size:16px;margin-left:6px;opacity:0.7}
 .file-item .file-del:hover{opacity:1}
 /* ANIMS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .form-card,.success-card{animation:fadeUp .4s ease both}
+/* MOBILE */
+@media(max-width:600px){
+  .title{font-size:28px;letter-spacing:3px}
+  .subtitle{font-size:12px}
+  .tabs{gap:8px}
+  .tab{font-size:11px;padding:12px 18px}
+  .form-title{font-size:18px}
+  .form-card{padding:24px}
+}
 </style>
 </head>
 <body>
 
 <div class="container">
   <div class="header">
-    <div class="logo"><span class="logo-fallback">PC</span></div>
+    <div class="logo"><img src="img/logo.png" alt="PC" onerror="this.outerHTML='<span class=logo-fallback>PC</span>'"></div>
     <div class="title">Phase City</div>
-    <div class="subtitle">// CITIZEN PORTAL</div>
-    <div class="tagline">Help us build a better city. Report bugs, suggest features, or let us know if something crashes.</div>
+    <div class="subtitle">// CITIZEN PORTAL //</div>
+    <div class="tagline">Help us build a better city.<br>Report bugs, suggest features, or submit crash reports.</div>
   </div>
 
   <div class="tabs">
-    <button class="tab on" data-tab="bug" onclick="switchTab(&#39;bug&#39;)"><span class="tab-icon">🐛</span>BUG REPORT</button>
-    <button class="tab" data-tab="suggestion" onclick="switchTab(&#39;suggestion&#39;)"><span class="tab-icon">💡</span>SUGGESTION</button>
-    <button class="tab" data-tab="crash" onclick="switchTab(&#39;crash&#39;)"><span class="tab-icon">💥</span>CRASH REPORT</button>
+    <button class="tab on" data-tab="bug" onclick="switchTab('bug')"><span class="tab-icon">🐛</span>BUG REPORT</button>
+    <button class="tab" data-tab="suggestion" onclick="switchTab('suggestion')"><span class="tab-icon">💡</span>SUGGESTION</button>
+    <button class="tab" data-tab="crash" onclick="switchTab('crash')"><span class="tab-icon">💥</span>CRASH REPORT</button>
   </div>
 
   <!-- BUG REPORT FORM -->
@@ -151,9 +160,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     </div>
     <div class="field">
       <label class="label">Steps to Reproduce</label>
-      <textarea class="ta" id="bug-steps" placeholder="1. Go to location X
-2. Do action Y
-3. Bug appears" style="min-height:90px"></textarea>
+      <textarea class="ta" id="bug-steps" placeholder="1. Go to location X&#10;2. Do action Y&#10;3. Bug appears" style="min-height:90px"></textarea>
     </div>
     <div class="field">
       <label class="label">Screenshot/Video URL (optional)</label>
@@ -165,11 +172,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
         <div class="file-drop-icon">📷</div>
         <div class="file-drop-text">DROP FILES HERE or <span>CLICK TO BROWSE</span></div>
         <div class="file-drop-hint">Images (PNG, JPG, GIF) or Videos (MP4, WebM) — Max 8MB each</div>
-        <input type="file" id="bug-file-input" accept="image/*,video/*" multiple="" style="display:none">
+        <input type="file" id="bug-file-input" accept="image/*,video/*" multiple style="display:none">
       </div>
       <div class="file-list" id="bug-file-list"></div>
     </div>
-    <button class="btn btn-primary" id="bug-submit-btn" onclick="submitBug()">🚀 SUBMIT BUG REPORT</button>
+    <button class="btn btn-primary" id="bug-submit-btn" onclick="submitBug()">&#128640; SUBMIT BUG REPORT</button>
   </div>
 
   <!-- SUGGESTION FORM -->
@@ -206,11 +213,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
         <div class="file-drop-icon">🖼️</div>
         <div class="file-drop-text">DROP FILES HERE or <span>CLICK TO BROWSE</span></div>
         <div class="file-drop-hint">Images or videos to help explain your idea — Max 8MB each</div>
-        <input type="file" id="sug-file-input" accept="image/*,video/*" multiple="" style="display:none">
+        <input type="file" id="sug-file-input" accept="image/*,video/*" multiple style="display:none">
       </div>
       <div class="file-list" id="sug-file-list"></div>
     </div>
-    <button class="btn btn-primary" id="sug-submit-btn" onclick="submitSuggestion()">💡 SUBMIT SUGGESTION</button>
+    <button class="btn btn-primary" id="sug-submit-btn" onclick="submitSuggestion()">&#128161; SUBMIT SUGGESTION</button>
   </div>
 
   <!-- CRASH REPORT FORM -->
@@ -237,7 +244,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     </div>
     <div class="field">
       <label class="label">FiveM Crash Report (ZIP file)</label>
-      <div class="file-drop" id="crash-file-drop" onclick="document.getElementById(&#39;crash-file-input&#39;).click()">
+      <div class="file-drop" id="crash-file-drop" onclick="document.getElementById('crash-file-input').click()">
         <div class="file-drop-icon">📁</div>
         <div class="file-drop-text">DROP CRASH ZIP HERE or <span>CLICK TO BROWSE</span></div>
         <div class="file-drop-hint">FiveM saves crash reports to: AppData\Local\CrashDumps</div>
@@ -245,12 +252,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       </div>
       <div class="file-attached" id="crash-file-attached" style="display:none">
         <span class="file-name" id="crash-file-name"></span>
-        <span class="file-remove" onclick="removeCrashFile()">×</span>
+        <span class="file-remove" onclick="removeCrashFile()">&times;</span>
       </div>
     </div>
     <div class="field">
       <label class="label">Error Message (if any)</label>
-      <textarea class="ta" id="crash-error" placeholder="Copy any error text that appeared" style="min-height:80px;font-family:&#39;Share Tech Mono&#39;,monospace;font-size:11px"></textarea>
+      <textarea class="ta" id="crash-error" placeholder="Copy any error text that appeared" style="min-height:80px;font-family:'Share Tech Mono',monospace;font-size:11px"></textarea>
     </div>
     <div class="field">
       <label class="label">How Often Does This Happen?</label>
@@ -261,7 +268,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
         <option value="Every time">Every time I do this action</option>
       </select>
     </div>
-    <button class="btn btn-primary" id="crash-submit-btn" onclick="submitCrash()">💥 SUBMIT CRASH REPORT</button>
+    <button class="btn btn-primary" id="crash-submit-btn" onclick="submitCrash()">&#128165; SUBMIT CRASH REPORT</button>
   </div>
 
   <!-- SUCCESS STATE -->
@@ -273,7 +280,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
   </div>
 
   <div class="footer">
-    <p>PHASE CITY // <a href="file:///C:/Users/z4cha/Downloads/citizen-portal.html#">DISCORD</a> // POWERED BY OGZ SERVERS</p>
+    <p>PHASE CITY // <a href="#">DISCORD</a> // POWERED BY OGZ SERVERS</p>
   </div>
 </div>
 
@@ -651,6 +658,5 @@ function submitCrash() {
   }
 }
 </script>
-
-
-</body></html>
+</body>
+</html>
