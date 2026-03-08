@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0052)file:///C:/Users/z4cha/Downloads/citizen-portal.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Phase City // Citizen Portal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./citizen-portal_files/css2" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--v:#7B68EE;--c:#5CE1E6;--bg:#07070f;--bg2:#0d0d1e;--border:rgba(123,104,238,0.22);--text:#e0e0ff;--muted:#666;--red:#ff4d6d;--orange:#ff9f43;--green:#10b981}
@@ -87,6 +87,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 .file-name{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--c);letter-spacing:1px}
 .file-remove{color:var(--red);cursor:pointer;font-size:18px;font-weight:bold;padding:0 4px}
 .file-remove:hover{color:#ff6b8a}
+.file-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.file-item{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(92,225,230,0.08);border:1px solid rgba(92,225,230,0.2);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--c)}
+.file-item img{width:36px;height:36px;object-fit:cover;border-radius:4px;border:1px solid rgba(92,225,230,0.3)}
+.file-item .file-info{display:flex;flex-direction:column;gap:2px}
+.file-item .file-info span:last-child{font-size:9px;color:#666}
+.file-item .file-del{color:var(--red);cursor:pointer;font-size:14px;margin-left:4px;opacity:0.7}
+.file-item .file-del:hover{opacity:1}
 /* ANIMS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .form-card,.success-card{animation:fadeUp .4s ease both}
@@ -96,16 +103,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 
 <div class="container">
   <div class="header">
-    <div class="logo"><img src="img/logo.png" alt="PC" onerror="this.outerHTML='<span class=logo-fallback>PC</span>'"></div>
+    <div class="logo"><span class="logo-fallback">PC</span></div>
     <div class="title">Phase City</div>
     <div class="subtitle">// CITIZEN PORTAL</div>
     <div class="tagline">Help us build a better city. Report bugs, suggest features, or let us know if something crashes.</div>
   </div>
 
   <div class="tabs">
-    <button class="tab on" data-tab="bug" onclick="switchTab('bug')"><span class="tab-icon">🐛</span>BUG REPORT</button>
-    <button class="tab" data-tab="suggestion" onclick="switchTab('suggestion')"><span class="tab-icon">💡</span>SUGGESTION</button>
-    <button class="tab" data-tab="crash" onclick="switchTab('crash')"><span class="tab-icon">💥</span>CRASH REPORT</button>
+    <button class="tab on" data-tab="bug" onclick="switchTab(&#39;bug&#39;)"><span class="tab-icon">🐛</span>BUG REPORT</button>
+    <button class="tab" data-tab="suggestion" onclick="switchTab(&#39;suggestion&#39;)"><span class="tab-icon">💡</span>SUGGESTION</button>
+    <button class="tab" data-tab="crash" onclick="switchTab(&#39;crash&#39;)"><span class="tab-icon">💥</span>CRASH REPORT</button>
   </div>
 
   <!-- BUG REPORT FORM -->
@@ -144,13 +151,25 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     </div>
     <div class="field">
       <label class="label">Steps to Reproduce</label>
-      <textarea class="ta" id="bug-steps" placeholder="1. Go to location X&#10;2. Do action Y&#10;3. Bug appears" style="min-height:90px"></textarea>
+      <textarea class="ta" id="bug-steps" placeholder="1. Go to location X
+2. Do action Y
+3. Bug appears" style="min-height:90px"></textarea>
     </div>
     <div class="field">
       <label class="label">Screenshot/Video URL (optional)</label>
       <input class="inp" id="bug-media" placeholder="https://imgur.com/... or YouTube link">
     </div>
-    <button class="btn btn-primary" onclick="submitBug()">&#128640; SUBMIT BUG REPORT</button>
+    <div class="field">
+      <label class="label">Upload Screenshots/Videos (optional)</label>
+      <div class="file-drop" id="bug-file-drop">
+        <div class="file-drop-icon">📷</div>
+        <div class="file-drop-text">DROP FILES HERE or <span>CLICK TO BROWSE</span></div>
+        <div class="file-drop-hint">Images (PNG, JPG, GIF) or Videos (MP4, WebM) — Max 8MB each</div>
+        <input type="file" id="bug-file-input" accept="image/*,video/*" multiple="" style="display:none">
+      </div>
+      <div class="file-list" id="bug-file-list"></div>
+    </div>
+    <button class="btn btn-primary" id="bug-submit-btn" onclick="submitBug()">🚀 SUBMIT BUG REPORT</button>
   </div>
 
   <!-- SUGGESTION FORM -->
@@ -181,7 +200,17 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       <input class="inp" id="sug-ref" placeholder="Link to similar feature, video, or inspiration">
       <div class="hint">Seen this on another server or in a video? Share a link!</div>
     </div>
-    <button class="btn btn-primary" onclick="submitSuggestion()">&#128161; SUBMIT SUGGESTION</button>
+    <div class="field">
+      <label class="label">Upload Images/Mockups (optional)</label>
+      <div class="file-drop" id="sug-file-drop">
+        <div class="file-drop-icon">🖼️</div>
+        <div class="file-drop-text">DROP FILES HERE or <span>CLICK TO BROWSE</span></div>
+        <div class="file-drop-hint">Images or videos to help explain your idea — Max 8MB each</div>
+        <input type="file" id="sug-file-input" accept="image/*,video/*" multiple="" style="display:none">
+      </div>
+      <div class="file-list" id="sug-file-list"></div>
+    </div>
+    <button class="btn btn-primary" id="sug-submit-btn" onclick="submitSuggestion()">💡 SUBMIT SUGGESTION</button>
   </div>
 
   <!-- CRASH REPORT FORM -->
@@ -208,7 +237,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     </div>
     <div class="field">
       <label class="label">FiveM Crash Report (ZIP file)</label>
-      <div class="file-drop" id="crash-file-drop" onclick="document.getElementById('crash-file-input').click()">
+      <div class="file-drop" id="crash-file-drop" onclick="document.getElementById(&#39;crash-file-input&#39;).click()">
         <div class="file-drop-icon">📁</div>
         <div class="file-drop-text">DROP CRASH ZIP HERE or <span>CLICK TO BROWSE</span></div>
         <div class="file-drop-hint">FiveM saves crash reports to: AppData\Local\CrashDumps</div>
@@ -216,12 +245,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       </div>
       <div class="file-attached" id="crash-file-attached" style="display:none">
         <span class="file-name" id="crash-file-name"></span>
-        <span class="file-remove" onclick="removeCrashFile()">&times;</span>
+        <span class="file-remove" onclick="removeCrashFile()">×</span>
       </div>
     </div>
     <div class="field">
       <label class="label">Error Message (if any)</label>
-      <textarea class="ta" id="crash-error" placeholder="Copy any error text that appeared" style="min-height:80px;font-family:'Share Tech Mono',monospace;font-size:11px"></textarea>
+      <textarea class="ta" id="crash-error" placeholder="Copy any error text that appeared" style="min-height:80px;font-family:&#39;Share Tech Mono&#39;,monospace;font-size:11px"></textarea>
     </div>
     <div class="field">
       <label class="label">How Often Does This Happen?</label>
@@ -232,7 +261,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
         <option value="Every time">Every time I do this action</option>
       </select>
     </div>
-    <button class="btn btn-primary" id="crash-submit-btn" onclick="submitCrash()">&#128165; SUBMIT CRASH REPORT</button>
+    <button class="btn btn-primary" id="crash-submit-btn" onclick="submitCrash()">💥 SUBMIT CRASH REPORT</button>
   </div>
 
   <!-- SUCCESS STATE -->
@@ -244,16 +273,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
   </div>
 
   <div class="footer">
-    <p>PHASE CITY // <a href="#">DISCORD</a> // POWERED BY OGZ SERVERS</p>
+    <p>PHASE CITY // <a href="file:///C:/Users/z4cha/Downloads/citizen-portal.html#">DISCORD</a> // POWERED BY OGZ SERVERS</p>
   </div>
 </div>
 
 <script>
 // CONFIG - Set your Discord webhook URLs here
 const WEBHOOKS = {
-  bug: '',      // Bug reports webhook URL
-  suggestion: '',  // Suggestions webhook URL  
-  crash: ''     // Crash reports webhook URL
+  bug: 'https://discord.com/api/webhooks/1480044840879263918/ifTTUl-fOemHzJydenutZ413bMaTgcBbl_yy3quy9WW_xnGk8B7_qQNI4A5vW_gXzJCj',      // Bug reports webhook URL
+  suggestion: 'https://discord.com/api/webhooks/1480044539069726771/Nox47E54fjaZh4yXongOnM8SwQC6lBL4xzyO-IpASJukS-zuwdXtTEFnIvJ8hA0wfF_y',  // Suggestions webhook URL  
+  crash: 'https://discord.com/api/webhooks/1480044951470342257/S6MD0_mUbyw8z6jkZPVVwP7jJCM_AK7LsARv4ZMPG2Dkl5Wf-wHgGk_Atay1hUCPVsae'     // Crash reports webhook URL
 };
 
 let currentTab = 'bug';
@@ -292,6 +321,8 @@ function getSelectedBadge(containerId) {
 }
 
 let crashFile = null;
+let bugFiles = [];
+let sugFiles = [];
 
 function handleCrashFile(file) {
   if (!file) return;
@@ -312,17 +343,134 @@ function removeCrashFile() {
   document.getElementById('crash-file-attached').style.display = 'none';
 }
 
-// Drag and drop for crash file
+// Bug files handling
+function addBugFiles(files) {
+  Array.from(files).forEach(file => {
+    if (file.size > 8 * 1024 * 1024) {
+      alert(`${file.name} is too large (max 8MB)`);
+      return;
+    }
+    if (bugFiles.length >= 5) {
+      alert('Maximum 5 files allowed');
+      return;
+    }
+    if (!bugFiles.find(f => f.name === file.name)) {
+      bugFiles.push(file);
+    }
+  });
+  renderBugFiles();
+}
+
+function removeBugFile(index) {
+  bugFiles.splice(index, 1);
+  renderBugFiles();
+}
+
+function renderBugFiles() {
+  const container = document.getElementById('bug-file-list');
+  if (!bugFiles.length) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = bugFiles.map((file, i) => {
+    const isImg = file.type.startsWith('image/');
+    const thumb = isImg ? URL.createObjectURL(file) : '';
+    return `<div class="file-item">
+      ${isImg ? `<img src="${thumb}" alt="">` : '<span style="font-size:20px">🎬</span>'}
+      <div class="file-info">
+        <span>${file.name.slice(0,20)}${file.name.length>20?'...':''}</span>
+        <span>${(file.size/1024).toFixed(0)} KB</span>
+      </div>
+      <span class="file-del" onclick="removeBugFile(${i})">&times;</span>
+    </div>`;
+  }).join('');
+}
+
+// Suggestion files handling
+function addSugFiles(files) {
+  Array.from(files).forEach(file => {
+    if (file.size > 8 * 1024 * 1024) {
+      alert(`${file.name} is too large (max 8MB)`);
+      return;
+    }
+    if (sugFiles.length >= 5) {
+      alert('Maximum 5 files allowed');
+      return;
+    }
+    if (!sugFiles.find(f => f.name === file.name)) {
+      sugFiles.push(file);
+    }
+  });
+  renderSugFiles();
+}
+
+function removeSugFile(index) {
+  sugFiles.splice(index, 1);
+  renderSugFiles();
+}
+
+function renderSugFiles() {
+  const container = document.getElementById('sug-file-list');
+  if (!sugFiles.length) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = sugFiles.map((file, i) => {
+    const isImg = file.type.startsWith('image/');
+    const thumb = isImg ? URL.createObjectURL(file) : '';
+    return `<div class="file-item">
+      ${isImg ? `<img src="${thumb}" alt="">` : '<span style="font-size:20px">🎬</span>'}
+      <div class="file-info">
+        <span>${file.name.slice(0,20)}${file.name.length>20?'...':''}</span>
+        <span>${(file.size/1024).toFixed(0)} KB</span>
+      </div>
+      <span class="file-del" onclick="removeSugFile(${i})">&times;</span>
+    </div>`;
+  }).join('');
+}
+
+// Drag and drop setup
 document.addEventListener('DOMContentLoaded', () => {
-  const drop = document.getElementById('crash-file-drop');
-  if (drop) {
-    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
-    drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
-    drop.addEventListener('drop', e => {
+  // Crash file drop
+  const crashDrop = document.getElementById('crash-file-drop');
+  if (crashDrop) {
+    crashDrop.addEventListener('dragover', e => { e.preventDefault(); crashDrop.classList.add('dragover'); });
+    crashDrop.addEventListener('dragleave', () => crashDrop.classList.remove('dragover'));
+    crashDrop.addEventListener('drop', e => {
       e.preventDefault();
-      drop.classList.remove('dragover');
+      crashDrop.classList.remove('dragover');
       if (e.dataTransfer.files.length) handleCrashFile(e.dataTransfer.files[0]);
     });
+  }
+  
+  // Bug file drop
+  const bugDrop = document.getElementById('bug-file-drop');
+  const bugInput = document.getElementById('bug-file-input');
+  if (bugDrop && bugInput) {
+    bugDrop.addEventListener('click', () => bugInput.click());
+    bugDrop.addEventListener('dragover', e => { e.preventDefault(); bugDrop.classList.add('dragover'); });
+    bugDrop.addEventListener('dragleave', () => bugDrop.classList.remove('dragover'));
+    bugDrop.addEventListener('drop', e => {
+      e.preventDefault();
+      bugDrop.classList.remove('dragover');
+      addBugFiles(e.dataTransfer.files);
+    });
+    bugInput.addEventListener('change', () => addBugFiles(bugInput.files));
+  }
+  
+  // Suggestion file drop
+  const sugDrop = document.getElementById('sug-file-drop');
+  const sugInput = document.getElementById('sug-file-input');
+  if (sugDrop && sugInput) {
+    sugDrop.addEventListener('click', () => sugInput.click());
+    sugDrop.addEventListener('dragover', e => { e.preventDefault(); sugDrop.classList.add('dragover'); });
+    sugDrop.addEventListener('dragleave', () => sugDrop.classList.remove('dragover'));
+    sugDrop.addEventListener('drop', e => {
+      e.preventDefault();
+      sugDrop.classList.remove('dragover');
+      addSugFiles(e.dataTransfer.files);
+    });
+    sugInput.addEventListener('change', () => addSugFiles(sugInput.files));
   }
 });
 
@@ -368,6 +516,29 @@ async function sendToDiscordWithFile(webhook, embed, file) {
   }
 }
 
+async function sendToDiscordWithMultipleFiles(webhook, embed, files) {
+  if (!webhook) {
+    console.warn('Webhook not configured');
+    showSuccess();
+    return;
+  }
+  try {
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
+    files.forEach((file, i) => {
+      formData.append(`file${i}`, file, file.name);
+    });
+    const res = await fetch(webhook, {
+      method: 'POST',
+      body: formData
+    });
+    if (res.ok) showSuccess();
+    else alert('Submission failed. Please try again or contact staff on Discord.');
+  } catch (e) {
+    alert('Network error. Please try again.');
+  }
+}
+
 function showSuccess() {
   document.querySelectorAll('.form-card').forEach(f => f.style.display = 'none');
   document.getElementById('form-success').style.display = 'block';
@@ -376,6 +547,10 @@ function showSuccess() {
 function resetForm() {
   document.querySelectorAll('input, textarea').forEach(el => el.value = '');
   removeCrashFile();
+  bugFiles = [];
+  sugFiles = [];
+  renderBugFiles();
+  renderSugFiles();
   switchTab('bug');
 }
 
@@ -383,6 +558,10 @@ function submitBug() {
   const discord = document.getElementById('bug-discord').value.trim();
   const what = document.getElementById('bug-what').value.trim();
   if (!discord || !what) { alert('Please fill in required fields'); return; }
+  
+  const btn = document.getElementById('bug-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"></span>SUBMITTING...';
   
   const embed = {
     title: '🐛 Bug Report',
@@ -399,15 +578,24 @@ function submitBug() {
   const steps = document.getElementById('bug-steps').value.trim();
   const media = document.getElementById('bug-media').value.trim();
   if (steps) embed.fields.push({ name: '🔄 Steps to Reproduce', value: steps.slice(0, 500) });
-  if (media) embed.fields.push({ name: '📎 Media', value: media });
+  if (media) embed.fields.push({ name: '🔗 Media URL', value: media });
+  if (bugFiles.length) embed.fields.push({ name: '📎 Attachments', value: `${bugFiles.length} file(s) attached` });
   
-  sendToDiscord(WEBHOOKS.bug, embed);
+  if (bugFiles.length) {
+    sendToDiscordWithMultipleFiles(WEBHOOKS.bug, embed, bugFiles);
+  } else {
+    sendToDiscord(WEBHOOKS.bug, embed);
+  }
 }
 
 function submitSuggestion() {
   const discord = document.getElementById('sug-discord').value.trim();
   const idea = document.getElementById('sug-idea').value.trim();
   if (!discord || !idea) { alert('Please fill in required fields'); return; }
+  
+  const btn = document.getElementById('sug-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"></span>SUBMITTING...';
   
   const embed = {
     title: '💡 Suggestion',
@@ -422,8 +610,13 @@ function submitSuggestion() {
   };
   const ref = document.getElementById('sug-ref').value.trim();
   if (ref) embed.fields.push({ name: '🔗 Reference', value: ref });
+  if (sugFiles.length) embed.fields.push({ name: '📎 Attachments', value: `${sugFiles.length} file(s) attached` });
   
-  sendToDiscord(WEBHOOKS.suggestion, embed);
+  if (sugFiles.length) {
+    sendToDiscordWithMultipleFiles(WEBHOOKS.suggestion, embed, sugFiles);
+  } else {
+    sendToDiscord(WEBHOOKS.suggestion, embed);
+  }
 }
 
 function submitCrash() {
@@ -458,5 +651,6 @@ function submitCrash() {
   }
 }
 </script>
-</body>
-</html>
+
+
+</body></html>
