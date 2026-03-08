@@ -551,6 +551,70 @@ function showSuccess() {
   document.getElementById('form-success').style.display = 'block';
 }
 
+// JSONbin integration - creates task in taskboard
+function genTaskId(){return 'cp-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)}
+
+async function createTaskInTaskboard(taskData) {
+  try {
+    // Read config from localStorage (shared with taskboard on same domain)
+    const cfgStr = localStorage.getItem('pc_cfg');
+    if (!cfgStr) {
+      console.log('No taskboard config found - task not created');
+      return;
+    }
+    const cfg = JSON.parse(cfgStr);
+    if (!cfg.apikey || !cfg.binid) {
+      console.log('Taskboard not configured - task not created');
+      return;
+    }
+    
+    // Fetch current tasks
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}/latest`, {
+      headers: { 'X-Master-Key': cfg.apikey }
+    });
+    if (!res.ok) {
+      console.error('Failed to fetch tasks from JSONbin');
+      return;
+    }
+    const data = await res.json();
+    let tasks = data.record?.tasks || [];
+    
+    // Create new task
+    const now = new Date().toISOString();
+    const newTask = {
+      id: genTaskId(),
+      title: taskData.title,
+      description: taskData.description,
+      category: taskData.category || 'Citizen Portal',
+      resource: taskData.resource || '',
+      priority: taskData.priority || 'Medium',
+      assignee: 'Unassigned',
+      status: 'Backlog',
+      attachments: [],
+      createdAt: now,
+      updatedAt: now,
+      source: 'citizen-portal',
+      submitter: taskData.submitter || ''
+    };
+    tasks.push(newTask);
+    
+    // Save back to JSONbin
+    const saveRes = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': cfg.apikey
+      },
+      body: JSON.stringify({ ...data.record, tasks })
+    });
+    if (saveRes.ok) {
+      console.log('Task created in taskboard:', newTask.id);
+    }
+  } catch (e) {
+    console.error('Failed to create task:', e);
+  }
+}
+
 function resetForm() {
   document.querySelectorAll('input, textarea').forEach(el => el.value = '');
   removeCrashFile();
@@ -570,23 +634,36 @@ function submitBug() {
   btn.disabled = true;
   btn.innerHTML = '<span class="loading"></span>SUBMITTING...';
   
+  const category = getSelectedBadge('bug-category');
+  const severity = getSelectedBadge('bug-severity');
+  const steps = document.getElementById('bug-steps').value.trim();
+  
   const embed = {
     title: '🐛 Bug Report',
     color: 0xFF4D6D,
     fields: [
       { name: '👤 Discord', value: discord, inline: true },
-      { name: '📁 Category', value: getSelectedBadge('bug-category'), inline: true },
-      { name: '⚠️ Severity', value: getSelectedBadge('bug-severity'), inline: true },
+      { name: '📁 Category', value: category, inline: true },
+      { name: '⚠️ Severity', value: severity, inline: true },
       { name: '📝 Description', value: what.slice(0, 1000) },
     ],
     footer: { text: 'Phase City Citizen Portal' },
     timestamp: new Date().toISOString()
   };
-  const steps = document.getElementById('bug-steps').value.trim();
   const media = document.getElementById('bug-media').value.trim();
   if (steps) embed.fields.push({ name: '🔄 Steps to Reproduce', value: steps.slice(0, 500) });
   if (media) embed.fields.push({ name: '🔗 Media URL', value: media });
   if (bugFiles.length) embed.fields.push({ name: '📎 Attachments', value: `${bugFiles.length} file(s) attached` });
+  
+  // Create task in taskboard
+  const priority = severity === 'High' ? 'Critical' : severity === 'Medium' ? 'High' : 'Medium';
+  createTaskInTaskboard({
+    title: `🐛 [${category}] ${what.slice(0, 60)}${what.length > 60 ? '...' : ''}`,
+    description: `**Reporter:** ${discord}\n**Severity:** ${severity}\n\n${what}${steps ? '\n\n**Steps:**\n' + steps : ''}`,
+    category: 'Bug Reports',
+    priority: priority,
+    submitter: discord
+  });
   
   if (bugFiles.length) {
     sendToDiscordWithMultipleFiles(WEBHOOKS.bug, embed, bugFiles);
@@ -604,12 +681,14 @@ function submitSuggestion() {
   btn.disabled = true;
   btn.innerHTML = '<span class="loading"></span>SUBMITTING...';
   
+  const category = getSelectedBadge('sug-category');
+  
   const embed = {
     title: '💡 Suggestion',
     color: 0x5CE1E6,
     fields: [
       { name: '👤 Discord', value: discord, inline: true },
-      { name: '📁 Category', value: getSelectedBadge('sug-category'), inline: true },
+      { name: '📁 Category', value: category, inline: true },
       { name: '📝 Suggestion', value: idea.slice(0, 1000) },
     ],
     footer: { text: 'Phase City Citizen Portal' },
@@ -618,6 +697,15 @@ function submitSuggestion() {
   const ref = document.getElementById('sug-ref').value.trim();
   if (ref) embed.fields.push({ name: '🔗 Reference', value: ref });
   if (sugFiles.length) embed.fields.push({ name: '📎 Attachments', value: `${sugFiles.length} file(s) attached` });
+  
+  // Create task in taskboard
+  createTaskInTaskboard({
+    title: `💡 [${category}] ${idea.slice(0, 60)}${idea.length > 60 ? '...' : ''}`,
+    description: `**Suggested by:** ${discord}\n**Category:** ${category}\n\n${idea}${ref ? '\n\n**Reference:** ' + ref : ''}`,
+    category: 'Suggestions',
+    priority: 'Low',
+    submitter: discord
+  });
   
   if (sugFiles.length) {
     sendToDiscordWithMultipleFiles(WEBHOOKS.suggestion, embed, sugFiles);
@@ -635,21 +723,34 @@ function submitCrash() {
   btn.disabled = true;
   btn.innerHTML = '<span class="loading"></span>SUBMITTING...';
   
+  const crashType = getSelectedBadge('crash-type');
+  const freq = document.getElementById('crash-freq').value;
+  const error = document.getElementById('crash-error').value.trim();
+  
   const embed = {
     title: '💥 Crash Report',
     color: 0xFF9F43,
     fields: [
       { name: '👤 Discord', value: discord, inline: true },
-      { name: '💢 Type', value: getSelectedBadge('crash-type'), inline: true },
-      { name: '🔄 Frequency', value: document.getElementById('crash-freq').value, inline: true },
+      { name: '💢 Type', value: crashType, inline: true },
+      { name: '🔄 Frequency', value: freq, inline: true },
       { name: '📝 What Happened', value: what.slice(0, 1000) },
     ],
     footer: { text: 'Phase City Citizen Portal' },
     timestamp: new Date().toISOString()
   };
-  const error = document.getElementById('crash-error').value.trim();
   if (error) embed.fields.push({ name: '⚠️ Error Message', value: '```' + error.slice(0, 500) + '```' });
   if (crashFile) embed.fields.push({ name: '📎 Crash File', value: crashFile.name });
+  
+  // Create task in taskboard - crashes are high priority
+  const priority = freq === 'Every time I do this action' ? 'Critical' : 'High';
+  createTaskInTaskboard({
+    title: `💥 [${crashType}] ${what.slice(0, 60)}${what.length > 60 ? '...' : ''}`,
+    description: `**Reporter:** ${discord}\n**Crash Type:** ${crashType}\n**Frequency:** ${freq}\n\n${what}${error ? '\n\n**Error:**\n```\n' + error + '\n```' : ''}`,
+    category: 'Crash Reports',
+    priority: priority,
+    submitter: discord
+  });
   
   if (crashFile) {
     sendToDiscordWithFile(WEBHOOKS.crash, embed, crashFile);
