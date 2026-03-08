@@ -170,6 +170,29 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 .attach-drop:hover,.attach-drop.dragover{border-color:var(--c);background:rgba(123,104,238,0.08);box-shadow:0 0 15px rgba(123,104,238,0.15)}
 .attach-drop-txt{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--vlight);letter-spacing:1.5px}
 .attach-drop-txt span{color:var(--c);font-weight:600}
+/* CHECKLIST */
+.checklist-section{margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+.checklist-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.checklist-label span{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--c);letter-spacing:3px;text-transform:uppercase;font-weight:600}
+.checklist-count{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--c);background:rgba(92,225,230,0.1);padding:3px 10px;border-radius:5px;border:1px solid rgba(92,225,230,0.2)}
+.checklist-items{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;max-height:200px;overflow-y:auto}
+.checklist-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(123,104,238,0.06);border:1px solid var(--border);border-radius:8px;transition:all .15s}
+.checklist-item:hover{border-color:var(--v);background:rgba(123,104,238,0.1)}
+.checklist-item.checked{opacity:0.6}
+.checklist-item.checked .checklist-text{text-decoration:line-through;color:var(--vlight)}
+.checklist-check{width:20px;height:20px;border:2px solid var(--v);border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:transparent;transition:all .15s;flex-shrink:0}
+.checklist-check:hover{border-color:var(--c);box-shadow:0 0 8px rgba(92,225,230,0.3)}
+.checklist-check.checked{background:var(--c);border-color:var(--c)}
+.checklist-check.checked::after{content:'✓';color:#0a0a14;font-size:12px;font-weight:bold}
+.checklist-text{flex:1;font-size:14px;color:var(--text);word-break:break-word}
+.checklist-del{width:22px;height:22px;border:none;background:transparent;color:var(--red);font-size:16px;cursor:pointer;opacity:0;transition:opacity .15s;border-radius:4px;display:flex;align-items:center;justify-content:center}
+.checklist-item:hover .checklist-del{opacity:1}
+.checklist-del:hover{background:rgba(255,77,109,0.15)}
+.checklist-add-row{display:flex;gap:10px}
+.checklist-add-row .inp{flex:1;font-size:13px;padding:10px 14px}
+.checklist-progress{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--c);display:flex;align-items:center;gap:5px;margin-top:6px}
+.checklist-bar{width:60px;height:5px;background:rgba(123,104,238,0.2);border-radius:3px;overflow:hidden}
+.checklist-bar-fill{height:100%;background:linear-gradient(90deg,var(--v),var(--c));border-radius:3px;transition:width .3s}
 /* LIGHTBOX */
 #lightbox{position:fixed;inset:0;z-index:950;background:rgba(0,0,0,0.94);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;flex-direction:column;padding:24px}
 #lightbox.show{display:flex}
@@ -380,6 +403,19 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       <div class="field"><label class="label">Assignee</label><select class="sel" id="m-assignee"></select></div>
     </div>
     <div class="field"><label class="label">Status</label><select class="sel" id="m-status"><option>Backlog</option><option>In Progress</option><option>Review</option><option>Done</option></select></div>
+    
+    <!-- CHECKLIST -->
+    <div class="checklist-section">
+      <div class="checklist-label">
+        <span>&#9745; Checklist</span>
+        <span class="checklist-count" id="checklist-count">0 items</span>
+      </div>
+      <div class="checklist-items" id="checklist-items"></div>
+      <div class="checklist-add-row">
+        <input class="inp" id="checklist-input" placeholder="Add checklist item..." onkeydown="if(event.key==='Enter'){addChecklistItem();event.preventDefault()}">
+        <button class="btn btn-primary" onclick="addChecklistItem()" style="padding:8px 14px;font-size:10px">+ ADD</button>
+      </div>
+    </div>
     
     <!-- ATTACHMENTS -->
     <div class="attach-section">
@@ -796,6 +832,7 @@ function openTaskModal(id=null){
   editId=id;const t=id?tasks.find(x=>x.id===id):null;
   selectedRes=t?resources.find(r=>r.id===t.resourceId)||null:null;
   currentAttachments=t?.attachments?[...t.attachments]:[];
+  currentChecklist=t?.checklist?JSON.parse(JSON.stringify(t.checklist)):[];
   $('tm-title').textContent=t?'EDIT TASK':'NEW TASK';
   $('m-title').value=t?.title||'';$('m-desc').value=t?.description||'';
   $('m-priority').value=t?.priority||'Medium';$('m-status').value=t?.status||'Backlog';$('m-id').value=id||'';
@@ -803,11 +840,12 @@ function openTaskModal(id=null){
   $('m-cat').innerHTML='<option value="">— Select Category —</option>'+categories.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
   if(t&&selectedRes){$('m-cat').value=selectedRes.category;onModalCatChange(selectedRes.id);}
   else{$('m-res-search').value='';$('m-res-search').disabled=true;$('res-drop-wrap').style.display='none';updateResDisplay();}
-  $('attach-url').value='';
+  $('attach-url').value='';$('checklist-input').value='';
   renderAttachGrid();
+  renderChecklist();
   $('task-modal').style.display='flex';setTimeout(()=>$('m-title').focus(),50);
 }
-function closeTaskModal(){$('task-modal').style.display='none';editId=null;selectedRes=null;currentAttachments=[];}
+function closeTaskModal(){$('task-modal').style.display='none';editId=null;selectedRes=null;currentAttachments=[];currentChecklist=[];}
 
 function onModalCatChange(preId=null){
   const cat=$('m-cat').value;const srch=$('m-res-search');
@@ -833,7 +871,7 @@ async function saveTask(){
   const title=$('m-title').value.trim();
   if(!title){toast('Title required','err');return;}if(!selectedRes){toast('Select a resource','err');return;}
   const now=new Date().toISOString();
-  const td={title,description:$('m-desc').value.trim(),resourceId:selectedRes.id,resourceName:selectedRes.name,category:selectedRes.category,priority:$('m-priority').value,assignee:$('m-assignee').value,status:$('m-status').value,attachments:[...currentAttachments]};
+  const td={title,description:$('m-desc').value.trim(),resourceId:selectedRes.id,resourceName:selectedRes.name,category:selectedRes.category,priority:$('m-priority').value,assignee:$('m-assignee').value,status:$('m-status').value,attachments:[...currentAttachments],checklist:[...currentChecklist]};
   const isNew=!editId;
   if(editId){tasks=tasks.map(t=>t.id===editId?{...t,...td,updatedAt:now}:t);toast('Task updated');}
   else{const newTask={id:genId(),...td,createdAt:now,updatedAt:now};tasks.push(newTask);toast('Task created');notifyDiscord('create',newTask);}
@@ -902,12 +940,58 @@ function cHTML(t,list){
   const attBadge=att?`<span class="card-attach" onclick="event.stopPropagation();openLightbox(0,'task','${t.id}')"><span class="card-attach-icon">&#128247;</span>${att}</span>`:'';
   const attThumb=att&&!list?(()=>{const a=t.attachments[0];const yt=isYouTube(a.url);const th=yt?getYouTubeThumb(a.url):a.url;return`<img class="card-mini-thumb" src="${esc(th)}" alt="" onclick="event.stopPropagation();openLightbox(0,'task','${t.id}')" onerror="this.style.display='none'">`})():'';
   const srcBadge=t.source==='citizen-portal'?`<span class="card-source">&#128236; CITIZEN</span>`:'';
-  if(list)return`<div class="list-card${isDone?' card-done':''}" onclick="openTaskModal('${t.id}')">${bar}<span class="badge ${pClass(t.priority)}" style="min-width:62px;text-align:center">${t.priority}</span><span class="list-title">${esc(t.title)}</span>${t.source==='citizen-portal'?'<span class="card-source" style="position:static;margin:0 6px">&#128236;</span>':''}<span class="list-meta">&#9672; ${esc(t.resourceName||'—')}</span>${att?`<span class="card-attach" onclick="event.stopPropagation();openLightbox(0,'task','${t.id}')"><span class="card-attach-icon">&#128247;</span>${att}</span>`:''}<span class="assignee-chip">${esc(t.assignee)}</span><span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:${sc.color};min-width:78px;text-align:right">${t.status}</span><div class="list-actions" onclick="event.stopPropagation()"><button class="btn-sm btn-edit" onclick="openTaskModal('${t.id}')">EDIT</button><button class="btn-sm btn-del" onclick="deleteTask('${t.id}')">DEL</button></div></div>`;
-  return`<div class="card${isDone?' card-done':''}" onclick="openTaskModal('${t.id}')">${bar}${srcBadge}<div class="card-cat">${esc(t.category||'')}</div><div class="card-res">&#9672; ${esc(t.resourceName||'—')}</div><div class="card-title">${esc(t.title)}</div>${desc?`<div class="card-desc">${esc(desc)}</div>`:''}<div class="card-foot"><span class="badge ${pClass(t.priority)}">${t.priority}</span><span class="assignee-chip">${esc(t.assignee)}</span>${attThumb}</div>${attBadge}<div class="card-actions" onclick="event.stopPropagation()">${si>0?`<button class="btn-sm btn-move" onclick="moveTask('${t.id}',-1)">&#9664; ${STATUSES[si-1]}</button>`:''}${si<3?`<button class="btn-sm btn-move" onclick="moveTask('${t.id}',1)">${STATUSES[si+1]} &#9654;</button>`:''}<button class="btn-sm btn-edit" onclick="openTaskModal('${t.id}')">EDIT</button><button class="btn-sm btn-del" onclick="deleteTask('${t.id}')">DEL</button></div><div class="card-date">${fmtDate(t.updatedAt)}</div></div>`;
+  // Checklist progress
+  const cl=t.checklist||[];
+  const clDone=cl.filter(c=>c.done).length;
+  const clTotal=cl.length;
+  const clPct=clTotal?(clDone/clTotal)*100:0;
+  const clBadge=clTotal?`<div class="checklist-progress"><span>☑ ${clDone}/${clTotal}</span><div class="checklist-bar"><div class="checklist-bar-fill" style="width:${clPct}%"></div></div></div>`:'';
+  if(list)return`<div class="list-card${isDone?' card-done':''}" onclick="openTaskModal('${t.id}')">${bar}<span class="badge ${pClass(t.priority)}" style="min-width:62px;text-align:center">${t.priority}</span><span class="list-title">${esc(t.title)}</span>${t.source==='citizen-portal'?'<span class="card-source" style="position:static;margin:0 6px">&#128236;</span>':''}${clTotal?`<span class="checklist-progress" style="margin:0 6px"><span>☑ ${clDone}/${clTotal}</span></span>`:''}<span class="list-meta">&#9672; ${esc(t.resourceName||'—')}</span>${att?`<span class="card-attach" onclick="event.stopPropagation();openLightbox(0,'task','${t.id}')"><span class="card-attach-icon">&#128247;</span>${att}</span>`:''}<span class="assignee-chip">${esc(t.assignee)}</span><span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:${sc.color};min-width:78px;text-align:right">${t.status}</span><div class="list-actions" onclick="event.stopPropagation()"><button class="btn-sm btn-edit" onclick="openTaskModal('${t.id}')">EDIT</button><button class="btn-sm btn-del" onclick="deleteTask('${t.id}')">DEL</button></div></div>`;
+  return`<div class="card${isDone?' card-done':''}" onclick="openTaskModal('${t.id}')">${bar}${srcBadge}<div class="card-cat">${esc(t.category||'')}</div><div class="card-res">&#9672; ${esc(t.resourceName||'—')}</div><div class="card-title">${esc(t.title)}</div>${desc?`<div class="card-desc">${esc(desc)}</div>`:''}${clBadge}<div class="card-foot"><span class="badge ${pClass(t.priority)}">${t.priority}</span><span class="assignee-chip">${esc(t.assignee)}</span>${attThumb}</div>${attBadge}<div class="card-actions" onclick="event.stopPropagation()">${si>0?`<button class="btn-sm btn-move" onclick="moveTask('${t.id}',-1)">&#9664; ${STATUSES[si-1]}</button>`:''}${si<3?`<button class="btn-sm btn-move" onclick="moveTask('${t.id}',1)">${STATUSES[si+1]} &#9654;</button>`:''}<button class="btn-sm btn-edit" onclick="openTaskModal('${t.id}')">EDIT</button><button class="btn-sm btn-del" onclick="deleteTask('${t.id}')">DEL</button></div><div class="card-date">${fmtDate(t.updatedAt)}</div></div>`;
 }
 
 // TOAST
 let tt;function toast(msg,type=''){const el=$('toast');el.textContent=msg;el.className='show'+(type==='err'?' err':'');clearTimeout(tt);tt=setTimeout(()=>{el.className='';},2800);}
+
+// CHECKLIST
+let currentChecklist=[];
+
+function renderChecklist(){
+  const container=$('checklist-items');
+  if(!currentChecklist.length){
+    container.innerHTML='<div style="font-family:\'Share Tech Mono\',monospace;font-size:11px;color:var(--vlight);opacity:0.6;padding:8px 0">No checklist items yet</div>';
+  }else{
+    container.innerHTML=currentChecklist.map((item,i)=>`
+      <div class="checklist-item${item.done?' checked':''}">
+        <div class="checklist-check${item.done?' checked':''}" onclick="toggleChecklistItem(${i})"></div>
+        <span class="checklist-text">${esc(item.text)}</span>
+        <button class="checklist-del" onclick="removeChecklistItem(${i})">&times;</button>
+      </div>
+    `).join('');
+  }
+  const done=currentChecklist.filter(c=>c.done).length;
+  const total=currentChecklist.length;
+  $('checklist-count').textContent=total?`${done}/${total} done`:'0 items';
+}
+
+function addChecklistItem(){
+  const inp=$('checklist-input');
+  const text=inp.value.trim();
+  if(!text){toast('Enter checklist item','err');return;}
+  currentChecklist.push({text,done:false});
+  inp.value='';
+  renderChecklist();
+}
+
+function toggleChecklistItem(i){
+  if(currentChecklist[i])currentChecklist[i].done=!currentChecklist[i].done;
+  renderChecklist();
+}
+
+function removeChecklistItem(i){
+  currentChecklist.splice(i,1);
+  renderChecklist();
+}
 
 // ATTACHMENTS
 let currentAttachments=[];

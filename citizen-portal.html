@@ -481,9 +481,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-async function sendToDiscord(webhook, embed) {
+async function sendToDiscord(webhook, embed, btnId) {
+  const btn = btnId ? document.getElementById(btnId) : null;
+  const resetBtn = () => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '&#10148; SUBMIT';
+    }
+  };
+  
   if (!webhook) {
     console.warn('Webhook not configured');
+    resetBtn();
     showSuccess();
     return;
   }
@@ -493,16 +502,27 @@ async function sendToDiscord(webhook, embed) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ embeds: [embed] })
     });
+    resetBtn();
     if (res.ok) showSuccess();
     else alert('Submission failed. Please try again or contact staff on Discord.');
   } catch (e) {
+    resetBtn();
     alert('Network error. Please try again.');
   }
 }
 
-async function sendToDiscordWithFile(webhook, embed, file) {
+async function sendToDiscordWithFile(webhook, embed, file, btnId) {
+  const btn = btnId ? document.getElementById(btnId) : null;
+  const resetBtn = () => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '&#10148; SUBMIT';
+    }
+  };
+  
   if (!webhook) {
     console.warn('Webhook not configured');
+    resetBtn();
     showSuccess();
     return;
   }
@@ -516,16 +536,27 @@ async function sendToDiscordWithFile(webhook, embed, file) {
       method: 'POST',
       body: formData
     });
+    resetBtn();
     if (res.ok) showSuccess();
     else alert('Submission failed. Please try again or contact staff on Discord.');
   } catch (e) {
+    resetBtn();
     alert('Network error. Please try again.');
   }
 }
 
-async function sendToDiscordWithMultipleFiles(webhook, embed, files) {
+async function sendToDiscordWithMultipleFiles(webhook, embed, files, btnId) {
+  const btn = btnId ? document.getElementById(btnId) : null;
+  const resetBtn = () => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '&#10148; SUBMIT';
+    }
+  };
+  
   if (!webhook) {
     console.warn('Webhook not configured');
+    resetBtn();
     showSuccess();
     return;
   }
@@ -539,9 +570,11 @@ async function sendToDiscordWithMultipleFiles(webhook, embed, files) {
       method: 'POST',
       body: formData
     });
+    resetBtn();
     if (res.ok) showSuccess();
     else alert('Submission failed. Please try again or contact staff on Discord.');
   } catch (e) {
+    resetBtn();
     alert('Network error. Please try again.');
   }
 }
@@ -549,6 +582,8 @@ async function sendToDiscordWithMultipleFiles(webhook, embed, files) {
 function showSuccess() {
   document.querySelectorAll('.form-card').forEach(f => f.style.display = 'none');
   document.getElementById('form-success').style.display = 'block';
+  // Clear all form data after a short delay
+  setTimeout(() => resetAllForms(), 500);
 }
 
 // JSONbin integration - creates task in taskboard
@@ -666,9 +701,9 @@ function submitBug() {
   });
   
   if (bugFiles.length) {
-    sendToDiscordWithMultipleFiles(WEBHOOKS.bug, embed, bugFiles);
+    sendToDiscordWithMultipleFiles(WEBHOOKS.bug, embed, bugFiles, 'bug-submit-btn');
   } else {
-    sendToDiscord(WEBHOOKS.bug, embed);
+    sendToDiscord(WEBHOOKS.bug, embed, 'bug-submit-btn');
   }
 }
 
@@ -708,9 +743,9 @@ function submitSuggestion() {
   });
   
   if (sugFiles.length) {
-    sendToDiscordWithMultipleFiles(WEBHOOKS.suggestion, embed, sugFiles);
+    sendToDiscordWithMultipleFiles(WEBHOOKS.suggestion, embed, sugFiles, 'sug-submit-btn');
   } else {
-    sendToDiscord(WEBHOOKS.suggestion, embed);
+    sendToDiscord(WEBHOOKS.suggestion, embed, 'sug-submit-btn');
   }
 }
 
@@ -753,9 +788,9 @@ function submitCrash() {
   });
   
   if (crashFile) {
-    sendToDiscordWithFile(WEBHOOKS.crash, embed, crashFile);
+    sendToDiscordWithFile(WEBHOOKS.crash, embed, crashFile, 'crash-submit-btn');
   } else {
-    sendToDiscord(WEBHOOKS.crash, embed);
+    sendToDiscord(WEBHOOKS.crash, embed, 'crash-submit-btn');
   }
 }
 </script>
