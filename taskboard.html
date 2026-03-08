@@ -229,13 +229,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 .cl-preview-tab:hover{border-color:var(--v);color:#fff}
 .cl-preview-tab.on{border-color:var(--c);color:var(--c);background:rgba(92,225,230,0.1);box-shadow:0 0 10px rgba(92,225,230,0.15)}
 .cl-preview{flex:1;overflow-y:auto;border-radius:10px;padding:16px;font-family:'Share Tech Mono',monospace;font-size:13px;line-height:1.7;white-space:pre-wrap}
-.cl-preview.styled{background:linear-gradient(135deg,rgba(123,104,238,0.1),rgba(92,225,230,0.06));border:1px solid var(--border)}
+.cl-preview.styled{background:#2f3136;border-left:4px solid var(--v);border-radius:4px}
 .cl-preview.plain{background:#1a1a2e;border:1px solid #2a2a4a;color:#ddd}
-.cl-preview .cl-header{color:var(--c);font-size:14px;font-weight:700;letter-spacing:2.5px}
-.cl-preview .cl-divider{color:var(--v);opacity:0.5}
-.cl-preview .cl-section-name{color:var(--v);font-weight:600;margin-top:10px}
-.cl-preview .cl-item{color:var(--text);padding-left:5px}
-.cl-preview .cl-credits{color:var(--c);font-style:italic}
+.cl-embed-preview{display:flex;flex-direction:column;gap:12px}
+.cl-embed-header{color:#fff;font-size:16px;font-weight:700;letter-spacing:1px}
+.cl-embed-date{color:#dcddde;font-size:13px}
+.cl-embed-field{margin-top:8px}
+.cl-embed-field-name{color:var(--c);font-weight:700;font-size:13px;margin-bottom:4px;letter-spacing:1px}
+.cl-embed-item{color:#dcddde;font-size:13px;padding-left:4px;line-height:1.6}
+.cl-embed-footer{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);color:#72767d;font-size:11px;display:flex;align-items:center;gap:8px}
 .cl-footer{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
 .cl-footer-left{display:flex;gap:10px}
 .cl-webhook-status{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--vlight);letter-spacing:1.5px;opacity:0.7}
@@ -274,11 +276,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 .rm-pool-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(10,10,20,0.55);border:1px solid rgba(123,104,238,0.12);border-radius:6px;margin-bottom:5px;font-size:12px;cursor:grab}
 .rm-pool-item:hover{border-color:rgba(123,104,238,0.3)}
 .rm-pool-item .task-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rm-preview{flex:1;overflow-y:auto;background:linear-gradient(135deg,rgba(123,104,238,0.08),rgba(92,225,230,0.04));border:1px solid var(--border);border-radius:12px;padding:18px;font-family:'Share Tech Mono',monospace;font-size:13px;line-height:1.8;white-space:pre-wrap}
-.rm-preview .rm-title{color:var(--c);font-size:15px;font-weight:700;letter-spacing:2.5px}
-.rm-preview .rm-divider{color:var(--v);opacity:0.5}
-.rm-preview .rm-phase-name{color:var(--v);font-weight:700;margin-top:8px}
-.rm-preview .rm-item{color:var(--text);padding-left:5px}
+.rm-preview{flex:1;overflow-y:auto;background:#2f3136;border-left:4px solid var(--c);border-radius:4px;padding:18px;font-family:'Share Tech Mono',monospace;font-size:13px;line-height:1.8}
+.rm-embed-preview{display:flex;flex-direction:column;gap:10px}
+.rm-embed-header{color:#fff;font-size:16px;font-weight:700;letter-spacing:1px}
+.rm-embed-desc{color:#dcddde;font-size:13px}
+.rm-embed-field{margin-top:8px}
+.rm-embed-field-name{color:var(--v);font-weight:700;font-size:13px;margin-bottom:4px;letter-spacing:1px}
+.rm-embed-item{color:#dcddde;font-size:13px;padding-left:4px;line-height:1.6}
+.rm-embed-legend{margin-top:12px;padding-top:10px;color:#72767d;font-size:11px}
+.rm-embed-footer{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.06);color:#72767d;font-size:11px}
 /* ANIMS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
@@ -992,10 +998,13 @@ function clSelectAll(mode){
 }
 
 function renderClBuckets(){
-  $('cl-buckets').innerHTML=CL_SECTIONS.map(sec=>`
+  $('cl-buckets').innerHTML=CL_SECTIONS.map(sec=>{
+    const placeholder=sec==='COMMUNITY CREDITS'?'@username...':'Add custom item...';
+    const addBtn=sec==='COMMUNITY CREDITS'?'+ ADD':'+ ADD SELECTED';
+    return`
     <div class="cl-bucket" data-section="${sec}">
       <div class="cl-bucket-hdr" onclick="toggleBucketCollapse(this)">
-        <span class="cl-bucket-name">${sec}</span>
+        <span class="cl-bucket-name">${CL_ICONS[sec]||'📌'} ${sec}</span>
         <span style="font-size:9px;color:#444">${clBuckets[sec]?.length||0}</span>
       </div>
       <div class="cl-bucket-body${!clBuckets[sec]?.length?' empty':''}" 
@@ -1011,11 +1020,11 @@ function renderClBuckets(){
         `).join(''):'DROP TASKS OR ADD CUSTOM'}
       </div>
       <div class="cl-add-item">
-        <input placeholder="Add custom item..." onkeydown="if(event.key==='Enter'){addCustomItem('${sec}',this.value);this.value=''}">
-        <button class="btn-sm btn-edit" onclick="addSelectedToBucket('${sec}')">+ ADD SELECTED</button>
+        <input placeholder="${placeholder}" onkeydown="if(event.key==='Enter'){addCustomItem('${sec}',this.value);this.value='';renderClPreview()}">
+        <button class="btn-sm btn-edit" onclick="${sec==='COMMUNITY CREDITS'?`addCustomItem('${sec}',this.previousElementSibling.value);this.previousElementSibling.value=''`:`addSelectedToBucket('${sec}')`}">${addBtn}</button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 function addSelectedToBucket(sec){
   clSelectedTasks.forEach(id=>{
@@ -1060,73 +1069,158 @@ function setClPreview(mode){
 function renderClPreview(){
   const ver=$('cl-version').value||'v1.0.0';
   const dateVal=$('cl-date').value;
-  const date=dateVal?new Date(dateVal+'T12:00:00').toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'2-digit'}):'TBD';
-  const div='━'.repeat(46);
+  const date=dateVal?new Date(dateVal+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Today';
   
   if(clPreviewMode==='styled'){
-    let html=`<span class="cl-divider">${div}</span>\n`;
-    html+=`<span class="cl-header">PHASE CITY | Patch Notes ${esc(ver)}</span>\n`;
-    html+=`<span class="cl-divider">${div}</span>\n`;
-    html+=`Released: ${date}\n`;
-    html+=`<span class="cl-divider">${div}</span>\n`;
-    CL_SECTIONS.forEach(sec=>{
+    let html=`<div class="cl-embed-preview">`;
+    html+=`<div class="cl-embed-header">🌃 PHASE CITY | Patch Notes ${esc(ver)}</div>`;
+    html+=`<div class="cl-embed-date"><strong>Released:</strong> ${date}</div>\n`;
+    
+    ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
       if(clBuckets[sec]?.length){
-        html+=`<span class="cl-section-name">${sec}</span>\n`;
-        clBuckets[sec].forEach((item,i,arr)=>{
-          const prefix=i===arr.length-1?'┗':'┣';
-          html+=`<span class="cl-item">${prefix} • ${esc(item)}</span>\n`;
+        const icon=CL_ICONS[sec];
+        html+=`<div class="cl-embed-field">`;
+        html+=`<div class="cl-embed-field-name">${icon} ${sec}</div>`;
+        clBuckets[sec].forEach(item=>{
+          html+=`<div class="cl-embed-item">• ${esc(item)}</div>`;
         });
+        html+=`</div>`;
       }
     });
-    html+=`<span class="cl-divider">${div}</span>\n`;
-    html+=`- OG\n`;
-    html+=`<span class="cl-divider">${div}</span>`;
+    
+    if(clBuckets['COMING SOON']?.length){
+      html+=`<div class="cl-embed-field">`;
+      html+=`<div class="cl-embed-field-name">🔮 COMING SOON</div>`;
+      clBuckets['COMING SOON'].forEach(item=>{
+        html+=`<div class="cl-embed-item">• ${esc(item)}</div>`;
+      });
+      html+=`</div>`;
+    }
+    
+    if(clBuckets['COMMUNITY CREDITS']?.length){
+      html+=`<div class="cl-embed-field">`;
+      html+=`<div class="cl-embed-field-name">🏆 COMMUNITY CREDITS</div>`;
+      html+=`<div class="cl-embed-item">${clBuckets['COMMUNITY CREDITS'].map(c=>esc(c)).join(' • ')}</div>`;
+      html+=`</div>`;
+    }
+    
+    html+=`<div class="cl-embed-footer">Phase City - The city that builds itself.!</div>`;
+    html+=`</div>`;
     $('cl-preview').innerHTML=html;
   }else{
-    let txt=`${div}\nPHASE CITY | Patch Notes ${ver}\n${div}\nReleased: ${date}\n${div}\n`;
-    CL_SECTIONS.forEach(sec=>{
+    let txt=`🌃 PHASE CITY | Patch Notes ${ver}\n\nReleased: ${date}\n\n`;
+    ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
       if(clBuckets[sec]?.length){
-        txt+=`${sec}\n`;
-        clBuckets[sec].forEach((item,i,arr)=>{
-          const prefix=i===arr.length-1?'┗':'┣';
-          txt+=`${prefix} • ${item}\n`;
+        const icon=CL_ICONS[sec];
+        txt+=`${icon} ${sec}\n`;
+        clBuckets[sec].forEach(item=>{
+          txt+=`• ${item}\n`;
         });
+        txt+=`\n`;
       }
     });
-    txt+=`${div}\n- OG\n${div}`;
+    if(clBuckets['COMING SOON']?.length){
+      txt+=`🔮 COMING SOON\n`;
+      clBuckets['COMING SOON'].forEach(item=>{txt+=`• ${item}\n`;});
+      txt+=`\n`;
+    }
+    if(clBuckets['COMMUNITY CREDITS']?.length){
+      txt+=`🏆 COMMUNITY CREDITS\n${clBuckets['COMMUNITY CREDITS'].join(' • ')}\n`;
+    }
+    txt+=`\nPhase City - The city that builds itself.!`;
     $('cl-preview').textContent=txt;
   }
 }
 function getPlainChangelog(){
   const ver=$('cl-version').value||'v1.0.0';
   const dateVal=$('cl-date').value;
-  const date=dateVal?new Date(dateVal+'T12:00:00').toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'2-digit'}):'TBD';
-  const div='━'.repeat(46);
-  let txt=`${div}\nPHASE CITY | Patch Notes ${ver}\n${div}\nReleased: ${date}\n${div}\n`;
-  CL_SECTIONS.forEach(sec=>{
+  const date=dateVal?new Date(dateVal+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Today';
+  let txt=`🌃 PHASE CITY | Patch Notes ${ver}\n\nReleased: ${date}\n\n`;
+  ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
     if(clBuckets[sec]?.length){
-      txt+=`${sec}\n`;
-      clBuckets[sec].forEach((item,i,arr)=>{
-        const prefix=i===arr.length-1?'┗':'┣';
-        txt+=`${prefix} • ${item}\n`;
-      });
+      const icon=CL_ICONS[sec];
+      txt+=`${icon} ${sec}\n`;
+      clBuckets[sec].forEach(item=>{txt+=`• ${item}\n`;});
+      txt+=`\n`;
     }
   });
-  txt+=`${div}\n- OG\n${div}`;
+  if(clBuckets['COMING SOON']?.length){
+    txt+=`🔮 COMING SOON\n`;
+    clBuckets['COMING SOON'].forEach(item=>{txt+=`• ${item}\n`;});
+    txt+=`\n`;
+  }
+  if(clBuckets['COMMUNITY CREDITS']?.length){
+    txt+=`🏆 COMMUNITY CREDITS\n${clBuckets['COMMUNITY CREDITS'].join(' • ')}\n`;
+  }
+  txt+=`\nPhase City - The city that builds itself.!`;
   return txt;
 }
 function copyChangelog(){
   navigator.clipboard.writeText(getPlainChangelog()).then(()=>toast('Changelog copied!')).catch(()=>toast('Copy failed','err'));
 }
 const CL_WEBHOOK='https://discord.com/api/webhooks/1480062988638621841/y3qkkH53Gw3Jc7lleinSuSgg-jV5W4hWcMZuSABjkC4cwy91w5PRa19yUMnYsZgBc-SX';
+const PC_LOGO='https://www.phasecity.net/img/logo.png';
+const CL_ICONS={'NEW FEATURES':'🆕','IMPROVEMENTS':'⚡','BUG FIXES':'🐛','TWEAKS & ADJUSTMENTS':'🔧','KNOWN ISSUES':'⚠️','COMING SOON':'🔮','COMMUNITY CREDITS':'🏆'};
+
+function getDiscordTimestamp(dateVal){
+  if(!dateVal)return{unix:Math.floor(Date.now()/1000),display:'Today'};
+  const d=new Date(dateVal+'T12:00:00');
+  const unix=Math.floor(d.getTime()/1000);
+  return{unix,display:`<t:${unix}:D>`};
+}
+
+function buildChangelogEmbed(){
+  const ver=$('cl-version').value||'v1.0.0';
+  const dateVal=$('cl-date').value;
+  const ts=getDiscordTimestamp(dateVal);
+  
+  const fields=[];
+  
+  // Main sections (not credits/coming soon)
+  ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
+    if(clBuckets[sec]?.length){
+      const icon=CL_ICONS[sec];
+      const items=clBuckets[sec].map(item=>`• ${item}`).join('\n');
+      fields.push({name:`${icon} ${sec}`,value:items,inline:false});
+    }
+  });
+  
+  // Coming Soon
+  if(clBuckets['COMING SOON']?.length){
+    const items=clBuckets['COMING SOON'].map(item=>`• ${item}`).join('\n');
+    fields.push({name:`🔮 COMING SOON`,value:items,inline:false});
+  }
+  
+  // Community Credits - special formatting
+  if(clBuckets['COMMUNITY CREDITS']?.length){
+    const credits=clBuckets['COMMUNITY CREDITS'].join(' • ');
+    fields.push({name:`🏆 COMMUNITY CREDITS`,value:credits,inline:false});
+  }
+  
+  return{
+    embeds:[{
+      title:`🌃 PHASE CITY | Patch Notes ${ver}`,
+      description:`**Released:** ${ts.display}`,
+      color:0x7B68EE,
+      timestamp:new Date().toISOString(),
+      fields:fields,
+      footer:{text:'Phase City - The city that builds itself.!',icon_url:PC_LOGO},
+      thumbnail:{url:PC_LOGO}
+    }]
+  };
+}
+
 async function postChangelogToDiscord(){
-  const content=getPlainChangelog();
+  const hasContent=CL_SECTIONS.some(s=>clBuckets[s]?.length);
+  if(!hasContent){toast('Add items to sections first','err');return;}
+  
   $('cl-webhook-status').textContent='Posting...';
   try{
-    const res=await fetch(CL_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
+    const payload=buildChangelogEmbed();
+    const res=await fetch(CL_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     if(res.ok){toast('Posted to Discord!');$('cl-webhook-status').textContent='✓ Posted';}
-    else{toast('Discord error: '+res.status,'err');$('cl-webhook-status').textContent='✗ Failed';}
-  }catch(e){toast('Network error','err');$('cl-webhook-status').textContent='✗ Error';}
+    else{const err=await res.text();console.error(err);toast('Discord error: '+res.status,'err');$('cl-webhook-status').textContent='✗ Failed';}
+  }catch(e){console.error(e);toast('Network error','err');$('cl-webhook-status').textContent='✗ Error';}
 }
 $('cl-version')?.addEventListener('input',renderClPreview);
 $('cl-date')?.addEventListener('input',renderClPreview);
@@ -1222,56 +1316,93 @@ function dropIntoPhase(e,pi){
 }
 function renderRmPreview(){
   const title=$('rm-title').value||'Phase City Development Roadmap';
-  const div='━'.repeat(46);
-  let html=`<span class="rm-divider">${div}</span>\n`;
-  html+=`<span class="rm-title">${esc(title)}</span>\n`;
-  html+=`<span class="rm-divider">${div}</span>\n\n`;
+  let html=`<div class="rm-embed-preview">`;
+  html+=`<div class="rm-embed-header">🗺️ ${esc(title)}</div>`;
+  html+=`<div class="rm-embed-desc">Here's what we're cooking up for Phase City!</div>`;
+  
   rmPhases.forEach(p=>{
     if(p.items.length){
-      html+=`<span class="rm-phase-name">◆ ${esc(p.name)} [${esc(p.eta)}]</span>\n`;
-      p.items.forEach((item,i,arr)=>{
-        const prefix=i===arr.length-1?'┗':'┣';
-        const status=item.status==='development'?' ⚡':item.status==='soon'?' 🔜':'';
-        html+=`<span class="rm-item">${prefix} • ${esc(item.text)}${status}</span>\n`;
+      html+=`<div class="rm-embed-field">`;
+      html+=`<div class="rm-embed-field-name">◆ ${esc(p.name)} [${esc(p.eta)}]</div>`;
+      p.items.forEach(item=>{
+        const icon=item.status==='development'?'⚡':item.status==='soon'?'🔜':'◦';
+        html+=`<div class="rm-embed-item">${icon} ${esc(item.text)}</div>`;
       });
-      html+='\n';
+      html+=`</div>`;
     }
   });
-  html+=`<span class="rm-divider">${div}</span>\n`;
-  html+=`- OG\n`;
-  html+=`<span class="rm-divider">${div}</span>`;
+  
+  html+=`<div class="rm-embed-legend">◦ Planned  •  ⚡ In Development  •  🔜 Coming Soon</div>`;
+  html+=`<div class="rm-embed-footer">Phase City - The city that builds itself.!</div>`;
+  html+=`</div>`;
   $('rm-preview').innerHTML=html;
 }
 function getPlainRoadmap(){
   const title=$('rm-title').value||'Phase City Development Roadmap';
-  const div='━'.repeat(46);
-  let txt=`${div}\n${title}\n${div}\n\n`;
+  let txt=`🗺️ ${title}\n\nHere's what we're cooking up for Phase City!\n\n`;
   rmPhases.forEach(p=>{
     if(p.items.length){
       txt+=`◆ ${p.name} [${p.eta}]\n`;
-      p.items.forEach((item,i,arr)=>{
-        const prefix=i===arr.length-1?'┗':'┣';
-        const status=item.status==='development'?' ⚡':item.status==='soon'?' 🔜':'';
-        txt+=`${prefix} • ${item.text}${status}\n`;
+      p.items.forEach(item=>{
+        const icon=item.status==='development'?'⚡':item.status==='soon'?'🔜':'◦';
+        txt+=`${icon} ${item.text}\n`;
       });
-      txt+='\n';
+      txt+=`\n`;
     }
   });
-  txt+=`${div}\n- OG\n${div}`;
+  txt+=`◦ Planned  •  ⚡ In Development  •  🔜 Coming Soon\n\nPhase City - The city that builds itself.!`;
   return txt;
 }
 function copyRoadmap(){
   navigator.clipboard.writeText(getPlainRoadmap()).then(()=>toast('Roadmap copied!')).catch(()=>toast('Copy failed','err'));
 }
 const RM_WEBHOOK='https://discord.com/api/webhooks/1480056241085612174/pF2JCAH1AeHhjN-zE843StEiTNSqCL0RVDoo31aZ5Ge51AImmUmvwli-dOeTFt8TsuPM';
+
+function buildRoadmapEmbed(){
+  const title=$('rm-title').value||'Phase City Development Roadmap';
+  
+  const fields=[];
+  rmPhases.forEach(p=>{
+    if(p.items.length){
+      const items=p.items.map(item=>{
+        const icon=item.status==='development'?'⚡':item.status==='soon'?'🔜':'◦';
+        return`${icon} ${item.text}`;
+      }).join('\n');
+      fields.push({name:`◆ ${p.name} [${p.eta}]`,value:items,inline:false});
+    }
+  });
+  
+  // Status legend - cleaner format
+  fields.push({
+    name:'\u200B',
+    value:'◦ Planned  •  ⚡ In Development  •  🔜 Coming Soon',
+    inline:false
+  });
+  
+  return{
+    embeds:[{
+      title:`🗺️ ${title}`,
+      description:`Here's what we're cooking up for Phase City!`,
+      color:0x5CE1E6,
+      timestamp:new Date().toISOString(),
+      fields:fields,
+      footer:{text:'Phase City - The city that builds itself.!',icon_url:PC_LOGO},
+      thumbnail:{url:PC_LOGO}
+    }]
+  };
+}
+
 async function postRoadmapToDiscord(){
-  const content=getPlainRoadmap();
+  const hasContent=rmPhases.some(p=>p.items.length);
+  if(!hasContent){toast('Add items to phases first','err');return;}
+  
   $('rm-webhook-status').textContent='Posting...';
   try{
-    const res=await fetch(RM_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
+    const payload=buildRoadmapEmbed();
+    const res=await fetch(RM_WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     if(res.ok){toast('Posted to Discord!');$('rm-webhook-status').textContent='✓ Posted';}
-    else{toast('Discord error: '+res.status,'err');$('rm-webhook-status').textContent='✗ Failed';}
-  }catch(e){toast('Network error','err');$('rm-webhook-status').textContent='✗ Error';}
+    else{const err=await res.text();console.error(err);toast('Discord error: '+res.status,'err');$('rm-webhook-status').textContent='✗ Failed';}
+  }catch(e){console.error(e);toast('Network error','err');$('rm-webhook-status').textContent='✗ Error';}
 }
 
 // KEYBOARD
