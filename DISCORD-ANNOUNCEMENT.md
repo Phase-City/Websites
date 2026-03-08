@@ -43,18 +43,33 @@ Game crashed? We want that data.
 ┗ • Help us murder bugs before they murder your RP
 
 ════════════════════════════════════════════════════════
-⚡  **THE MAGIC BEHIND THE SCENES**
+🗣️  **NEW: COMMUNITY FORUMS — YOUR VOICE MATTERS**
 ════════════════════════════════════════════════════════
 
 Here's where it gets **CRAZY.**
 
-Every single submission from the Citizen Portal **automatically creates a task** in our internal Dev Task Board. That means:
+Every submission from the Citizen Portal now creates a **public forum thread** that the ENTIRE community can engage with!
 
-✦ Your bug report → Instantly becomes a tracked dev task
-✦ Assigned priority based on YOUR severity rating
-✦ Tagged with category, resource, and your Discord username
-✦ **Your attachments upload directly to our system** — no external links needed
-✦ Status updates flow to #dev-tasks so you can see progress
+**#citizen-bug-reports** • **#citizen-suggestions** • **#citizen-crash-reports**
+
+✦ **👍👎 VOTE** on reports and suggestions — show us what matters most to YOU
+✦ **💬 DISCUSS** — add your own observations, reproduce bugs, expand on ideas
+✦ **🔍 SEARCH** — see what others have reported before submitting duplicates
+✦ **📊 COMMUNITY PRIORITY** — the most upvoted issues get attention first
+
+This is **transparent development**. You see what we see. You shape what we build.
+
+════════════════════════════════════════════════════════
+⚡  **THE MAGIC BEHIND THE SCENES**
+════════════════════════════════════════════════════════
+
+Every single submission from the Citizen Portal **automatically**:
+
+✦ Creates a **public forum thread** for community discussion
+✦ Creates a **tracked dev task** in our internal Task Board
+✦ Assigns priority based on YOUR severity rating
+✦ Tags with category, resource, and your Discord username
+✦ Uploads attachments directly to the thread
 
 We built a REAL development pipeline. The same kind Fortune 500 companies pay millions for. Except we built it ourselves. Because that's how Phase City operates.
 
@@ -92,7 +107,7 @@ Every changelog we post has a **COMMUNITY CREDITS** section. That's where legend
 
 Most FiveM servers have a suggestion channel that nobody reads.
 Most FiveM servers lose bug reports in the Discord void.
-Most FiveM servers don't have a clue what their community actually wants.
+Most FiveM servers don't let the community discuss and vote on issues.
 
 **We're not most servers.**
 
@@ -100,6 +115,9 @@ Phase City is building something different. Something professional. Something th
 
 You wanted a direct line to the devs? 
 Now you have a **direct pipeline**.
+
+You wanted your voice to matter?
+Now the **community decides what's important**.
 
 The city that builds itself? 
 Nah — **the city that WE build. Together.**

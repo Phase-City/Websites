@@ -285,11 +285,19 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 </div>
 
 <script>
-// CONFIG - Set your Discord webhook URLs here
+// CONFIG - Discord webhook URLs
+// Staff channels (private - internal tracking)
 const WEBHOOKS = {
   bug: 'https://discord.com/api/webhooks/1480044840879263918/ifTTUl-fOemHzJydenutZ413bMaTgcBbl_yy3quy9WW_xnGk8B7_qQNI4A5vW_gXzJCj',
   suggestion: 'https://discord.com/api/webhooks/1480044539069726771/Nox47E54fjaZh4yXongOnM8SwQC6lBL4xzyO-IpASJukS-zuwdXtTEFnIvJ8hA0wfF_y',
   crash: 'https://discord.com/api/webhooks/1480044951470342257/S6MD0_mUbyw8z6jkZPVVwP7jJCM_AK7LsARv4ZMPG2Dkl5Wf-wHgGk_Atay1hUCPVsae'
+};
+
+// Forum channels (public - community discussion & voting)
+const FORUM_WEBHOOKS = {
+  bug: 'https://discord.com/api/webhooks/1480285544163577866/-fPcaGOITtQrI2po3JiXcevLdoBPZAODqewvYxiSniBNRwiztNNJ-6ixzRC2xm3IV5QN',
+  suggestion: 'https://discord.com/api/webhooks/1480279904703483995/NgWBzPOYafQ9g2sA7yaJx_cfG7Q3fyN6xbN3ET8kCyxXJmPf0VffiMOPPyZQCRZcRuED',
+  crash: 'https://discord.com/api/webhooks/1480285139643924733/ax_W7NeLdu2hnQHqtza0Ts1Hdm6NqJG6tJOJAL8hJofnnDPFV3tbLEUjQYIwh1F78xc4'
 };
 
 let currentTab = 'bug';
@@ -481,37 +489,75 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-async function sendToDiscord(webhook, embed, btnId) {
-  const btn = btnId ? document.getElementById(btnId) : null;
-  const resetBtn = () => {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '&#10148; SUBMIT';
-    }
-  };
-  
-  if (!webhook) {
-    console.warn('Webhook not configured');
-    resetBtn();
-    showSuccess();
-    return;
-  }
+// Send to staff webhook only (no thread)
+async function sendToStaff(webhook, embed) {
+  if (!webhook) return;
   try {
-    const res = await fetch(webhook, {
+    await fetch(webhook, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ embeds: [embed] })
     });
-    resetBtn();
-    if (res.ok) showSuccess();
-    else alert('Submission failed. Please try again or contact staff on Discord.');
-  } catch (e) {
-    resetBtn();
-    alert('Network error. Please try again.');
-  }
+  } catch (e) { console.warn('Staff webhook failed', e); }
 }
 
-async function sendToDiscordWithFile(webhook, embed, file, btnId) {
+async function sendToStaffWithFile(webhook, embed, file) {
+  if (!webhook) return;
+  try {
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
+    if (file) formData.append('file', file, file.name);
+    await fetch(webhook, { method: 'POST', body: formData });
+  } catch (e) { console.warn('Staff webhook failed', e); }
+}
+
+async function sendToStaffWithMultipleFiles(webhook, embed, files) {
+  if (!webhook) return;
+  try {
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
+    files.forEach((file, i) => formData.append(`file${i}`, file, file.name));
+    await fetch(webhook, { method: 'POST', body: formData });
+  } catch (e) { console.warn('Staff webhook failed', e); }
+}
+
+// Send to forum channel (creates thread)
+async function sendToForum(webhook, threadName, embed) {
+  if (!webhook) return false;
+  try {
+    const res = await fetch(webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ thread_name: threadName, embeds: [embed] })
+    });
+    return res.ok;
+  } catch (e) { console.warn('Forum webhook failed', e); return false; }
+}
+
+async function sendToForumWithFile(webhook, threadName, embed, file) {
+  if (!webhook) return false;
+  try {
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify({ thread_name: threadName, embeds: [embed] }));
+    if (file) formData.append('file', file, file.name);
+    const res = await fetch(webhook, { method: 'POST', body: formData });
+    return res.ok;
+  } catch (e) { console.warn('Forum webhook failed', e); return false; }
+}
+
+async function sendToForumWithMultipleFiles(webhook, threadName, embed, files) {
+  if (!webhook) return false;
+  try {
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify({ thread_name: threadName, embeds: [embed] }));
+    files.forEach((file, i) => formData.append(`file${i}`, file, file.name));
+    const res = await fetch(webhook, { method: 'POST', body: formData });
+    return res.ok;
+  } catch (e) { console.warn('Forum webhook failed', e); return false; }
+}
+
+// Main submit handlers - send to BOTH staff and forum
+async function submitToDiscord(type, threadName, embed, files, btnId) {
   const btn = btnId ? document.getElementById(btnId) : null;
   const resetBtn = () => {
     if (btn) {
@@ -520,58 +566,60 @@ async function sendToDiscordWithFile(webhook, embed, file, btnId) {
     }
   };
   
-  if (!webhook) {
-    console.warn('Webhook not configured');
-    resetBtn();
-    showSuccess();
-    return;
-  }
+  let success = false;
+  
   try {
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
+    // Send to forum (public - community can discuss/vote)
+    if (files && files.length > 0) {
+      success = await sendToForumWithMultipleFiles(FORUM_WEBHOOKS[type], threadName, embed, files);
+    } else {
+      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed);
+    }
+    
+    // Also send to staff channel (private - internal tracking)
+    if (files && files.length > 0) {
+      await sendToStaffWithMultipleFiles(WEBHOOKS[type], embed, files);
+    } else {
+      await sendToStaff(WEBHOOKS[type], embed);
+    }
+    
+    resetBtn();
+    if (success) showSuccess();
+    else alert('Submission failed. Please try again or contact staff on Discord.');
+  } catch (e) {
+    resetBtn();
+    alert('Network error. Please try again.');
+  }
+}
+
+async function submitToDiscordWithSingleFile(type, threadName, embed, file, btnId) {
+  const btn = btnId ? document.getElementById(btnId) : null;
+  const resetBtn = () => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '&#10148; SUBMIT';
+    }
+  };
+  
+  let success = false;
+  
+  try {
+    // Send to forum (public)
     if (file) {
-      formData.append('file', file, file.name);
+      success = await sendToForumWithFile(FORUM_WEBHOOKS[type], threadName, embed, file);
+    } else {
+      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed);
     }
-    const res = await fetch(webhook, {
-      method: 'POST',
-      body: formData
-    });
-    resetBtn();
-    if (res.ok) showSuccess();
-    else alert('Submission failed. Please try again or contact staff on Discord.');
-  } catch (e) {
-    resetBtn();
-    alert('Network error. Please try again.');
-  }
-}
-
-async function sendToDiscordWithMultipleFiles(webhook, embed, files, btnId) {
-  const btn = btnId ? document.getElementById(btnId) : null;
-  const resetBtn = () => {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '&#10148; SUBMIT';
+    
+    // Also send to staff channel (private)
+    if (file) {
+      await sendToStaffWithFile(WEBHOOKS[type], embed, file);
+    } else {
+      await sendToStaff(WEBHOOKS[type], embed);
     }
-  };
-  
-  if (!webhook) {
-    console.warn('Webhook not configured');
+    
     resetBtn();
-    showSuccess();
-    return;
-  }
-  try {
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
-    files.forEach((file, i) => {
-      formData.append(`file${i}`, file, file.name);
-    });
-    const res = await fetch(webhook, {
-      method: 'POST',
-      body: formData
-    });
-    resetBtn();
-    if (res.ok) showSuccess();
+    if (success) showSuccess();
     else alert('Submission failed. Please try again or contact staff on Discord.');
   } catch (e) {
     resetBtn();
@@ -682,7 +730,7 @@ function submitBug() {
       { name: '⚠️ Severity', value: severity, inline: true },
       { name: '📝 Description', value: what.slice(0, 1000) },
     ],
-    footer: { text: 'Phase City Citizen Portal' },
+    footer: { text: 'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!' },
     timestamp: new Date().toISOString()
   };
   const media = document.getElementById('bug-media').value.trim();
@@ -700,11 +748,11 @@ function submitBug() {
     submitter: discord
   });
   
-  if (bugFiles.length) {
-    sendToDiscordWithMultipleFiles(WEBHOOKS.bug, embed, bugFiles, 'bug-submit-btn');
-  } else {
-    sendToDiscord(WEBHOOKS.bug, embed, 'bug-submit-btn');
-  }
+  // Thread name for forum post (truncate for Discord's 100 char limit)
+  const threadName = `🐛 [${category}] ${what.slice(0, 70)}${what.length > 70 ? '...' : ''}`;
+  
+  // Submit to both forum (public) and staff (private)
+  submitToDiscord('bug', threadName, embed, bugFiles, 'bug-submit-btn');
 }
 
 function submitSuggestion() {
@@ -726,7 +774,7 @@ function submitSuggestion() {
       { name: '📁 Category', value: category, inline: true },
       { name: '📝 Suggestion', value: idea.slice(0, 1000) },
     ],
-    footer: { text: 'Phase City Citizen Portal' },
+    footer: { text: 'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!' },
     timestamp: new Date().toISOString()
   };
   const ref = document.getElementById('sug-ref').value.trim();
@@ -742,11 +790,11 @@ function submitSuggestion() {
     submitter: discord
   });
   
-  if (sugFiles.length) {
-    sendToDiscordWithMultipleFiles(WEBHOOKS.suggestion, embed, sugFiles, 'sug-submit-btn');
-  } else {
-    sendToDiscord(WEBHOOKS.suggestion, embed, 'sug-submit-btn');
-  }
+  // Thread name for forum post (truncate for Discord's 100 char limit)
+  const threadName = `💡 [${category}] ${idea.slice(0, 70)}${idea.length > 70 ? '...' : ''}`;
+  
+  // Submit to both forum (public) and staff (private)
+  submitToDiscord('suggestion', threadName, embed, sugFiles, 'sug-submit-btn');
 }
 
 function submitCrash() {
@@ -771,7 +819,7 @@ function submitCrash() {
       { name: '🔄 Frequency', value: freq, inline: true },
       { name: '📝 What Happened', value: what.slice(0, 1000) },
     ],
-    footer: { text: 'Phase City Citizen Portal' },
+    footer: { text: 'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!' },
     timestamp: new Date().toISOString()
   };
   if (error) embed.fields.push({ name: '⚠️ Error Message', value: '```' + error.slice(0, 500) + '```' });
@@ -787,11 +835,11 @@ function submitCrash() {
     submitter: discord
   });
   
-  if (crashFile) {
-    sendToDiscordWithFile(WEBHOOKS.crash, embed, crashFile, 'crash-submit-btn');
-  } else {
-    sendToDiscord(WEBHOOKS.crash, embed, 'crash-submit-btn');
-  }
+  // Thread name for forum post (truncate for Discord's 100 char limit)
+  const threadName = `💥 [${crashType}] ${what.slice(0, 70)}${what.length > 70 ? '...' : ''}`;
+  
+  // Submit to both forum (public) and staff (private)
+  submitToDiscordWithSingleFile('crash', threadName, embed, crashFile, 'crash-submit-btn');
 }
 </script>
 </body>
