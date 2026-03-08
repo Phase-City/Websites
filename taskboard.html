@@ -231,6 +231,34 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 .notes-add-row .btn{align-self:flex-end}
 .notes-empty{text-align:center;padding:30px;color:var(--vlight);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px}
 .card-notes{display:flex;align-items:center;gap:4px;font-family:'Share Tech Mono',monospace;font-size:10px;color:#ff9f43;margin-top:4px}
+/* TO-DO PANEL */
+.todo-panel{max-width:700px;width:95vw;max-height:85vh;display:flex;flex-direction:column}
+.todo-header-row{display:flex;gap:10px;margin-bottom:16px;align-items:center}
+.todo-header-row .btn{white-space:nowrap}
+.todo-paste-area{width:100%;min-height:100px;font-family:'Share Tech Mono',monospace;font-size:13px;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.25);border-radius:10px;padding:14px;color:var(--text);resize:vertical}
+.todo-paste-area:focus{border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,0.12);outline:none}
+.todo-paste-area::placeholder{color:var(--vlight);opacity:0.6}
+.todo-body{flex:1;overflow-y:auto;padding-right:6px;margin-top:16px}
+.todo-list{display:flex;flex-direction:column;gap:6px}
+.todo-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.15);border-radius:8px;transition:all .15s}
+.todo-item:hover{border-color:rgba(16,185,129,0.35)}
+.todo-item.done{opacity:0.5}
+.todo-item.done .todo-text{text-decoration:line-through;color:var(--vlight)}
+.todo-check{width:22px;height:22px;border:2px solid #10b981;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:transparent;transition:all .15s;flex-shrink:0}
+.todo-check:hover{box-shadow:0 0 10px rgba(16,185,129,0.4)}
+.todo-check.done{background:#10b981;border-color:#10b981}
+.todo-check.done::after{content:'✓';color:#0a0a14;font-size:13px;font-weight:bold}
+.todo-text{flex:1;font-size:14px;color:var(--text);word-break:break-word;line-height:1.5}
+.todo-del{width:24px;height:24px;border:none;background:transparent;color:var(--red);font-size:16px;cursor:pointer;opacity:0;transition:opacity .15s;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.todo-item:hover .todo-del{opacity:1}
+.todo-del:hover{background:rgba(255,77,109,0.15)}
+.todo-stats{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:12px}
+.todo-stat{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--vlight);letter-spacing:1px}
+.todo-stat b{color:#10b981}
+.todo-progress{flex:1;display:flex;align-items:center;gap:10px}
+.todo-progress-bar{flex:1;height:8px;background:rgba(16,185,129,0.15);border-radius:4px;overflow:hidden}
+.todo-progress-fill{height:100%;background:linear-gradient(90deg,#10b981,var(--c));border-radius:4px;transition:width .3s}
+.todo-empty{text-align:center;padding:40px;color:var(--vlight);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px}
 /* LIGHTBOX */
 #lightbox{position:fixed;inset:0;z-index:950;background:rgba(0,0,0,0.94);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;flex-direction:column;padding:24px}
 #lightbox.show{display:flex}
@@ -386,6 +414,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       <div class="stat-chip"><b id="stat-prog">0</b> Active</div>
       <div class="stat-chip cyan"><b id="stat-done">0</b> Done</div>
       <button class="btn-cyan" id="sync-btn" onclick="syncData()">&#8635; SYNC</button>
+      <button class="btn btn-ghost" style="border-color:rgba(16,185,129,0.4);color:#10b981" onclick="openTodoPanel()">&#9745; TO-DO</button>
       <button class="btn btn-ghost" style="border-color:rgba(255,159,67,0.4);color:#ff9f43" onclick="openNotesPanel()">&#128221; NOTES</button>
       <button class="btn btn-ghost" style="border-color:rgba(92,225,230,0.3);color:var(--c)" onclick="openChangelog()">&#128227; CHANGELOG</button>
       <button class="btn btn-ghost" style="border-color:rgba(123,104,238,0.3);color:var(--v)" onclick="openRoadmap()">&#128506; ROADMAP</button>
@@ -563,6 +592,35 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeNotesPanel()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TO-DO LIST -->
+<div class="overlay" id="todo-modal" style="display:none" onclick="if(event.target===this)closeTodoPanel()">
+  <div class="modal todo-panel">
+    <div class="modal-title">&#9745; TO-DO LIST</div>
+    <div class="todo-header-row">
+      <textarea class="todo-paste-area" id="todo-paste" placeholder="Paste your list here (one item per line)...&#10;&#10;Example:&#10;Update ox_inventory config&#10;Test vehicle spawns&#10;Review police loadouts"></textarea>
+    </div>
+    <div class="todo-header-row">
+      <button class="btn btn-primary" onclick="parseTodoList()" style="flex:1">&#10148; CONVERT TO CHECKLIST</button>
+      <button class="btn btn-ghost" onclick="clearTodoList()" style="border-color:rgba(255,77,109,0.3);color:var(--red)">&#128465; CLEAR ALL</button>
+    </div>
+    <div class="todo-stats" id="todo-stats" style="display:none">
+      <div class="todo-stat"><b id="todo-done">0</b> / <span id="todo-total">0</span> done</div>
+      <div class="todo-progress">
+        <div class="todo-progress-bar"><div class="todo-progress-fill" id="todo-progress-fill" style="width:0%"></div></div>
+        <span id="todo-pct" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#10b981">0%</span>
+      </div>
+    </div>
+    <div class="todo-body" id="todo-body">
+      <div class="todo-empty">PASTE A LIST ABOVE TO GET STARTED</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeTodoPanel()">Close</button>
+      <button class="btn btn-ghost" onclick="saveTodoDraft()" style="border-color:rgba(16,185,129,0.3);color:#10b981">&#128190; SAVE DRAFT</button>
+      <button class="btn btn-primary" onclick="postTodoToDiscord()">&#128227; POST TO DISCORD</button>
     </div>
   </div>
 </div>
@@ -1228,6 +1286,162 @@ function openNotesForTask(taskId){
       if(isTarget)h.classList.add('open');
     });
   },50);
+}
+
+// TO-DO LIST SYSTEM
+let todoItems=[];
+
+function openTodoPanel(){
+  loadTodoDraft();
+  renderTodoList();
+  $('todo-modal').style.display='flex';
+}
+
+function closeTodoPanel(){
+  $('todo-modal').style.display='none';
+}
+
+function parseTodoList(){
+  const text=$('todo-paste').value.trim();
+  if(!text){toast('Paste a list first','err');return;}
+  
+  // Split by newlines, filter empty lines, create items
+  const lines=text.split(/\n/).map(l=>l.trim()).filter(l=>l.length>0);
+  if(!lines.length){toast('No items found','err');return;}
+  
+  // Parse lines - handle various formats:
+  // - Plain text
+  // - "- item" or "* item" (bullet points)
+  // - "1. item" or "1) item" (numbered)
+  // - "[ ] item" or "[x] item" (checkbox format)
+  lines.forEach(line=>{
+    let text=line;
+    let done=false;
+    
+    // Remove common prefixes
+    text=text.replace(/^[-*•]\s*/,''); // bullets
+    text=text.replace(/^\d+[.)]\s*/,''); // numbers
+    
+    // Check for checkbox format
+    if(/^\[x\]/i.test(text)){
+      done=true;
+      text=text.replace(/^\[x\]\s*/i,'');
+    }else if(/^\[\s?\]/.test(text)){
+      text=text.replace(/^\[\s?\]\s*/,'');
+    }
+    
+    if(text.length>0){
+      todoItems.push({
+        id:'td-'+Date.now()+'-'+Math.random().toString(36).slice(2,5),
+        text,
+        done,
+        createdAt:new Date().toISOString()
+      });
+    }
+  });
+  
+  $('todo-paste').value='';
+  renderTodoList();
+  saveTodoDraft();
+  toast(`Added ${lines.length} item${lines.length>1?'s':''}`);
+}
+
+function renderTodoList(){
+  const body=$('todo-body');
+  const stats=$('todo-stats');
+  
+  if(!todoItems.length){
+    body.innerHTML='<div class="todo-empty">PASTE A LIST ABOVE TO GET STARTED</div>';
+    stats.style.display='none';
+    return;
+  }
+  
+  stats.style.display='flex';
+  const done=todoItems.filter(t=>t.done).length;
+  const total=todoItems.length;
+  const pct=Math.round((done/total)*100);
+  
+  $('todo-done').textContent=done;
+  $('todo-total').textContent=total;
+  $('todo-pct').textContent=pct+'%';
+  $('todo-progress-fill').style.width=pct+'%';
+  
+  body.innerHTML=`<div class="todo-list">${todoItems.map((t,i)=>`
+    <div class="todo-item${t.done?' done':''}">
+      <div class="todo-check${t.done?' done':''}" onclick="toggleTodoItem(${i})"></div>
+      <span class="todo-text">${esc(t.text)}</span>
+      <button class="todo-del" onclick="deleteTodoItem(${i})">&times;</button>
+    </div>
+  `).join('')}</div>`;
+}
+
+function toggleTodoItem(i){
+  if(todoItems[i])todoItems[i].done=!todoItems[i].done;
+  renderTodoList();
+  saveTodoDraft();
+}
+
+function deleteTodoItem(i){
+  todoItems.splice(i,1);
+  renderTodoList();
+  saveTodoDraft();
+}
+
+function clearTodoList(){
+  if(!todoItems.length)return;
+  if(!confirm('Clear all to-do items?'))return;
+  todoItems=[];
+  renderTodoList();
+  saveTodoDraft();
+  toast('List cleared');
+}
+
+function saveTodoDraft(){
+  try{localStorage.setItem('pc_todo_draft',JSON.stringify(todoItems));}catch(e){}
+  toast('Draft saved');
+}
+
+function loadTodoDraft(){
+  try{
+    const saved=localStorage.getItem('pc_todo_draft');
+    if(saved)todoItems=JSON.parse(saved);
+  }catch(e){}
+}
+
+async function postTodoToDiscord(){
+  if(!todoItems.length){toast('No items to post','err');return;}
+  if(!cfg.devhook){toast('No webhook configured','err');return;}
+  
+  const done=todoItems.filter(t=>t.done).length;
+  const total=todoItems.length;
+  const pct=Math.round((done/total)*100);
+  
+  // Build checklist text
+  const listText=todoItems.map(t=>`${t.done?'✅':'⬜'} ${t.text}`).join('\n');
+  
+  const embed={
+    title:'📋 To-Do List Progress',
+    description:`**Progress:** ${done}/${total} (${pct}%)\n\n${listText}`,
+    color:pct===100?0x10b981:0x7B68EE,
+    footer:{text:'Phase City - The city that builds itself.!',icon_url:PC_LOGO},
+    thumbnail:{url:PC_LOGO},
+    timestamp:new Date().toISOString()
+  };
+  
+  try{
+    const res=await fetch(cfg.devhook,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({embeds:[embed]})
+    });
+    if(res.ok){
+      toast('Posted to Discord!');
+    }else{
+      toast('Failed to post','err');
+    }
+  }catch(e){
+    toast('Network error','err');
+  }
 }
 
 // ATTACHMENTS
