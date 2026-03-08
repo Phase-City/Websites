@@ -193,6 +193,44 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 .checklist-progress{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--c);display:flex;align-items:center;gap:5px;margin-top:6px}
 .checklist-bar{width:60px;height:5px;background:rgba(123,104,238,0.2);border-radius:3px;overflow:hidden}
 .checklist-bar-fill{height:100%;background:linear-gradient(90deg,var(--v),var(--c));border-radius:3px;transition:width .3s}
+/* NOTES PANEL */
+.notes-panel{max-width:800px;width:95vw;max-height:85vh;display:flex;flex-direction:column}
+.notes-search{margin-bottom:16px}
+.notes-search .inp{font-size:14px;padding:12px 16px;background:rgba(255,159,67,0.06);border-color:rgba(255,159,67,0.25)}
+.notes-search .inp:focus{border-color:#ff9f43;box-shadow:0 0 0 3px rgba(255,159,67,0.12)}
+.notes-body{flex:1;overflow-y:auto;padding-right:6px}
+.notes-task-group{margin-bottom:14px;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:rgba(12,12,26,0.6)}
+.notes-task-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;background:rgba(123,104,238,0.06);border-bottom:1px solid transparent;transition:all .15s}
+.notes-task-header:hover{background:rgba(123,104,238,0.12)}
+.notes-task-header.open{border-bottom-color:var(--border)}
+.notes-task-title{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.notes-task-title .arrow{color:var(--vlight);font-size:10px;transition:transform .2s}
+.notes-task-header.open .arrow{transform:rotate(90deg)}
+.notes-task-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notes-task-res{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--vlight);letter-spacing:1px}
+.notes-task-count{font-family:'Share Tech Mono',monospace;font-size:10px;color:#ff9f43;background:rgba(255,159,67,0.12);padding:3px 10px;border-radius:5px;border:1px solid rgba(255,159,67,0.2)}
+.notes-task-body{display:none;padding:12px 16px}
+.notes-task-header.open+.notes-task-body{display:block}
+.note-item{background:rgba(255,159,67,0.04);border:1px solid rgba(255,159,67,0.15);border-radius:8px;padding:12px 14px;margin-bottom:10px;position:relative}
+.note-item:hover{border-color:rgba(255,159,67,0.35)}
+.note-item.pinned{border-color:rgba(255,159,67,0.5);background:rgba(255,159,67,0.08)}
+.note-item.pinned::before{content:'📌';position:absolute;top:-8px;left:10px;font-size:12px;background:var(--bg2);padding:0 4px}
+.note-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.note-author{font-family:'Share Tech Mono',monospace;font-size:11px;color:#ff9f43;letter-spacing:1px;font-weight:600}
+.note-date{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--vlight);letter-spacing:1px}
+.note-content{font-size:14px;color:var(--text);line-height:1.65;white-space:pre-wrap;word-break:break-word}
+.note-actions{position:absolute;top:10px;right:10px;display:flex;gap:6px;opacity:0;transition:opacity .15s}
+.note-item:hover .note-actions{opacity:1}
+.note-actions button{width:24px;height:24px;border:none;border-radius:5px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.note-btn-pin{background:rgba(255,159,67,0.15);color:#ff9f43}
+.note-btn-pin:hover{background:rgba(255,159,67,0.3)}
+.note-btn-del{background:rgba(255,77,109,0.15);color:var(--red)}
+.note-btn-del:hover{background:rgba(255,77,109,0.3)}
+.notes-add-row{display:flex;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.notes-add-row .ta{flex:1;min-height:70px;font-size:13px;resize:vertical}
+.notes-add-row .btn{align-self:flex-end}
+.notes-empty{text-align:center;padding:30px;color:var(--vlight);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px}
+.card-notes{display:flex;align-items:center;gap:4px;font-family:'Share Tech Mono',monospace;font-size:10px;color:#ff9f43;margin-top:4px}
 /* LIGHTBOX */
 #lightbox{position:fixed;inset:0;z-index:950;background:rgba(0,0,0,0.94);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;flex-direction:column;padding:24px}
 #lightbox.show{display:flex}
@@ -348,6 +386,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       <div class="stat-chip"><b id="stat-prog">0</b> Active</div>
       <div class="stat-chip cyan"><b id="stat-done">0</b> Done</div>
       <button class="btn-cyan" id="sync-btn" onclick="syncData()">&#8635; SYNC</button>
+      <button class="btn btn-ghost" style="border-color:rgba(255,159,67,0.4);color:#ff9f43" onclick="openNotesPanel()">&#128221; NOTES</button>
       <button class="btn btn-ghost" style="border-color:rgba(92,225,230,0.3);color:var(--c)" onclick="openChangelog()">&#128227; CHANGELOG</button>
       <button class="btn btn-ghost" style="border-color:rgba(123,104,238,0.3);color:var(--v)" onclick="openRoadmap()">&#128506; ROADMAP</button>
       <button class="btn btn-ghost" onclick="openRM()">&#8853; RESOURCES</button>
@@ -434,6 +473,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       </div>
     </div>
 
+    <!-- NOTES LINK -->
+    <div id="task-notes-link" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:none">
+      <button class="btn btn-ghost" style="width:100%;border-color:rgba(255,159,67,0.3);color:#ff9f43" onclick="openNotesForTask(editId)">
+        📝 <span id="task-notes-count">0</span> Notes — Click to View/Add
+      </button>
+    </div>
+
     <input type="hidden" id="m-id">
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeTaskModal()">Cancel</button>
@@ -502,6 +548,22 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       </div>
     </div>
     <div class="modal-foot"><button class="btn btn-ghost" onclick="closeCfg()">Cancel</button><button class="btn btn-primary" onclick="saveCfg()">SAVE CONFIG</button></div>
+  </div>
+</div>
+
+<!-- NOTES PANEL -->
+<div class="overlay" id="notes-modal" style="display:none" onclick="if(event.target===this)closeNotesPanel()">
+  <div class="modal notes-panel">
+    <div class="modal-title">&#128221; TASK NOTES</div>
+    <div class="notes-search">
+      <input class="inp" id="notes-search" placeholder="&#128269; Search notes..." oninput="filterNotes()">
+    </div>
+    <div class="notes-body" id="notes-body">
+      <!-- Notes grouped by task will be rendered here -->
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeNotesPanel()">Close</button>
+    </div>
   </div>
 </div>
 
@@ -624,12 +686,13 @@ function loadLocal(){
     const t=sessionStorage.getItem('pc_tasks');if(t)tasks=JSON.parse(t);
     const c=sessionStorage.getItem('pc_cats');if(c)categories=JSON.parse(c);
     const r=sessionStorage.getItem('pc_res');if(r)resources=JSON.parse(r);
+    const n=sessionStorage.getItem('pc_notes');if(n)notes=JSON.parse(n);
     const cf=localStorage.getItem('pc_cfg');if(cf)cfg={...cfg,...JSON.parse(cf)};
   }catch(e){}
   $('setup-banner').style.display=(cfg.apikey&&cfg.binid)?'none':'flex';
 }
 function saveLocal(){
-  try{sessionStorage.setItem('pc_tasks',JSON.stringify(tasks));sessionStorage.setItem('pc_cats',JSON.stringify(categories));sessionStorage.setItem('pc_res',JSON.stringify(resources));}catch(e){}
+  try{sessionStorage.setItem('pc_tasks',JSON.stringify(tasks));sessionStorage.setItem('pc_cats',JSON.stringify(categories));sessionStorage.setItem('pc_res',JSON.stringify(resources));sessionStorage.setItem('pc_notes',JSON.stringify(notes));}catch(e){}
 }
 function saveCfgLocal(){try{localStorage.setItem('pc_cfg',JSON.stringify(cfg));}catch(e){}}
 
@@ -642,14 +705,14 @@ async function syncData(showMsg=true){
     const r=await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}/latest`,{headers:{'X-Master-Key':cfg.apikey}});
     if(!r.ok)throw new Error();
     const data=(await r.json()).record||{};
-    if(data.tasks)tasks=data.tasks;if(data.categories)categories=data.categories;if(data.resources)resources=data.resources;
+    if(data.tasks)tasks=data.tasks;if(data.categories)categories=data.categories;if(data.resources)resources=data.resources;if(data.notes)notes=data.notes;
     saveLocal();render();setSS('SYNCED '+new Date().toLocaleTimeString());if(showMsg)toast('Synced with team');
   }catch(e){setSS('SYNC FAILED');if(showMsg)toast('Sync failed — check keys','err');}
   btn.style.opacity='1';btn.innerHTML='&#8635; SYNC';
 }
 async function pushData(){
   saveLocal();if(!cfg.apikey||!cfg.binid)return;setSS('SAVING...');
-  try{await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':cfg.apikey},body:JSON.stringify({tasks,categories,resources})});setSS('SAVED '+new Date().toLocaleTimeString());}
+  try{await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':cfg.apikey},body:JSON.stringify({tasks,categories,resources,notes})});setSS('SAVED '+new Date().toLocaleTimeString());}
   catch(e){setSS('SAVE FAILED');}
 }
 const setSS=msg=>$('sync-status').textContent=msg;
@@ -843,6 +906,15 @@ function openTaskModal(id=null){
   $('attach-url').value='';$('checklist-input').value='';
   renderAttachGrid();
   renderChecklist();
+  // Show notes link for existing tasks
+  const notesLink=$('task-notes-link');
+  if(id){
+    const nc=getNoteCountForTask(id);
+    $('task-notes-count').textContent=nc;
+    notesLink.style.display='block';
+  }else{
+    notesLink.style.display='none';
+  }
   $('task-modal').style.display='flex';setTimeout(()=>$('m-title').focus(),50);
 }
 function closeTaskModal(){$('task-modal').style.display='none';editId=null;selectedRes=null;currentAttachments=[];currentChecklist=[];}
@@ -946,8 +1018,11 @@ function cHTML(t,list){
   const clTotal=cl.length;
   const clPct=clTotal?(clDone/clTotal)*100:0;
   const clBadge=clTotal?`<div class="checklist-progress"><span>☑ ${clDone}/${clTotal}</span><div class="checklist-bar"><div class="checklist-bar-fill" style="width:${clPct}%"></div></div></div>`:'';
-  if(list)return`<div class="list-card${isDone?' card-done':''}" onclick="openTaskModal('${t.id}')">${bar}<span class="badge ${pClass(t.priority)}" style="min-width:62px;text-align:center">${t.priority}</span><span class="list-title">${esc(t.title)}</span>${t.source==='citizen-portal'?'<span class="card-source" style="position:static;margin:0 6px">&#128236;</span>':''}${clTotal?`<span class="checklist-progress" style="margin:0 6px"><span>☑ ${clDone}/${clTotal}</span></span>`:''}<span class="list-meta">&#9672; ${esc(t.resourceName||'—')}</span>${att?`<span class="card-attach" onclick="event.stopPropagation();openLightbox(0,'task','${t.id}')"><span class="card-attach-icon">&#128247;</span>${att}</span>`:''}<span class="assignee-chip">${esc(t.assignee)}</span><span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:${sc.color};min-width:78px;text-align:right">${t.status}</span><div class="list-actions" onclick="event.stopPropagation()"><button class="btn-sm btn-edit" onclick="openTaskModal('${t.id}')">EDIT</button><button class="btn-sm btn-del" onclick="deleteTask('${t.id}')">DEL</button></div></div>`;
-  return`<div class="card${isDone?' card-done':''}" onclick="openTaskModal('${t.id}')">${bar}${srcBadge}<div class="card-cat">${esc(t.category||'')}</div><div class="card-res">&#9672; ${esc(t.resourceName||'—')}</div><div class="card-title">${esc(t.title)}</div>${desc?`<div class="card-desc">${esc(desc)}</div>`:''}${clBadge}<div class="card-foot"><span class="badge ${pClass(t.priority)}">${t.priority}</span><span class="assignee-chip">${esc(t.assignee)}</span>${attThumb}</div>${attBadge}<div class="card-actions" onclick="event.stopPropagation()">${si>0?`<button class="btn-sm btn-move" onclick="moveTask('${t.id}',-1)">&#9664; ${STATUSES[si-1]}</button>`:''}${si<3?`<button class="btn-sm btn-move" onclick="moveTask('${t.id}',1)">${STATUSES[si+1]} &#9654;</button>`:''}<button class="btn-sm btn-edit" onclick="openTaskModal('${t.id}')">EDIT</button><button class="btn-sm btn-del" onclick="deleteTask('${t.id}')">DEL</button></div><div class="card-date">${fmtDate(t.updatedAt)}</div></div>`;
+  // Notes count
+  const noteCount=getNoteCountForTask(t.id);
+  const noteBadge=noteCount?`<span class="card-notes" onclick="event.stopPropagation();openNotesForTask('${t.id}')">📝 ${noteCount}</span>`:'';
+  if(list)return`<div class="list-card${isDone?' card-done':''}" onclick="openTaskModal('${t.id}')">${bar}<span class="badge ${pClass(t.priority)}" style="min-width:62px;text-align:center">${t.priority}</span><span class="list-title">${esc(t.title)}</span>${t.source==='citizen-portal'?'<span class="card-source" style="position:static;margin:0 6px">&#128236;</span>':''}${clTotal?`<span class="checklist-progress" style="margin:0 6px"><span>☑ ${clDone}/${clTotal}</span></span>`:''}${noteCount?`<span class="card-notes" style="margin:0 6px" onclick="event.stopPropagation();openNotesForTask('${t.id}')">📝 ${noteCount}</span>`:''}<span class="list-meta">&#9672; ${esc(t.resourceName||'—')}</span>${att?`<span class="card-attach" onclick="event.stopPropagation();openLightbox(0,'task','${t.id}')"><span class="card-attach-icon">&#128247;</span>${att}</span>`:''}<span class="assignee-chip">${esc(t.assignee)}</span><span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:${sc.color};min-width:78px;text-align:right">${t.status}</span><div class="list-actions" onclick="event.stopPropagation()"><button class="btn-sm btn-edit" onclick="openTaskModal('${t.id}')">EDIT</button><button class="btn-sm btn-del" onclick="deleteTask('${t.id}')">DEL</button></div></div>`;
+  return`<div class="card${isDone?' card-done':''}" onclick="openTaskModal('${t.id}')">${bar}${srcBadge}<div class="card-cat">${esc(t.category||'')}</div><div class="card-res">&#9672; ${esc(t.resourceName||'—')}</div><div class="card-title">${esc(t.title)}</div>${desc?`<div class="card-desc">${esc(desc)}</div>`:''}${clBadge}${noteBadge}<div class="card-foot"><span class="badge ${pClass(t.priority)}">${t.priority}</span><span class="assignee-chip">${esc(t.assignee)}</span>${attThumb}</div>${attBadge}<div class="card-actions" onclick="event.stopPropagation()">${si>0?`<button class="btn-sm btn-move" onclick="moveTask('${t.id}',-1)">&#9664; ${STATUSES[si-1]}</button>`:''}${si<3?`<button class="btn-sm btn-move" onclick="moveTask('${t.id}',1)">${STATUSES[si+1]} &#9654;</button>`:''}<button class="btn-sm btn-edit" onclick="openTaskModal('${t.id}')">EDIT</button><button class="btn-sm btn-del" onclick="deleteTask('${t.id}')">DEL</button></div><div class="card-date">${fmtDate(t.updatedAt)}</div></div>`;
 }
 
 // TOAST
@@ -991,6 +1066,168 @@ function toggleChecklistItem(i){
 function removeChecklistItem(i){
   currentChecklist.splice(i,1);
   renderChecklist();
+}
+
+// NOTES SYSTEM
+let notes=[];
+let notesFilterQ='';
+
+function openNotesPanel(){
+  notesFilterQ='';
+  $('notes-search').value='';
+  renderNotesPanel();
+  $('notes-modal').style.display='flex';
+}
+
+function closeNotesPanel(){
+  $('notes-modal').style.display='none';
+}
+
+function filterNotes(){
+  notesFilterQ=($('notes-search').value||'').toLowerCase();
+  renderNotesPanel();
+}
+
+function getNotesForTask(taskId){
+  return notes.filter(n=>n.taskId===taskId).sort((a,b)=>{
+    if(a.pinned&&!b.pinned)return -1;
+    if(!a.pinned&&b.pinned)return 1;
+    return new Date(b.createdAt)-new Date(a.createdAt);
+  });
+}
+
+function renderNotesPanel(){
+  const body=$('notes-body');
+  const q=notesFilterQ;
+  
+  // Get all tasks with their notes, sorted by note count (most notes first)
+  let taskGroups=tasks.map(t=>{
+    const taskNotes=getNotesForTask(t.id);
+    return {task:t,notes:taskNotes};
+  }).sort((a,b)=>b.notes.length-a.notes.length);
+  
+  // Filter by search
+  if(q){
+    taskGroups=taskGroups.map(g=>({
+      task:g.task,
+      notes:g.notes.filter(n=>
+        n.content.toLowerCase().includes(q)||
+        n.author.toLowerCase().includes(q)||
+        g.task.title.toLowerCase().includes(q)||
+        g.task.resourceName?.toLowerCase().includes(q)
+      )
+    })).filter(g=>g.notes.length>0||g.task.title.toLowerCase().includes(q)||g.task.resourceName?.toLowerCase().includes(q));
+  }
+  
+  if(!taskGroups.length){
+    body.innerHTML=`<div class="notes-empty">${q?'NO TASKS MATCHING "'+esc(q.toUpperCase())+'"':'NO TASKS YET'}</div>`;
+    return;
+  }
+  
+  body.innerHTML=taskGroups.map(g=>{
+    const t=g.task;
+    const tn=g.notes;
+    const open=tn.length>0&&!q?'open':'';
+    return`
+      <div class="notes-task-group">
+        <div class="notes-task-header ${open}" onclick="this.classList.toggle('open')">
+          <div class="notes-task-title">
+            <span class="arrow">▶</span>
+            <span class="notes-task-name">${esc(t.title)}</span>
+            <span class="notes-task-res">◈ ${esc(t.resourceName||'No resource')}</span>
+          </div>
+          <span class="notes-task-count">${tn.length} note${tn.length!==1?'s':''}</span>
+        </div>
+        <div class="notes-task-body">
+          ${tn.length?tn.map(n=>`
+            <div class="note-item${n.pinned?' pinned':''}">
+              <div class="note-meta">
+                <span class="note-author">${esc(n.author)}</span>
+                <span class="note-date">${fmtNoteDate(n.createdAt)}</span>
+              </div>
+              <div class="note-content">${esc(n.content)}</div>
+              <div class="note-actions">
+                <button class="note-btn-pin" onclick="togglePinNote('${n.id}')" title="${n.pinned?'Unpin':'Pin'}">${n.pinned?'📌':'📍'}</button>
+                <button class="note-btn-del" onclick="deleteNote('${n.id}')" title="Delete">✕</button>
+              </div>
+            </div>
+          `).join(''):`<div style="padding:8px 0;color:var(--vlight);font-size:13px;opacity:0.7">No notes yet for this task</div>`}
+          <div class="notes-add-row">
+            <textarea class="ta" id="note-input-${t.id}" placeholder="Add a note for this task..."></textarea>
+            <button class="btn btn-primary" onclick="addNote('${t.id}')" style="padding:10px 16px;font-size:11px">+ ADD NOTE</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function fmtNoteDate(iso){
+  const d=new Date(iso);
+  const now=new Date();
+  const diff=now-d;
+  if(diff<60000)return 'Just now';
+  if(diff<3600000)return Math.floor(diff/60000)+' min ago';
+  if(diff<86400000)return Math.floor(diff/3600000)+' hr ago';
+  if(diff<604800000)return Math.floor(diff/86400000)+' day'+(Math.floor(diff/86400000)>1?'s':'')+' ago';
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:d.getFullYear()!==now.getFullYear()?'numeric':undefined});
+}
+
+function genNoteId(){return 'n-'+Date.now()+'-'+Math.random().toString(36).slice(2,7);}
+
+async function addNote(taskId){
+  const inp=$('note-input-'+taskId);
+  const content=inp.value.trim();
+  if(!content){toast('Enter note content','err');return;}
+  
+  const note={
+    id:genNoteId(),
+    taskId,
+    author:cfg.members[0]||'Staff', // Default to first member (The OG KiLLz)
+    content,
+    pinned:false,
+    createdAt:new Date().toISOString()
+  };
+  notes.push(note);
+  inp.value='';
+  renderNotesPanel();
+  toast('Note added');
+  await pushData();
+}
+
+async function deleteNote(id){
+  if(!confirm('Delete this note?'))return;
+  notes=notes.filter(n=>n.id!==id);
+  renderNotesPanel();
+  toast('Note deleted');
+  await pushData();
+}
+
+async function togglePinNote(id){
+  notes=notes.map(n=>n.id===id?{...n,pinned:!n.pinned}:n);
+  renderNotesPanel();
+  await pushData();
+}
+
+function getNoteCountForTask(taskId){
+  return notes.filter(n=>n.taskId===taskId).length;
+}
+
+// Quick add note from task modal
+function openNotesForTask(taskId){
+  closeTaskModal();
+  notesFilterQ='';
+  $('notes-search').value='';
+  renderNotesPanel();
+  $('notes-modal').style.display='flex';
+  // Auto-expand the task's group
+  setTimeout(()=>{
+    const headers=document.querySelectorAll('.notes-task-header');
+    headers.forEach(h=>{
+      const isTarget=h.closest('.notes-task-group')?.querySelector(`[id="note-input-${taskId}"]`);
+      if(isTarget)h.classList.add('open');
+    });
+  },50);
 }
 
 // ATTACHMENTS
@@ -1158,6 +1395,7 @@ function clSelectAll(mode){
 function renderClBuckets(){
   $('cl-buckets').innerHTML=CL_SECTIONS.map(sec=>{
     const placeholder=sec==='COMMUNITY CREDITS'?'@username...':'Add custom item...';
+    const autoPullBtn=sec==='COMMUNITY CREDITS'?`<button class="btn-sm btn-edit" onclick="autoPullCredits()" title="Auto-pull from citizen submissions">🔄 AUTO-PULL</button>`:'';
     return`
     <div class="cl-bucket" data-section="${sec}">
       <div class="cl-bucket-hdr" onclick="toggleBucketCollapse(this)">
@@ -1180,10 +1418,41 @@ function renderClBuckets(){
         <input placeholder="${placeholder}" id="cl-input-${sec.replace(/\s+/g,'-')}" onkeydown="if(event.key==='Enter'){addCustomItem('${sec}',this.value);this.value=''}">
         <button class="btn-sm btn-edit" onclick="const inp=document.getElementById('cl-input-${sec.replace(/\s+/g,'-')}');addCustomItem('${sec}',inp.value);inp.value=''">+ ADD</button>
         ${sec!=='COMMUNITY CREDITS'?`<button class="btn-sm btn-edit" onclick="addSelectedToBucket('${sec}')" title="Add selected tasks">+ SELECTED</button>`:''}
+        ${autoPullBtn}
       </div>
     </div>
   `}).join('');
 }
+
+function autoPullCredits(){
+  // Get unique submitters from citizen portal tasks that are in the selected tasks or done
+  const citizenTasks=tasks.filter(t=>t.source==='citizen-portal'&&t.submitter);
+  const submitters=new Set();
+  
+  // First add from selected tasks
+  clSelectedTasks.forEach(id=>{
+    const t=tasks.find(x=>x.id===id);
+    if(t?.source==='citizen-portal'&&t.submitter)submitters.add(t.submitter);
+  });
+  
+  // Then add from done citizen portal tasks
+  citizenTasks.filter(t=>t.status==='Done').forEach(t=>submitters.add(t.submitter));
+  
+  // Add to credits bucket (avoid duplicates)
+  submitters.forEach(s=>{
+    const formatted=s.startsWith('@')?s:`@${s}`;
+    if(!clBuckets['COMMUNITY CREDITS'].includes(formatted)&&!clBuckets['COMMUNITY CREDITS'].includes(s)){
+      clBuckets['COMMUNITY CREDITS'].push(formatted);
+    }
+  });
+  
+  if(submitters.size===0)toast('No citizen submitters found');
+  else toast(`Added ${submitters.size} contributor(s)`);
+  
+  renderClBuckets();
+  renderClPreview();
+}
+
 function addSelectedToBucket(sec){
   clSelectedTasks.forEach(id=>{
     const t=tasks.find(x=>x.id===id);
