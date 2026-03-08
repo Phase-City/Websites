@@ -623,7 +623,7 @@ function checkPW(){
   if($('pw-input').value===cfg.password){
     $('lock-screen').style.display='none';$('app').style.display='block';
     if(cfg.apikey&&cfg.binid)syncData(false);render();
-    setInterval(()=>syncData(false),60000);
+    setInterval(()=>syncData(false),3600000); // Auto-sync every hour
   }else{
     const i=$('pw-input');i.classList.add('shake');$('pw-err').classList.add('show');
     setTimeout(()=>{i.classList.remove('shake');i.value='';},400);
