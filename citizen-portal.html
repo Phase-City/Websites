@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phase City // Citizen Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--v:#7B68EE;--c:#5CE1E6;--bg:#07070f;--bg2:#0d0d1e;--border:rgba(123,104,238,0.22);--text:#e0e0ff;--muted:#666;--red:#ff4d6d;--orange:#ff9f43;--green:#10b981}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#0a0a12}::-webkit-scrollbar-thumb{background:var(--v);border-radius:3px}
+::selection{background:rgba(123,104,238,0.35);color:#fff}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(123,104,238,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(123,104,238,0.04) 1px,transparent 1px);background-size:44px 44px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 15% 0%,rgba(123,104,238,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(92,225,230,0.06) 0%,transparent 55%)}
+.container{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:30px 20px}
+/* HEADER */
+.header{text-align:center;margin-bottom:40px}
+.logo{width:80px;height:80px;margin:0 auto 20px;border-radius:16px;overflow:hidden;box-shadow:0 0 50px rgba(123,104,238,0.5);display:flex;align-items:center;justify-content:center;background:rgba(123,104,238,0.15)}
+.logo img{width:100%;height:100%;object-fit:contain}
+.logo-fallback{font-size:28px;font-weight:900;color:#fff}
+.title{font-size:28px;font-weight:900;letter-spacing:4px;text-transform:uppercase;background:linear-gradient(90deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.subtitle{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--c);letter-spacing:4px}
+.tagline{margin-top:16px;font-size:13px;color:var(--muted);line-height:1.6}
+/* TABS */
+.tabs{display:flex;gap:8px;margin-bottom:24px;justify-content:center;flex-wrap:wrap}
+.tab{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;padding:10px 20px;border-radius:8px;border:1px solid var(--border);cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;text-transform:uppercase}
+.tab:hover{border-color:var(--v);color:var(--v)}
+.tab.on{border-color:var(--c);color:var(--c);background:rgba(92,225,230,0.08);box-shadow:0 0 20px rgba(92,225,230,0.15)}
+.tab-icon{margin-right:6px}
+/* FORM CARD */
+.form-card{background:rgba(12,12,26,0.92);border:1px solid var(--border);border-radius:14px;padding:28px;box-shadow:0 0 50px rgba(0,0,0,0.4)}
+.form-title{font-size:16px;font-weight:700;letter-spacing:2px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.form-title .icon{font-size:20px}
+.form-desc{font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+/* FIELDS */
+.field{margin-bottom:18px}
+.label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--v);letter-spacing:2.5px;text-transform:uppercase;display:block;margin-bottom:8px}
+.label .req{color:var(--red);margin-left:2px}
+.inp,.ta,.sel{width:100%;font-family:'Exo 2',sans-serif;font-size:14px;background:rgba(123,104,238,0.05);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:14px 18px;outline:none;transition:all .2s;color-scheme:dark}
+.inp:focus,.ta:focus,.sel:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(123,104,238,0.12)}
+.inp::placeholder,.ta::placeholder{color:#3a3a5a}
+.ta{resize:vertical;min-height:120px;line-height:1.6}
+.sel{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M0 0l6 7 6-7z' fill='%237B68EE'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px}
+.sel option{background:#0d0d1e;color:var(--text)}
+.hint{font-family:'Share Tech Mono',monospace;font-size:9px;color:#444;margin-top:6px;letter-spacing:1px}
+/* BUTTONS */
+.btn{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:14px 28px;border-radius:10px;border:none;cursor:pointer;transition:all .2s;width:100%}
+.btn-primary{background:linear-gradient(135deg,var(--v),#5a4fd4);color:#fff;box-shadow:0 0 24px rgba(123,104,238,0.4)}
+.btn-primary:hover{box-shadow:0 0 40px rgba(123,104,238,0.6);transform:translateY(-2px)}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+/* SUCCESS */
+.success-card{text-align:center;padding:50px 30px}
+.success-icon{font-size:60px;margin-bottom:20px}
+.success-title{font-size:20px;font-weight:700;color:var(--c);margin-bottom:10px}
+.success-msg{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:24px}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);font-size:11px;padding:10px 20px}
+.btn-ghost:hover{border-color:var(--v);color:var(--v)}
+/* FOOTER */
+.footer{text-align:center;margin-top:40px;font-family:'Share Tech Mono',monospace;font-size:10px;color:#333;letter-spacing:2px}
+.footer a{color:var(--v);text-decoration:none}
+.footer a:hover{color:var(--c)}
+/* BUG TYPE BADGES */
+.type-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.type-badge{font-family:'Share Tech Mono',monospace;font-size:10px;padding:6px 12px;border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:all .15s;color:var(--muted);background:transparent}
+.type-badge:hover{border-color:var(--v);color:var(--v)}
+.type-badge.on{border-color:var(--c);color:var(--c);background:rgba(92,225,230,0.1)}
+/* SEVERITY */
+.severity-row{display:flex;gap:8px}
+.severity-btn{flex:1;font-family:'Share Tech Mono',monospace;font-size:10px;padding:10px;border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:all .15s;text-align:center;color:var(--muted);background:transparent}
+.severity-btn:hover{border-color:var(--v)}
+.severity-btn.on.low{border-color:var(--v);color:var(--v);background:rgba(123,104,238,0.1)}
+.severity-btn.on.medium{border-color:var(--orange);color:var(--orange);background:rgba(255,159,67,0.1)}
+.severity-btn.on.high{border-color:var(--red);color:var(--red);background:rgba(255,77,109,0.1)}
+/* LOADING */
+.loading{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* FILE DROP */
+.file-drop{border:2px dashed var(--border);border-radius:10px;padding:24px;text-align:center;cursor:pointer;transition:all .2s}
+.file-drop:hover,.file-drop.dragover{border-color:var(--v);background:rgba(123,104,238,0.05)}
+.file-drop-icon{font-size:32px;margin-bottom:8px}
+.file-drop-text{font-family:'Share Tech Mono',monospace;font-size:11px;color:#666;letter-spacing:1px}
+.file-drop-text span{color:var(--c)}
+.file-drop-hint{font-family:'Share Tech Mono',monospace;font-size:9px;color:#444;margin-top:8px;letter-spacing:0.5px}
+.file-attached{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(92,225,230,0.08);border:1px solid rgba(92,225,230,0.25);border-radius:8px;margin-top:8px}
+.file-name{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--c);letter-spacing:1px}
+.file-remove{color:var(--red);cursor:pointer;font-size:18px;font-weight:bold;padding:0 4px}
+.file-remove:hover{color:#ff6b8a}
+/* ANIMS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.form-card,.success-card{animation:fadeUp .4s ease both}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="logo"><img src="img/logo.png" alt="PC" onerror="this.outerHTML='<span class=logo-fallback>PC</span>'"></div>
+    <div class="title">Phase City</div>
+    <div class="subtitle">// CITIZEN PORTAL</div>
+    <div class="tagline">Help us build a better city. Report bugs, suggest features, or let us know if something crashes.</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-tab="bug" onclick="switchTab('bug')"><span class="tab-icon">🐛</span>BUG REPORT</button>
+    <button class="tab" data-tab="suggestion" onclick="switchTab('suggestion')"><span class="tab-icon">💡</span>SUGGESTION</button>
+    <button class="tab" data-tab="crash" onclick="switchTab('crash')"><span class="tab-icon">💥</span>CRASH REPORT</button>
+  </div>
+
+  <!-- BUG REPORT FORM -->
+  <div class="form-card" id="form-bug">
+    <div class="form-title"><span class="icon">🐛</span> Bug Report</div>
+    <div class="form-desc">Found something broken? Let us know exactly what happened so we can fix it fast.</div>
+    
+    <div class="field">
+      <label class="label">Discord Username <span class="req">*</span></label>
+      <input class="inp" id="bug-discord" placeholder="YourName#1234 or @username">
+    </div>
+    <div class="field">
+      <label class="label">Bug Category</label>
+      <div class="type-badges" id="bug-category">
+        <span class="type-badge on" data-val="UI/Visual">UI/Visual</span>
+        <span class="type-badge" data-val="Gameplay">Gameplay</span>
+        <span class="type-badge" data-val="Jobs">Jobs</span>
+        <span class="type-badge" data-val="Phone">Phone</span>
+        <span class="type-badge" data-val="Vehicle">Vehicle</span>
+        <span class="type-badge" data-val="Inventory">Inventory</span>
+        <span class="type-badge" data-val="Other">Other</span>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Severity</label>
+      <div class="severity-row" id="bug-severity">
+        <button class="severity-btn low on" data-val="Low">LOW</button>
+        <button class="severity-btn medium" data-val="Medium">MEDIUM</button>
+        <button class="severity-btn high" data-val="High">HIGH</button>
+      </div>
+      <div class="hint">Low = minor annoyance | Medium = affects gameplay | High = game-breaking</div>
+    </div>
+    <div class="field">
+      <label class="label">What Happened? <span class="req">*</span></label>
+      <textarea class="ta" id="bug-what" placeholder="Describe the bug in detail. What did you expect vs what actually happened?"></textarea>
+    </div>
+    <div class="field">
+      <label class="label">Steps to Reproduce</label>
+      <textarea class="ta" id="bug-steps" placeholder="1. Go to location X&#10;2. Do action Y&#10;3. Bug appears" style="min-height:90px"></textarea>
+    </div>
+    <div class="field">
+      <label class="label">Screenshot/Video URL (optional)</label>
+      <input class="inp" id="bug-media" placeholder="https://imgur.com/... or YouTube link">
+    </div>
+    <button class="btn btn-primary" onclick="submitBug()">&#128640; SUBMIT BUG REPORT</button>
+  </div>
+
+  <!-- SUGGESTION FORM -->
+  <div class="form-card" id="form-suggestion" style="display:none">
+    <div class="form-title"><span class="icon">💡</span> Suggestion</div>
+    <div class="form-desc">Got an idea to make Phase City better? We're always looking for ways to improve.</div>
+    
+    <div class="field">
+      <label class="label">Discord Username <span class="req">*</span></label>
+      <input class="inp" id="sug-discord" placeholder="YourName#1234 or @username">
+    </div>
+    <div class="field">
+      <label class="label">Suggestion Category</label>
+      <div class="type-badges" id="sug-category">
+        <span class="type-badge on" data-val="New Feature">New Feature</span>
+        <span class="type-badge" data-val="Job Idea">Job Idea</span>
+        <span class="type-badge" data-val="Quality of Life">Quality of Life</span>
+        <span class="type-badge" data-val="Roleplay">Roleplay</span>
+        <span class="type-badge" data-val="Other">Other</span>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Your Suggestion <span class="req">*</span></label>
+      <textarea class="ta" id="sug-idea" placeholder="Describe your idea in detail. What would it add to the server? How would it work?"></textarea>
+    </div>
+    <div class="field">
+      <label class="label">Reference/Example URL (optional)</label>
+      <input class="inp" id="sug-ref" placeholder="Link to similar feature, video, or inspiration">
+      <div class="hint">Seen this on another server or in a video? Share a link!</div>
+    </div>
+    <button class="btn btn-primary" onclick="submitSuggestion()">&#128161; SUBMIT SUGGESTION</button>
+  </div>
+
+  <!-- CRASH REPORT FORM -->
+  <div class="form-card" id="form-crash" style="display:none">
+    <div class="form-title"><span class="icon">💥</span> Crash Report</div>
+    <div class="form-desc">Game crashed or got kicked? Help us track down the cause.</div>
+    
+    <div class="field">
+      <label class="label">Discord Username <span class="req">*</span></label>
+      <input class="inp" id="crash-discord" placeholder="YourName#1234 or @username">
+    </div>
+    <div class="field">
+      <label class="label">Crash Type</label>
+      <div class="type-badges" id="crash-type">
+        <span class="type-badge on" data-val="Game Crash">Game Crash</span>
+        <span class="type-badge" data-val="Kicked">Kicked</span>
+        <span class="type-badge" data-val="Freeze">Freeze</span>
+        <span class="type-badge" data-val="Infinite Load">Infinite Load</span>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">What Were You Doing? <span class="req">*</span></label>
+      <textarea class="ta" id="crash-what" placeholder="What were you doing right before the crash? Location, job, action, etc."></textarea>
+    </div>
+    <div class="field">
+      <label class="label">FiveM Crash Report (ZIP file)</label>
+      <div class="file-drop" id="crash-file-drop" onclick="document.getElementById('crash-file-input').click()">
+        <div class="file-drop-icon">📁</div>
+        <div class="file-drop-text">DROP CRASH ZIP HERE or <span>CLICK TO BROWSE</span></div>
+        <div class="file-drop-hint">FiveM saves crash reports to: AppData\Local\CrashDumps</div>
+        <input type="file" id="crash-file-input" accept=".zip,.dmp,.log,.txt" style="display:none" onchange="handleCrashFile(this.files[0])">
+      </div>
+      <div class="file-attached" id="crash-file-attached" style="display:none">
+        <span class="file-name" id="crash-file-name"></span>
+        <span class="file-remove" onclick="removeCrashFile()">&times;</span>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Error Message (if any)</label>
+      <textarea class="ta" id="crash-error" placeholder="Copy any error text that appeared" style="min-height:80px;font-family:'Share Tech Mono',monospace;font-size:11px"></textarea>
+    </div>
+    <div class="field">
+      <label class="label">How Often Does This Happen?</label>
+      <select class="sel" id="crash-freq">
+        <option value="First time">First time</option>
+        <option value="Happened before">Happened before</option>
+        <option value="Happens often">Happens often</option>
+        <option value="Every time">Every time I do this action</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" id="crash-submit-btn" onclick="submitCrash()">&#128165; SUBMIT CRASH REPORT</button>
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div class="form-card success-card" id="form-success" style="display:none">
+    <div class="success-icon">✅</div>
+    <div class="success-title">SUBMISSION RECEIVED!</div>
+    <div class="success-msg">Thank you for helping make Phase City better.<br>Our dev team will review your submission.<br><br>Your Discord username may be featured in our changelog credits! 🎉</div>
+    <button class="btn btn-ghost" onclick="resetForm()">SUBMIT ANOTHER</button>
+  </div>
+
+  <div class="footer">
+    <p>PHASE CITY // <a href="#">DISCORD</a> // POWERED BY OGZ SERVERS</p>
+  </div>
+</div>
+
+<script>
+// CONFIG - Set your Discord webhook URLs here
+const WEBHOOKS = {
+  bug: '',      // Bug reports webhook URL
+  suggestion: '',  // Suggestions webhook URL  
+  crash: ''     // Crash reports webhook URL
+};
+
+let currentTab = 'bug';
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('on');
+  document.querySelectorAll('.form-card').forEach(f => f.style.display = 'none');
+  document.getElementById(`form-${tab}`).style.display = 'block';
+}
+
+// Badge selection
+document.querySelectorAll('.type-badges').forEach(container => {
+  container.addEventListener('click', e => {
+    if (e.target.classList.contains('type-badge')) {
+      container.querySelectorAll('.type-badge').forEach(b => b.classList.remove('on'));
+      e.target.classList.add('on');
+    }
+  });
+});
+
+// Severity selection
+document.querySelectorAll('.severity-row').forEach(container => {
+  container.addEventListener('click', e => {
+    if (e.target.classList.contains('severity-btn')) {
+      container.querySelectorAll('.severity-btn').forEach(b => b.classList.remove('on'));
+      e.target.classList.add('on');
+    }
+  });
+});
+
+function getSelectedBadge(containerId) {
+  const el = document.querySelector(`#${containerId} .type-badge.on, #${containerId} .severity-btn.on`);
+  return el ? el.dataset.val : '';
+}
+
+let crashFile = null;
+
+function handleCrashFile(file) {
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    alert('File too large (max 10MB)');
+    return;
+  }
+  crashFile = file;
+  document.getElementById('crash-file-drop').style.display = 'none';
+  document.getElementById('crash-file-attached').style.display = 'flex';
+  document.getElementById('crash-file-name').textContent = '📎 ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+}
+
+function removeCrashFile() {
+  crashFile = null;
+  document.getElementById('crash-file-input').value = '';
+  document.getElementById('crash-file-drop').style.display = 'block';
+  document.getElementById('crash-file-attached').style.display = 'none';
+}
+
+// Drag and drop for crash file
+document.addEventListener('DOMContentLoaded', () => {
+  const drop = document.getElementById('crash-file-drop');
+  if (drop) {
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('dragover'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
+    drop.addEventListener('drop', e => {
+      e.preventDefault();
+      drop.classList.remove('dragover');
+      if (e.dataTransfer.files.length) handleCrashFile(e.dataTransfer.files[0]);
+    });
+  }
+});
+
+async function sendToDiscord(webhook, embed) {
+  if (!webhook) {
+    console.warn('Webhook not configured');
+    showSuccess();
+    return;
+  }
+  try {
+    const res = await fetch(webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ embeds: [embed] })
+    });
+    if (res.ok) showSuccess();
+    else alert('Submission failed. Please try again or contact staff on Discord.');
+  } catch (e) {
+    alert('Network error. Please try again.');
+  }
+}
+
+async function sendToDiscordWithFile(webhook, embed, file) {
+  if (!webhook) {
+    console.warn('Webhook not configured');
+    showSuccess();
+    return;
+  }
+  try {
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
+    if (file) {
+      formData.append('file', file, file.name);
+    }
+    const res = await fetch(webhook, {
+      method: 'POST',
+      body: formData
+    });
+    if (res.ok) showSuccess();
+    else alert('Submission failed. Please try again or contact staff on Discord.');
+  } catch (e) {
+    alert('Network error. Please try again.');
+  }
+}
+
+function showSuccess() {
+  document.querySelectorAll('.form-card').forEach(f => f.style.display = 'none');
+  document.getElementById('form-success').style.display = 'block';
+}
+
+function resetForm() {
+  document.querySelectorAll('input, textarea').forEach(el => el.value = '');
+  removeCrashFile();
+  switchTab('bug');
+}
+
+function submitBug() {
+  const discord = document.getElementById('bug-discord').value.trim();
+  const what = document.getElementById('bug-what').value.trim();
+  if (!discord || !what) { alert('Please fill in required fields'); return; }
+  
+  const embed = {
+    title: '🐛 Bug Report',
+    color: 0xFF4D6D,
+    fields: [
+      { name: '👤 Discord', value: discord, inline: true },
+      { name: '📁 Category', value: getSelectedBadge('bug-category'), inline: true },
+      { name: '⚠️ Severity', value: getSelectedBadge('bug-severity'), inline: true },
+      { name: '📝 Description', value: what.slice(0, 1000) },
+    ],
+    footer: { text: 'Phase City Citizen Portal' },
+    timestamp: new Date().toISOString()
+  };
+  const steps = document.getElementById('bug-steps').value.trim();
+  const media = document.getElementById('bug-media').value.trim();
+  if (steps) embed.fields.push({ name: '🔄 Steps to Reproduce', value: steps.slice(0, 500) });
+  if (media) embed.fields.push({ name: '📎 Media', value: media });
+  
+  sendToDiscord(WEBHOOKS.bug, embed);
+}
+
+function submitSuggestion() {
+  const discord = document.getElementById('sug-discord').value.trim();
+  const idea = document.getElementById('sug-idea').value.trim();
+  if (!discord || !idea) { alert('Please fill in required fields'); return; }
+  
+  const embed = {
+    title: '💡 Suggestion',
+    color: 0x5CE1E6,
+    fields: [
+      { name: '👤 Discord', value: discord, inline: true },
+      { name: '📁 Category', value: getSelectedBadge('sug-category'), inline: true },
+      { name: '📝 Suggestion', value: idea.slice(0, 1000) },
+    ],
+    footer: { text: 'Phase City Citizen Portal' },
+    timestamp: new Date().toISOString()
+  };
+  const ref = document.getElementById('sug-ref').value.trim();
+  if (ref) embed.fields.push({ name: '🔗 Reference', value: ref });
+  
+  sendToDiscord(WEBHOOKS.suggestion, embed);
+}
+
+function submitCrash() {
+  const discord = document.getElementById('crash-discord').value.trim();
+  const what = document.getElementById('crash-what').value.trim();
+  if (!discord || !what) { alert('Please fill in required fields'); return; }
+  
+  const btn = document.getElementById('crash-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loading"></span>SUBMITTING...';
+  
+  const embed = {
+    title: '💥 Crash Report',
+    color: 0xFF9F43,
+    fields: [
+      { name: '👤 Discord', value: discord, inline: true },
+      { name: '💢 Type', value: getSelectedBadge('crash-type'), inline: true },
+      { name: '🔄 Frequency', value: document.getElementById('crash-freq').value, inline: true },
+      { name: '📝 What Happened', value: what.slice(0, 1000) },
+    ],
+    footer: { text: 'Phase City Citizen Portal' },
+    timestamp: new Date().toISOString()
+  };
+  const error = document.getElementById('crash-error').value.trim();
+  if (error) embed.fields.push({ name: '⚠️ Error Message', value: '```' + error.slice(0, 500) + '```' });
+  if (crashFile) embed.fields.push({ name: '📎 Crash File', value: crashFile.name });
+  
+  if (crashFile) {
+    sendToDiscordWithFile(WEBHOOKS.crash, embed, crashFile);
+  } else {
+    sendToDiscord(WEBHOOKS.crash, embed);
+  }
+}
+</script>
+</body>
+</html>
