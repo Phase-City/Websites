@@ -1728,7 +1728,7 @@ function renderClPreview(){
   
   if(clPreviewMode==='styled'){
     let html=`<div class="cl-embed-preview">`;
-    html+=`<div class="cl-embed-header">🌃 PHASE CITY | Patch Notes ${esc(ver)}</div>`;
+    html+=`<div class="cl-embed-header">🌙 PHASE CITY | Change Log ${esc(ver)}</div>`;
     html+=`<div class="cl-embed-date"><strong>Released:</strong> ${date}</div>\n`;
     
     ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
@@ -1763,7 +1763,7 @@ function renderClPreview(){
     html+=`</div>`;
     $('cl-preview').innerHTML=html;
   }else{
-    let txt=`🌃 PHASE CITY | Patch Notes ${ver}\n\nReleased: ${date}\n\n`;
+    let txt=`🌙 PHASE CITY | Change Log ${ver}\n\nReleased: ${date}\n\n`;
     ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
       if(clBuckets[sec]?.length){
         const icon=CL_ICONS[sec];
@@ -1790,7 +1790,7 @@ function getPlainChangelog(){
   const ver=$('cl-version').value||'v1.0.0';
   const dateVal=$('cl-date').value;
   const date=dateVal?new Date(dateVal+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Today';
-  let txt=`🌃 PHASE CITY | Patch Notes ${ver}\n\nReleased: ${date}\n\n`;
+  let txt=`🌙 PHASE CITY | Change Log ${ver}\n\nReleased: ${date}\n\n`;
   ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
     if(clBuckets[sec]?.length){
       const icon=CL_ICONS[sec];
@@ -1813,7 +1813,7 @@ function getPlainChangelog(){
 function copyChangelog(){
   navigator.clipboard.writeText(getPlainChangelog()).then(()=>toast('Changelog copied!')).catch(()=>toast('Copy failed','err'));
 }
-const CL_WEBHOOK='https://discord.com/api/webhooks/1480062988638621841/y3qkkH53Gw3Jc7lleinSuSgg-jV5W4hWcMZuSABjkC4cwy91w5PRa19yUMnYsZgBc-SX';
+const CL_WEBHOOK='https://discord.com/api/webhooks/1480055528108458004/xKSSe6QsS6llhGf89_c8YuXM_c5kLhOV6o-3WE-XnzlM8UvFAhTqaxJOk_folffLrQRD';
 const CL_ICONS={'NEW FEATURES':'🆕','IMPROVEMENTS':'⚡','BUG FIXES':'🐛','TWEAKS & ADJUSTMENTS':'🔧','KNOWN ISSUES':'⚠️','COMING SOON':'🔮','COMMUNITY CREDITS':'🏆'};
 
 function getDiscordTimestamp(dateVal){
@@ -1853,7 +1853,7 @@ function buildChangelogEmbed(){
   
   return{
     embeds:[{
-      title:`🌃 PHASE CITY | Patch Notes ${ver}`,
+      title:`🌙 PHASE CITY | Change Log ${ver}`,
       description:`**Released:** ${ts.display}`,
       color:0x7B68EE,
       timestamp:new Date().toISOString(),
