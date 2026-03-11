@@ -2115,6 +2115,7 @@ function dropIntoBucket(e,targetSec){
   }
 }
 
+function renderClBuckets(){renderBucketSelector();renderActiveBucket();}
 function setClPreview(mode){
   clPreviewMode=mode;
   $('cl-tab-styled').className='cl-preview-tab'+(mode==='styled'?' on':'');
