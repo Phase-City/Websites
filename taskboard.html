@@ -362,6 +362,33 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 .cl-embed-footer{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.06);color:#72767d;font-size:11px;display:flex;align-items:center;gap:8px}
 .cl-footer{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
 .cl-footer-left{display:flex;gap:10px}
+/* CHANGELOG REDESIGN - TABS + BUCKET SELECTOR */
+.cl-source-tabs{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.cl-source-tab{flex:1;padding:10px 14px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;background:transparent;border:none;color:var(--vlight);cursor:pointer;transition:all .15s;text-align:center}
+.cl-source-tab:hover{background:rgba(123,104,238,0.1);color:#fff}
+.cl-source-tab.active{background:rgba(123,104,238,0.2);color:var(--c);border-bottom:2px solid var(--c)}
+.cl-source-tab.todo-tab.active{background:rgba(16,185,129,0.15);color:#10b981;border-bottom-color:#10b981}
+.cl-source-panel{display:none;flex:1;overflow:hidden;min-height:0}
+.cl-source-panel.active{display:flex;flex-direction:column}
+.cl-source-list{flex:1;overflow-y:auto;max-height:180px}
+.cl-bucket-area{flex:1;display:flex;flex-direction:column;min-height:280px;max-height:280px;overflow:hidden}
+.cl-bucket-selector{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.cl-bucket-selector select{flex:1;font-family:'Share Tech Mono',monospace;font-size:12px;background:rgba(123,104,238,0.1);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;cursor:pointer;color-scheme:dark;letter-spacing:1px}
+.cl-bucket-selector select option{background:#0d0d1e;color:var(--text)}
+.cl-bucket-selector select:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(123,104,238,0.15)}
+.cl-bucket-quick-nav{display:flex;gap:4px;flex-wrap:wrap}
+.cl-bucket-quick-btn{width:28px;height:28px;border:1px solid var(--border);border-radius:6px;background:rgba(123,104,238,0.08);color:var(--vlight);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cl-bucket-quick-btn:hover{border-color:var(--v);background:rgba(123,104,238,0.2);transform:scale(1.1)}
+.cl-bucket-quick-btn.active{border-color:var(--c);background:rgba(92,225,230,0.15);color:var(--c);box-shadow:0 0 8px rgba(92,225,230,0.25)}
+.cl-active-bucket{flex:1;display:flex;flex-direction:column;background:rgba(10,10,20,0.5);border:1px solid var(--border);border-radius:10px;overflow:hidden;min-height:0}
+.cl-active-bucket-header{padding:10px 14px;background:rgba(123,104,238,0.1);border-bottom:1px solid var(--border);font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--c);letter-spacing:2px;display:flex;align-items:center;justify-content:space-between}
+.cl-active-bucket-count{font-size:10px;background:rgba(92,225,230,0.15);padding:2px 8px;border-radius:4px}
+.cl-active-bucket-body{flex:1;overflow-y:auto;padding:10px;min-height:80px}
+.cl-active-bucket-body.empty{display:flex;align-items:center;justify-content:center;color:var(--vlight);font-family:'Share Tech Mono',monospace;font-size:11px;opacity:0.5}
+.cl-active-bucket-footer{padding:10px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap}
+.cl-active-bucket-footer input{flex:1;min-width:120px;font-size:12px;padding:8px 12px;background:rgba(10,10,20,0.85);border:1px solid var(--border);border-radius:6px;color:var(--text);outline:none}
+.cl-active-bucket-footer input::placeholder{color:var(--vlight);opacity:0.5}
+.cl-active-bucket-footer input:focus{border-color:var(--v)}
 .cl-webhook-status{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--vlight);letter-spacing:1.5px;opacity:0.7}
 /* ROADMAP */
 .rm-modal{max-width:980px;max-height:90vh;display:flex;flex-direction:column}
@@ -675,33 +702,56 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     </div>
     <div class="cl-body">
       <div class="cl-left">
-        <div class="cl-section">
-          <div class="cl-section-hdr">
-            <span class="cl-section-title">📋 TASKS (DONE)</span>
-            <span class="cl-section-count" id="cl-task-count">0</span>
-          </div>
+        <!-- SOURCE TABS -->
+        <div class="cl-source-tabs">
+          <button class="cl-source-tab active" id="cl-tab-tasks" onclick="switchClSourceTab('tasks')">📋 TASKS <span id="cl-task-count-badge">0</span></button>
+          <button class="cl-source-tab todo-tab" id="cl-tab-todos" onclick="switchClSourceTab('todos')">✅ TO-DO READY <span id="cl-todo-count-badge">0</span></button>
+        </div>
+        
+        <!-- TASKS PANEL -->
+        <div class="cl-source-panel active" id="cl-panel-tasks">
           <div style="display:flex;gap:6px;margin-bottom:8px">
             <button class="btn-sm btn-edit" onclick="clSelectAll('done')">Select All</button>
             <button class="btn-sm btn-edit" onclick="clSelectAll('none')">Clear</button>
           </div>
-          <div class="cl-task-list" id="cl-task-list"></div>
+          <div class="cl-source-list cl-task-list" id="cl-task-list"></div>
         </div>
-        <div class="cl-section" style="border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.03)">
-          <div class="cl-section-hdr">
-            <span class="cl-section-title" style="color:#10b981">✅ TO-DO READY</span>
-            <span class="cl-section-count" id="cl-todo-count" style="background:rgba(16,185,129,0.15);color:#10b981">0</span>
-          </div>
+        
+        <!-- TO-DO PANEL -->
+        <div class="cl-source-panel" id="cl-panel-todos">
           <div style="display:flex;gap:6px;margin-bottom:8px">
             <button class="btn-sm btn-green" onclick="clSelectAllTodo()">Select All</button>
             <button class="btn-sm btn-green" onclick="clClearTodo()">Clear</button>
           </div>
-          <div class="cl-task-list" id="cl-todo-list"></div>
+          <div class="cl-source-list cl-task-list" id="cl-todo-list"></div>
         </div>
-        <div class="cl-section" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
-          <div class="cl-section-hdr">
+        
+        <!-- BUCKET SELECTOR AREA (Fixed Height) -->
+        <div class="cl-bucket-area">
+          <div class="cl-section-hdr" style="margin-bottom:10px">
             <span class="cl-section-title">ORGANIZE INTO SECTIONS</span>
           </div>
-          <div style="flex:1;overflow-y:auto" id="cl-buckets"></div>
+          <div class="cl-bucket-selector">
+            <select id="cl-bucket-select" onchange="switchActiveBucket()"></select>
+          </div>
+          <div class="cl-bucket-quick-nav" id="cl-bucket-quick-nav"></div>
+          <div class="cl-active-bucket" id="cl-active-bucket"
+               ondragover="event.preventDefault();this.style.borderColor='var(--c)'"
+               ondragleave="this.style.borderColor=''"
+               ondrop="dropIntoActiveBucket(event)">
+            <div class="cl-active-bucket-header">
+              <span id="cl-active-bucket-name">🆕 NEW FEATURES</span>
+              <span class="cl-active-bucket-count" id="cl-active-bucket-count">0</span>
+            </div>
+            <div class="cl-active-bucket-body" id="cl-active-bucket-body">
+              DROP TASKS OR ADD CUSTOM
+            </div>
+            <div class="cl-active-bucket-footer">
+              <input placeholder="Add custom item..." id="cl-bucket-input" onkeydown="if(event.key==='Enter'){addCustomToActiveBucket();this.value=''}">
+              <button class="btn-sm btn-edit" onclick="addCustomToActiveBucket()">+ ADD</button>
+              <button class="btn-sm btn-edit" onclick="addSelectedToActiveBucket()">+ SELECTED</button>
+            </div>
+          </div>
         </div>
       </div>
       <div class="cl-right">
@@ -1736,18 +1786,24 @@ let clSelectedTodos=new Set();
 let dragClTodoId=null;
 let clBuckets={};
 let clPreviewMode='styled';
+let clActiveSection='NEW FEATURES';
+let clSourceTab='tasks';
 
 function openChangelog(){
   clSelectedTasks=new Set();
   clSelectedTodos=new Set();
   clBuckets={};
   CL_SECTIONS.forEach(s=>clBuckets[s]=[]);
+  clActiveSection='NEW FEATURES';
+  clSourceTab='tasks';
   $('cl-version').value='v1.0.0';
   $('cl-date').value=new Date().toISOString().split('T')[0];
   renderClTaskList();
   renderClTodoList();
-  renderClBuckets();
+  renderBucketSelector();
+  renderActiveBucket();
   renderClPreview();
+  switchClSourceTab('tasks');
   $('cl-modal').style.display='flex';
 }
 function closeChangelog(){$('cl-modal').style.display='none';}
@@ -1768,6 +1824,7 @@ function renderClTaskList(){
   `).join(''):'<div style="padding:12px;color:#444;font-size:10px;text-align:center">No tasks in Done or In Progress</div>';
   const doneTasks=tasks.filter(t=>t.status==='Done');
   $('cl-task-count').textContent=doneTasks.length;
+  $('cl-task-count-badge').textContent=doneTasks.length;
 }
 function renderClTodoList(){
   const readyItems=getTodoReadyItems();
@@ -1783,6 +1840,7 @@ function renderClTodoList(){
       <span class="task-source">${esc(t.listName)}</span>
     </div>
   `).join(''):'<div style="padding:12px;color:#444;font-size:10px;text-align:center">No to-do items ready</div>';
+  $('cl-todo-count-badge').textContent=readyItems.length;
 }
 
 function toggleClTodo(id){
@@ -1801,6 +1859,148 @@ function clClearTodo(){
   clSelectedTodos=new Set();
   renderClTodoList();
 }
+
+function switchClSourceTab(tab){
+  clSourceTab=tab;
+  $('cl-tab-tasks').className='cl-source-tab'+(tab==='tasks'?' active':'');
+  $('cl-tab-todos').className='cl-source-tab todo-tab'+(tab==='todos'?' active':'');
+  $('cl-panel-tasks').className='cl-source-panel'+(tab==='tasks'?' active':'');
+  $('cl-panel-todos').className='cl-source-panel'+(tab==='todos'?' active':'');
+}
+
+function renderBucketSelector(){
+  const sel=$('cl-bucket-select');
+  sel.innerHTML=CL_SECTIONS.map(s=>`<option value="${s}"${s===clActiveSection?' selected':''}>${CL_ICONS[s]} ${s} (${clBuckets[s]?.length||0})</option>`).join('');
+  
+  const nav=$('cl-bucket-quick-nav');
+  nav.innerHTML=CL_SECTIONS.map(s=>`<button class="cl-bucket-quick-btn${s===clActiveSection?' active':''}" onclick="setActiveBucket('${s}')" title="${s}">${CL_ICONS[s]}</button>`).join('');
+}
+
+function switchActiveBucket(){
+  clActiveSection=$('cl-bucket-select').value;
+  renderBucketSelector();
+  renderActiveBucket();
+}
+
+function setActiveBucket(sec){
+  clActiveSection=sec;
+  renderBucketSelector();
+  renderActiveBucket();
+}
+
+function renderActiveBucket(){
+  const items=clBuckets[clActiveSection]||[];
+  $('cl-active-bucket-name').textContent=`${CL_ICONS[clActiveSection]} ${clActiveSection}`;
+  $('cl-active-bucket-count').textContent=items.length;
+  
+  const body=$('cl-active-bucket-body');
+  if(!items.length){
+    body.className='cl-active-bucket-body empty';
+    body.innerHTML='DROP TASKS HERE OR ADD CUSTOM';
+  }else{
+    body.className='cl-active-bucket-body';
+    body.innerHTML=items.map((item,i)=>`
+      <div class="cl-bucket-item" draggable="true" ondragstart="dragBucketItem(event,'${clActiveSection}',${i})">
+        <span class="drag-handle">☰</span>
+        <span class="item-text">${esc(item)}</span>
+        <span class="item-del" onclick="removeFromActiveBucket(${i})">×</span>
+      </div>
+    `).join('');
+  }
+  
+  // Update placeholder based on section
+  const inp=$('cl-bucket-input');
+  inp.placeholder=clActiveSection==='COMMUNITY CREDITS'?'@username...':'Add custom item...';
+}
+
+function dropIntoActiveBucket(e){
+  e.preventDefault();
+  $('cl-active-bucket').style.borderColor='';
+  
+  if(dragClTaskId){
+    const t=tasks.find(x=>x.id===dragClTaskId);
+    if(t&&!clBuckets[clActiveSection].includes(t.title)){
+      clBuckets[clActiveSection].push(t.title);
+      renderBucketSelector();
+      renderActiveBucket();
+      renderClPreview();
+    }
+    dragClTaskId=null;
+    return;
+  }
+  
+  if(dragClTodoId){
+    const todoItems=getTodoReadyItems();
+    const t=todoItems.find(x=>x.id===dragClTodoId);
+    if(t&&!clBuckets[clActiveSection].includes(t.text)){
+      clBuckets[clActiveSection].push(t.text);
+      markTodoUsedInChangelog(t.id);
+      renderBucketSelector();
+      renderActiveBucket();
+      renderClPreview();
+      renderClTodoList();
+    }
+    dragClTodoId=null;
+    return;
+  }
+  
+  if(dragSec!==null&&dragIdx!==null){
+    const item=clBuckets[dragSec].splice(dragIdx,1)[0];
+    clBuckets[clActiveSection].push(item);
+    dragSec=null;dragIdx=null;
+    renderBucketSelector();
+    renderActiveBucket();
+    renderClPreview();
+  }
+}
+
+function addCustomToActiveBucket(){
+  const inp=$('cl-bucket-input');
+  const text=inp.value.trim();
+  if(!text)return;
+  clBuckets[clActiveSection].push(text);
+  inp.value='';
+  renderBucketSelector();
+  renderActiveBucket();
+  renderClPreview();
+}
+
+function addSelectedToActiveBucket(){
+  let added=0;
+  clSelectedTasks.forEach(id=>{
+    const t=tasks.find(x=>x.id===id);
+    if(t&&!clBuckets[clActiveSection].includes(t.title)){
+      clBuckets[clActiveSection].push(t.title);
+      added++;
+    }
+  });
+  clSelectedTodos.forEach(id=>{
+    const todoItems=getTodoReadyItems();
+    const t=todoItems.find(x=>x.id===id);
+    if(t&&!clBuckets[clActiveSection].includes(t.text)){
+      clBuckets[clActiveSection].push(t.text);
+      markTodoUsedInChangelog(t.id);
+      added++;
+    }
+  });
+  if(added){
+    renderBucketSelector();
+    renderActiveBucket();
+    renderClPreview();
+    renderClTodoList();
+    toast(`Added ${added} item(s) to ${clActiveSection}`);
+  }else{
+    toast('No items selected or already added','err');
+  }
+}
+
+function removeFromActiveBucket(i){
+  clBuckets[clActiveSection].splice(i,1);
+  renderBucketSelector();
+  renderActiveBucket();
+  renderClPreview();
+}
+
 function toggleClTask(id){
   if(clSelectedTasks.has(id))clSelectedTasks.delete(id);
   else clSelectedTasks.add(id);
@@ -1813,37 +2013,7 @@ function clSelectAll(mode){
   renderClTaskList();
 }
 
-function renderClBuckets(){
-  $('cl-buckets').innerHTML=CL_SECTIONS.map(sec=>{
-    const placeholder=sec==='COMMUNITY CREDITS'?'@username...':'Add custom item...';
-    const autoPullBtn=sec==='COMMUNITY CREDITS'?`<button class="btn-sm btn-edit" onclick="autoPullCredits()" title="Auto-pull from citizen submissions">🔄 AUTO-PULL</button>`:'';
-    return`
-    <div class="cl-bucket" data-section="${sec}">
-      <div class="cl-bucket-hdr" onclick="toggleBucketCollapse(this)">
-        <span class="cl-bucket-name">${CL_ICONS[sec]||'📌'} ${sec}</span>
-        <span style="font-size:9px;color:#444">${clBuckets[sec]?.length||0}</span>
-      </div>
-      <div class="cl-bucket-body${!clBuckets[sec]?.length?' empty':''}" 
-           ondragover="event.preventDefault();this.style.background='rgba(123,104,238,0.1)'" 
-           ondragleave="this.style.background=''" 
-           ondrop="dropIntoBucket(event,'${sec}')">
-        ${clBuckets[sec]?.length?clBuckets[sec].map((item,i)=>`
-          <div class="cl-bucket-item" draggable="true" ondragstart="dragBucketItem(event,'${sec}',${i})">
-            <span class="drag-handle">&#9776;</span>
-            <span class="item-text">${esc(item)}</span>
-            <span class="item-del" onclick="removeBucketItem('${sec}',${i})">&times;</span>
-          </div>
-        `).join(''):'DROP TASKS OR ADD CUSTOM'}
-      </div>
-      <div class="cl-add-item">
-        <input placeholder="${placeholder}" id="cl-input-${sec.replace(/\s+/g,'-')}" onkeydown="if(event.key==='Enter'){addCustomItem('${sec}',this.value);this.value=''}">
-        <button class="btn-sm btn-edit" onclick="const inp=document.getElementById('cl-input-${sec.replace(/\s+/g,'-')}');addCustomItem('${sec}',inp.value);inp.value=''">+ ADD</button>
-        ${sec!=='COMMUNITY CREDITS'?`<button class="btn-sm btn-edit" onclick="addSelectedToBucket('${sec}')" title="Add selected tasks">+ SELECTED</button>`:''}
-        ${autoPullBtn}
-      </div>
-    </div>
-  `}).join('');
-}
+
 
 function autoPullCredits(){
   // Get unique submitters from citizen portal tasks that are in the selected tasks or done
