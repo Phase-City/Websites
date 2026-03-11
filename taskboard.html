@@ -1766,6 +1766,7 @@ function renderClTaskList(){
       <span class="task-res">${esc(t.resourceName||'')}</span>
     </div>
   `).join(''):'<div style="padding:12px;color:#444;font-size:10px;text-align:center">No tasks in Done or In Progress</div>';
+  const doneTasks=tasks.filter(t=>t.status==='Done');
   $('cl-task-count').textContent=doneTasks.length;
 }
 function renderClTodoList(){
