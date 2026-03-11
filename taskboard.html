@@ -1781,6 +1781,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 // CHANGELOG GENERATOR
 const CL_SECTIONS=['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES','COMING SOON','COMMUNITY CREDITS'];
+const CL_ICONS={'NEW FEATURES':'🆕','IMPROVEMENTS':'⚡','BUG FIXES':'🐛','TWEAKS & ADJUSTMENTS':'🔧','KNOWN ISSUES':'⚠️','COMING SOON':'🔮','COMMUNITY CREDITS':'🏆'};
 let clSelectedTasks=new Set();
 let clSelectedTodos=new Set();
 let dragClTodoId=null;
@@ -1823,12 +1824,10 @@ function renderClTaskList(){
     </div>
   `).join(''):'<div style="padding:12px;color:#444;font-size:10px;text-align:center">No tasks in Done or In Progress</div>';
   const doneTasks=tasks.filter(t=>t.status==='Done');
-  $('cl-task-count').textContent=doneTasks.length;
   $('cl-task-count-badge').textContent=doneTasks.length;
 }
 function renderClTodoList(){
   const readyItems=getTodoReadyItems();
-  $('cl-todo-count').textContent=readyItems.length;
   $('cl-todo-list').innerHTML=readyItems.length?readyItems.map(t=>`
     <div class="cl-task-item todo-item-cl${clSelectedTodos.has(t.id)?' selected':''}" 
          draggable="true" 
@@ -2216,7 +2215,6 @@ function copyChangelog(){
   navigator.clipboard.writeText(getPlainChangelog()).then(()=>toast('Changelog copied!')).catch(()=>toast('Copy failed','err'));
 }
 const CL_WEBHOOK='https://discord.com/api/webhooks/1480055528108458004/xKSSe6QsS6llhGf89_c8YuXM_c5kLhOV6o-3WE-XnzlM8UvFAhTqaxJOk_folffLrQRD';
-const CL_ICONS={'NEW FEATURES':'🆕','IMPROVEMENTS':'⚡','BUG FIXES':'🐛','TWEAKS & ADJUSTMENTS':'🔧','KNOWN ISSUES':'⚠️','COMING SOON':'🔮','COMMUNITY CREDITS':'🏆'};
 
 function getDiscordTimestamp(dateVal){
   if(!dateVal)return{unix:Math.floor(Date.now()/1000),display:'Today'};
