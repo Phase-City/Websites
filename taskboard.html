@@ -259,6 +259,39 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 .todo-progress-bar{flex:1;height:8px;background:rgba(16,185,129,0.15);border-radius:4px;overflow:hidden}
 .todo-progress-fill{height:100%;background:linear-gradient(90deg,#10b981,var(--c));border-radius:4px;transition:width .3s}
 .todo-empty{text-align:center;padding:40px;color:var(--vlight);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px}
+/* MULTI-LIST TO-DO ADDITIONS */
+.todo-list-selector{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.todo-list-selector select{flex:1;min-width:200px;font-family:'Share Tech Mono',monospace;font-size:13px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);color:var(--text);border-radius:8px;padding:10px 14px;cursor:pointer;color-scheme:dark}
+.todo-list-selector select option{background:#0d0d1e;color:var(--text)}
+.todo-list-selector select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,0.15)}
+.todo-list-btn{font-family:'Share Tech Mono',monospace;font-size:11px;padding:8px 12px;border-radius:6px;border:1px solid rgba(16,185,129,0.3);background:rgba(16,185,129,0.08);color:#10b981;cursor:pointer;transition:all .15s;white-space:nowrap}
+.todo-list-btn:hover{background:rgba(16,185,129,0.18);border-color:#10b981}
+.todo-list-btn.danger{border-color:rgba(255,77,109,0.3);color:var(--red);background:rgba(255,77,109,0.08)}
+.todo-list-btn.danger:hover{background:rgba(255,77,109,0.18);border-color:var(--red)}
+.todo-item.ready-for-cl{border-color:rgba(92,225,230,0.4);background:rgba(92,225,230,0.08)}
+.todo-item.used-in-cl{opacity:0.4;background:rgba(123,104,238,0.05)}
+.todo-badges{display:flex;gap:6px;align-items:center}
+.todo-badge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 6px;border-radius:4px;letter-spacing:1px}
+.todo-badge.ready{background:rgba(92,225,230,0.15);color:var(--c);border:1px solid rgba(92,225,230,0.3)}
+.todo-badge.used{background:rgba(123,104,238,0.15);color:var(--v);border:1px solid rgba(123,104,238,0.3)}
+.todo-text-input{flex:1;font-size:14px;color:var(--text);background:rgba(16,185,129,0.1);border:1px solid #10b981;border-radius:6px;padding:6px 10px;outline:none}
+.todo-item-actions{display:flex;gap:6px;opacity:0;transition:opacity .15s}
+.todo-item:hover .todo-item-actions{opacity:1}
+.todo-action-btn{width:24px;height:24px;border:none;border-radius:5px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .15s;background:rgba(123,104,238,0.15);color:var(--v)}
+.todo-action-btn:hover{background:rgba(123,104,238,0.3)}
+.todo-action-btn.del{background:rgba(255,77,109,0.15);color:var(--red)}
+.todo-action-btn.del:hover{background:rgba(255,77,109,0.3)}
+.todo-action-btn.cl{background:rgba(92,225,230,0.15);color:var(--c)}
+.todo-action-btn.cl:hover{background:rgba(92,225,230,0.3)}
+.todo-comment{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--orange);background:rgba(255,159,67,0.08);padding:4px 8px;border-radius:4px;margin-top:4px;border-left:2px solid var(--orange);word-break:break-word}
+.todo-comment-input{width:100%;font-family:'Share Tech Mono',monospace;font-size:12px;background:rgba(255,159,67,0.08);border:1px solid rgba(255,159,67,0.3);color:var(--text);border-radius:6px;padding:6px 10px;margin-top:6px;outline:none;resize:none}
+.todo-comment-input:focus{border-color:var(--orange)}
+.todo-item-content{flex:1;display:flex;flex-direction:column;gap:2px}
+.cl-task-item.todo-item-cl{border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.08)}
+.cl-task-item.todo-item-cl:hover{border-color:rgba(16,185,129,0.5)}
+.cl-task-item.todo-item-cl.selected{border-color:#10b981;background:rgba(16,185,129,0.15)}
+.cl-task-item .task-source{font-family:'Share Tech Mono',monospace;font-size:9px;color:#10b981;background:rgba(16,185,129,0.15);padding:2px 6px;border-radius:3px}
+.btn-green{background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3)}.btn-green:hover{background:rgba(16,185,129,0.28);box-shadow:0 0 12px rgba(16,185,129,0.25)}
 /* LIGHTBOX */
 #lightbox{position:fixed;inset:0;z-index:950;background:rgba(0,0,0,0.94);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;flex-direction:column;padding:24px}
 #lightbox.show{display:flex}
@@ -596,30 +629,37 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
   </div>
 </div>
 
-<!-- TO-DO LIST -->
+<!-- TO-DO LIST - MULTI-LIST -->
 <div class="overlay" id="todo-modal" style="display:none" onclick="if(event.target===this)closeTodoPanel()">
   <div class="modal todo-panel">
-    <div class="modal-title">&#9745; TO-DO LIST</div>
+    <div class="modal-title">&#9745; TO-DO LISTS</div>
+    <div class="todo-list-selector">
+      <select id="todo-list-select" onchange="switchTodoList()"></select>
+      <button class="todo-list-btn" onclick="createNewTodoList()">+ NEW LIST</button>
+      <button class="todo-list-btn" onclick="renameTodoList()">✏ RENAME</button>
+      <button class="todo-list-btn danger" onclick="deleteTodoList()">🗑 DELETE</button>
+    </div>
     <div class="todo-header-row">
-      <textarea class="todo-paste-area" id="todo-paste" placeholder="Paste your list here (one item per line)...&#10;&#10;Example:&#10;Update ox_inventory config&#10;Test vehicle spawns&#10;Review police loadouts"></textarea>
+      <textarea class="todo-paste-area" id="todo-paste" placeholder="Paste your list here (one item per line)..."></textarea>
     </div>
     <div class="todo-header-row">
       <button class="btn btn-primary" onclick="parseTodoList()" style="flex:1">&#10148; CONVERT TO CHECKLIST</button>
-      <button class="btn btn-ghost" onclick="clearTodoList()" style="border-color:rgba(255,77,109,0.3);color:var(--red)">&#128465; CLEAR ALL</button>
+      <button class="btn btn-ghost btn-green" onclick="markAllReadyForChangelog()">📋 READY ALL DONE</button>
+      <button class="btn btn-ghost" onclick="clearUsedItems()" style="border-color:rgba(123,104,238,0.4);color:var(--v)">🧹 CLEAR USED</button>
     </div>
     <div class="todo-stats" id="todo-stats" style="display:none">
       <div class="todo-stat"><b id="todo-done">0</b> / <span id="todo-total">0</span> done</div>
+      <div class="todo-stat" style="color:var(--c)"><b id="todo-ready">0</b> ready</div>
       <div class="todo-progress">
         <div class="todo-progress-bar"><div class="todo-progress-fill" id="todo-progress-fill" style="width:0%"></div></div>
         <span id="todo-pct" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#10b981">0%</span>
       </div>
     </div>
     <div class="todo-body" id="todo-body">
-      <div class="todo-empty">PASTE A LIST ABOVE TO GET STARTED</div>
+      <div class="todo-empty">SELECT OR CREATE A LIST TO GET STARTED</div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-ghost" onclick="closeTodoPanel()">Close</button>
-      <button class="btn btn-ghost" onclick="saveTodoDraft()" style="border-color:rgba(16,185,129,0.3);color:#10b981">&#128190; SAVE DRAFT</button>
       <button class="btn btn-primary" onclick="postTodoToDiscord()">&#128227; POST TO DISCORD</button>
     </div>
   </div>
@@ -637,15 +677,25 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       <div class="cl-left">
         <div class="cl-section">
           <div class="cl-section-hdr">
-            <span class="cl-section-title">SELECT TASKS</span>
-            <span class="cl-section-count" id="cl-selected-count">0 selected</span>
+            <span class="cl-section-title">📋 TASKS (DONE)</span>
+            <span class="cl-section-count" id="cl-task-count">0</span>
           </div>
           <div style="display:flex;gap:6px;margin-bottom:8px">
-            <button class="btn-sm btn-edit" onclick="clSelectAll('done')">Done</button>
-            <button class="btn-sm btn-edit" onclick="clSelectAll('progress')">In Progress</button>
+            <button class="btn-sm btn-edit" onclick="clSelectAll('done')">Select All</button>
             <button class="btn-sm btn-edit" onclick="clSelectAll('none')">Clear</button>
           </div>
           <div class="cl-task-list" id="cl-task-list"></div>
+        </div>
+        <div class="cl-section" style="border-color:rgba(16,185,129,0.3);background:rgba(16,185,129,0.03)">
+          <div class="cl-section-hdr">
+            <span class="cl-section-title" style="color:#10b981">✅ TO-DO READY</span>
+            <span class="cl-section-count" id="cl-todo-count" style="background:rgba(16,185,129,0.15);color:#10b981">0</span>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <button class="btn-sm btn-green" onclick="clSelectAllTodo()">Select All</button>
+            <button class="btn-sm btn-green" onclick="clClearTodo()">Clear</button>
+          </div>
+          <div class="cl-task-list" id="cl-todo-list"></div>
         </div>
         <div class="cl-section" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
           <div class="cl-section-hdr">
@@ -729,8 +779,15 @@ const DEFAULT_CATS=["[ogz]", "[dependencies]", "[root]", "[qbx]", "[ox]", "[g-sc
 const DEFAULT_RES=[{id:'r001',name:'ogz_blipz',category:'[ogz]'},{id:'r002',name:'ogz_cribz',category:'[ogz]'},{id:'r003',name:'ogz_illegaladmin',category:'[ogz]'},{id:'r004',name:'ogz_pedlife_v2',category:'[ogz]'},{id:'r005',name:'ogz_propmanager',category:'[ogz]'},{id:'r006',name:'ogz_rentals',category:'[ogz]'},{id:'r007',name:'ogz_resources',category:'[ogz]'},{id:'r008',name:'ogz_fitbit',category:'[dependencies]'},{id:'r009',name:'ogz_minigame_bridge',category:'[dependencies]'},{id:'r010',name:'ogz_skillsrep',category:'[dependencies]'},{id:'r011',name:'bl_dialog',category:'[dependencies]'},{id:'r012',name:'cdev_lib',category:'[dependencies]'},{id:'r013',name:'community_bridge',category:'[dependencies]'},{id:'r014',name:'Dm-throwitems',category:'[dependencies]'},{id:'r015',name:'evo_sound_player',category:'[dependencies]'},{id:'r016',name:'fmLib',category:'[dependencies]'},{id:'r017',name:'jg-vehiclemileage',category:'[dependencies]'},{id:'r018',name:'kimi_callbacks',category:'[dependencies]'},{id:'r019',name:'lc_utils',category:'[dependencies]'},{id:'r020',name:'loaf_lib',category:'[dependencies]'},{id:'r021',name:'menuv',category:'[dependencies]'},{id:'r022',name:'prompt_anim_core_2_new',category:'[dependencies]'},{id:'r023',name:'RageUI',category:'[dependencies]'},{id:'r024',name:'sn_lib',category:'[dependencies]'},{id:'r025',name:'wasabi_bridge',category:'[dependencies]'},{id:'r026',name:'xsound',category:'[dependencies]'},{id:'r027',name:'qbx_core',category:'[root]'},{id:'r028',name:'jg-hud',category:'[root]'},{id:'r029',name:'vertex-hub',category:'[root]'},{id:'r030',name:'qbx_binoculars',category:'[qbx]'},{id:'r031',name:'qbx_density',category:'[qbx]'},{id:'r032',name:'qbx_divegear',category:'[qbx]'},{id:'r033',name:'qbx_management',category:'[qbx]'},{id:'r034',name:'qbx_radialmenu',category:'[qbx]'},{id:'r035',name:'qbx_smallresources',category:'[qbx]'},{id:'r036',name:'qbx_vehicles',category:'[qbx]'},{id:'r037',name:'oxmysql',category:'[ox]'},{id:'r038',name:'ox_compat',category:'[ox]'},{id:'r039',name:'ox_doorlock',category:'[ox]'},{id:'r040',name:'ox_inventory',category:'[ox]'},{id:'r041',name:'ox_lib',category:'[ox]'},{id:'r042',name:'ox_target',category:'[ox]'},{id:'r043',name:'g-adv-paycheck',category:'[g-scripts]'},{id:'r044',name:'g-bossmenu',category:'[g-scripts]'},{id:'r045',name:'g-dutyV2',category:'[g-scripts]'},{id:'r046',name:'g-multijob',category:'[g-scripts]'},{id:'r047',name:'g-order-system',category:'[g-scripts]'},{id:'r048',name:'gg_busjob',category:'[jobs]'},{id:'r049',name:'gg_electricianjob',category:'[jobs]'},{id:'r050',name:'gg_garbagejob',category:'[jobs]'},{id:'r051',name:'gg_gruppejob',category:'[jobs]'},{id:'r052',name:'gg_taxijob',category:'[jobs]'},{id:'r053',name:'lation_detecting',category:'[jobs]'},{id:'r054',name:'lation_diving',category:'[jobs]'},{id:'r055',name:'kub_trucking',category:'[jobs]'},{id:'r056',name:'RxMining',category:'[jobs]'},{id:'r057',name:'RxZ_Smelters',category:'[jobs]'},{id:'r058',name:'r14-evidence',category:'[jobs]'},{id:'r059',name:'wasabi_ambulance',category:'[jobs]'},{id:'r060',name:'wasabi_crutch',category:'[jobs]'},{id:'r061',name:'wasabi_gps',category:'[jobs]'},{id:'r062',name:'wasabi_police',category:'[jobs]'},{id:'r063',name:'gg_boosting',category:'[illegal]'},{id:'r064',name:'lation_selling',category:'[illegal]'},{id:'r065',name:'tk_drugs',category:'[illegal]'},{id:'r066',name:'projectx-burner',category:'[illegal]'},{id:'r067',name:'projectx-masks',category:'[illegal]'},{id:'r068',name:'projectx-tasks',category:'[illegal]'},{id:'r069',name:'projectx-atmrobbery',category:'[illegal]'},{id:'r070',name:'projectx-houserobbery-v2',category:'[illegal]'},{id:'r071',name:'projectx-storerobbery-fm',category:'[illegal]'},{id:'r072',name:'crm-appearance',category:'[crm]'},{id:'r073',name:'crm-banking',category:'[crm]'},{id:'r074',name:'crm-core',category:'[crm]'},{id:'r075',name:'crm-loadingscreen',category:'[crm]'},{id:'r076',name:'crm-multicharacter',category:'[crm]'},{id:'r077',name:'crm-pausemenu',category:'[crm]'},{id:'r078',name:'crm-tattoos',category:'[crm]'},{id:'r079',name:'eatgo-app',category:'[phone]'},{id:'r080',name:'lb-newsapp',category:'[phone]'},{id:'r081',name:'lb-phone',category:'[phone]'},{id:'r082',name:'lb-phoneprop',category:'[phone]'},{id:'r083',name:'lbphone-insurance',category:'[phone]'},{id:'r084',name:'slrn_groups',category:'[phone]'},{id:'r085',name:'ws_emergency',category:'[phone]'},{id:'r086',name:'jg-advancedgarages',category:'[business]'},{id:'r087',name:'jg-dealerships',category:'[business]'},{id:'r088',name:'jg-mechanic',category:'[business]'},{id:'r089',name:'sn_furniture',category:'[housing]'},{id:'r090',name:'sn_properties',category:'[housing]'},{id:'r091',name:'envi-bridge',category:'[envi]'},{id:'r092',name:'envi-computer',category:'[envi]'},{id:'r093',name:'envi-hack-minigames-computer-edition',category:'[envi]'},{id:'r094',name:'envi-interact',category:'[envi]'},{id:'r095',name:'envi-pawnshop',category:'[envi]'},{id:'r096',name:'envi-zone-tool',category:'[envi]'},{id:'r097',name:'eagle_radar',category:'[mike]'},{id:'r098',name:'pc_economy',category:'[mike]'},{id:'r099',name:'pc_membership',category:'[mike]'},{id:'r100',name:'pc_queue',category:'[mike]'},{id:'r101',name:'ws_dispatch',category:'[mike]'},{id:'r102',name:'ws_gov',category:'[mike]'},{id:'r103',name:'ws_mdt',category:'[mike]'},{id:'r104',name:'bl_ui',category:'[minigames]'},{id:'r105',name:'tgg-minigames',category:'[minigames]'},{id:'r106',name:'lc_fuel',category:'[fuel]'},{id:'r107',name:'pixel-consumables',category:'[consumables]'},{id:'r108',name:'Renewed-Lib',category:'[renewed]'},{id:'r109',name:'Renewed-Vehiclekeys',category:'[renewed]'},{id:'r110',name:'Renewed-Weathersync',category:'[renewed]'},{id:'r111',name:'pma-voice',category:'[voice]'},{id:'r112',name:'zerio-radio',category:'[voice]'},{id:'r113',name:'AdvancedParking',category:'[standalone]'},{id:'r114',name:'amzn_admin_classic',category:'[standalone]'},{id:'r115',name:'bob74_ipl',category:'[standalone]'},{id:'r116',name:'cdev_chat',category:'[standalone]'},{id:'r117',name:'chowhathair',category:'[standalone]'},{id:'r118',name:'cr-stopmusic',category:'[standalone]'},{id:'r119',name:'fd_laptop',category:'[standalone]'},{id:'r120',name:'fivem-base-vehicle-handling',category:'[standalone]'},{id:'r121',name:'jg-handling',category:'[standalone]'},{id:'r122',name:'jg-stress-addon',category:'[standalone]'},{id:'r123',name:'kxCamera',category:'[standalone]'},{id:'r124',name:'Levi-Forceffp',category:'[standalone]'},{id:'r125',name:'lvc',category:'[standalone]'},{id:'r126',name:'MarkoMods-Menu',category:'[standalone]'},{id:'r127',name:'mnr_sitanywhere',category:'[standalone]'},{id:'r128',name:'MrNewbCustomPlates',category:'[standalone]'},{id:'r129',name:'MugShotBase64',category:'[standalone]'},{id:'r130',name:'object_gizmo',category:'[standalone]'},{id:'r131',name:'PolyZone',category:'[standalone]'},{id:'r132',name:'rpemotes',category:'[standalone]'},{id:'r133',name:'screenshot-basic',category:'[standalone]'},{id:'r134',name:'sd-dumpsters',category:'[standalone]'},{id:'r135',name:'snipe-menu',category:'[standalone]'},{id:'r136',name:'bcs_licensemanager',category:'[bcs]'},{id:'r137',name:'King-Greenscreen',category:'[bcs]'},{id:'r138',name:'cfx_onx_mp_faces',category:'[clothing]'},{id:'r139',name:'cfx_onx_mp_faces_replace',category:'[clothing]'},{id:'r140',name:'cfx_onx_mp_faces_replace_v2',category:'[clothing]'},{id:'r141',name:'fd_missing_textures',category:'[clothing]'},{id:'r142',name:'cfx-sent6-jakers',category:'[vehicles]'},{id:'r143',name:'sr1x',category:'[vehicles]'},{id:'r144',name:'beanbagshotgun',category:'[weapons]'},{id:'r145',name:'GlizzyWeaponsv1',category:'[weapons]'},{id:'r146',name:'MarkoMods-2011',category:'[weapons]'},{id:'r147',name:'MarkoMods-2S',category:'[weapons]'},{id:'r148',name:'MarkoMods-A45',category:'[weapons]'},{id:'r149',name:'MarkoMods-AGC',category:'[weapons]'},{id:'r150',name:'MarkoMods-KVR',category:'[weapons]'},{id:'r151',name:'MarkoMods-M320',category:'[weapons]'},{id:'r152',name:'MarkoMods-MB47',category:'[weapons]'},{id:'r153',name:'MarkoMods-P5',category:'[weapons]'},{id:'r154',name:'MarkoMods-PM4',category:'[weapons]'},{id:'r155',name:'MarkoMods-Shared',category:'[weapons]'},{id:'r156',name:'MarkoMods-TacticalSniper',category:'[weapons]'},{id:'r157',name:'MarkoMods-X17-Addon',category:'[weapons]'},{id:'r158',name:'MarkoMods-X17-Replace',category:'[weapons]'},{id:'r159',name:'PolarsArmoury_Glizzy',category:'[weapons]'}];
 
 let tasks=[],categories=[...DEFAULT_CATS],resources=[...DEFAULT_RES];
-let cfg={apikey:'',binid:'',password:'phasecity2026',members:['The OG KiLLz','Mike','Unassigned'],devhook:'https://discord.com/api/webhooks/1480042376423669800/NbacBKO0NxC2ZuTBnwaQjHoL88xUYLgGffm9L0IKUSgofiL6QcfodhbJ3lFnAHe6rT2B',notifyCreate:true,notifyDone:true,notifyCritical:false};
+let cfg={apikey:'',binid:'',password:'phasecity2026',members:['The OG KiLLz','Mike','Ray','Zach','Unassigned'],devhook:'https://discord.com/api/webhooks/1480042376423669800/NbacBKO0NxC2ZuTBnwaQjHoL88xUYLgGffm9L0IKUSgofiL6QcfodhbJ3lFnAHe6rT2B',notifyCreate:true,notifyDone:true,notifyCritical:false};
 let currentView='kanban',editId=null,selectedRes=null,rmTabCurrent='res';
+
+// MULTI-LIST TO-DO SYSTEM
+let todoLists=[{id:'default',name:'Quick Tasks',items:[],createdAt:new Date().toISOString()}];
+let currentTodoListId='default';
+let editingTodoItemId=null;
+const genTodoId=()=>'td_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+function getCurrentTodoList(){return todoLists.find(l=>l.id===currentTodoListId)||todoLists[0];}
 
 const genId=()=>'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
 const fmtDate=iso=>{if(!iso)return'';const d=new Date(iso);return`${d.getMonth()+1}/${d.getDate()}/${String(d.getFullYear()).slice(2)}`};
@@ -746,6 +803,10 @@ function loadLocal(){
     const r=sessionStorage.getItem('pc_res');if(r)resources=JSON.parse(r);
     const n=sessionStorage.getItem('pc_notes');if(n)notes=JSON.parse(n);
     const cf=localStorage.getItem('pc_cfg');if(cf)cfg={...cfg,...JSON.parse(cf)};
+    const tl=localStorage.getItem('pc_todo_lists');if(tl)todoLists=JSON.parse(tl);
+    const ctl=localStorage.getItem('pc_current_todo_list');if(ctl)currentTodoListId=ctl;
+    if(!todoLists.length)todoLists=[{id:'default',name:'Quick Tasks',items:[],createdAt:new Date().toISOString()}];
+    if(!todoLists.find(l=>l.id===currentTodoListId))currentTodoListId=todoLists[0].id;
   }catch(e){}
   $('setup-banner').style.display=(cfg.apikey&&cfg.binid)?'none':'flex';
 }
@@ -753,6 +814,9 @@ function saveLocal(){
   try{sessionStorage.setItem('pc_tasks',JSON.stringify(tasks));sessionStorage.setItem('pc_cats',JSON.stringify(categories));sessionStorage.setItem('pc_res',JSON.stringify(resources));sessionStorage.setItem('pc_notes',JSON.stringify(notes));}catch(e){}
 }
 function saveCfgLocal(){try{localStorage.setItem('pc_cfg',JSON.stringify(cfg));}catch(e){}}
+function saveTodoLists(){
+  try{localStorage.setItem('pc_todo_lists',JSON.stringify(todoLists));localStorage.setItem('pc_current_todo_list',currentTodoListId);}catch(e){}
+}
 
 // JSONBIN
 async function syncData(showMsg=true){
@@ -1288,160 +1352,266 @@ function openNotesForTask(taskId){
   },50);
 }
 
-// TO-DO LIST SYSTEM
-let todoItems=[];
+// ===== MULTI-LIST TO-DO SYSTEM =====
 
 function openTodoPanel(){
-  loadTodoDraft();
+  renderTodoListSelector();
   renderTodoList();
   $('todo-modal').style.display='flex';
 }
 
-function closeTodoPanel(){
-  $('todo-modal').style.display='none';
+function closeTodoPanel(){$('todo-modal').style.display='none';saveTodoLists();}
+
+function renderTodoListSelector(){
+  const sel=$('todo-list-select');
+  sel.innerHTML=todoLists.map(l=>`<option value="${l.id}"${l.id===currentTodoListId?' selected':''}>${esc(l.name)} (${l.items.length})</option>`).join('');
+}
+
+function switchTodoList(){
+  currentTodoListId=$('todo-list-select').value;
+  saveTodoLists();
+  renderTodoList();
+}
+
+function createNewTodoList(){
+  const name=prompt('Enter new list name:','New List');
+  if(!name||!name.trim())return;
+  const newList={id:genTodoId(),name:name.trim(),items:[],createdAt:new Date().toISOString()};
+  todoLists.push(newList);
+  currentTodoListId=newList.id;
+  saveTodoLists();
+  renderTodoListSelector();
+  renderTodoList();
+  toast('List created: '+name.trim());
+}
+
+function renameTodoList(){
+  const list=getCurrentTodoList();
+  const name=prompt('Enter new name:',list.name);
+  if(!name||!name.trim())return;
+  list.name=name.trim();
+  saveTodoLists();
+  renderTodoListSelector();
+  toast('List renamed');
+}
+
+function deleteTodoList(){
+  if(todoLists.length<=1){toast('Cannot delete last list','err');return;}
+  const list=getCurrentTodoList();
+  if(!confirm(`Delete "${list.name}" and all ${list.items.length} items?`))return;
+  todoLists=todoLists.filter(l=>l.id!==currentTodoListId);
+  currentTodoListId=todoLists[0].id;
+  saveTodoLists();
+  renderTodoListSelector();
+  renderTodoList();
+  toast('List deleted');
 }
 
 function parseTodoList(){
   const text=$('todo-paste').value.trim();
   if(!text){toast('Paste a list first','err');return;}
-  
-  // Split by newlines, filter empty lines, create items
   const lines=text.split(/\n/).map(l=>l.trim()).filter(l=>l.length>0);
   if(!lines.length){toast('No items found','err');return;}
-  
-  // Parse lines - handle various formats:
-  // - Plain text
-  // - "- item" or "* item" (bullet points)
-  // - "1. item" or "1) item" (numbered)
-  // - "[ ] item" or "[x] item" (checkbox format)
+  const list=getCurrentTodoList();
   lines.forEach(line=>{
     let text=line;
     let done=false;
-    
-    // Remove common prefixes
-    text=text.replace(/^[-*•]\s*/,''); // bullets
-    text=text.replace(/^\d+[.)]\s*/,''); // numbers
-    
-    // Check for checkbox format
-    if(/^\[x\]/i.test(text)){
-      done=true;
-      text=text.replace(/^\[x\]\s*/i,'');
-    }else if(/^\[\s?\]/.test(text)){
-      text=text.replace(/^\[\s?\]\s*/,'');
-    }
-    
+    text=text.replace(/^[-*•]\s*/,'');
+    text=text.replace(/^\d+[.)]\s*/,'');
+    if(/^\[x\]/i.test(text)){done=true;text=text.replace(/^\[x\]\s*/i,'');}
+    else if(/^\[\s?\]/.test(text)){text=text.replace(/^\[\s?\]\s*/,'');}
     if(text.length>0){
-      todoItems.push({
-        id:'td-'+Date.now()+'-'+Math.random().toString(36).slice(2,5),
-        text,
-        done,
-        createdAt:new Date().toISOString()
-      });
+      list.items.push({id:genTodoId(),text,done,readyForChangelog:false,usedInChangelog:false,createdAt:new Date().toISOString()});
     }
   });
-  
   $('todo-paste').value='';
+  saveTodoLists();
   renderTodoList();
-  saveTodoDraft();
   toast(`Added ${lines.length} item${lines.length>1?'s':''}`);
 }
 
 function renderTodoList(){
   const body=$('todo-body');
   const stats=$('todo-stats');
-  
-  if(!todoItems.length){
+  const list=getCurrentTodoList();
+  if(!list||!list.items.length){
     body.innerHTML='<div class="todo-empty">PASTE A LIST ABOVE TO GET STARTED</div>';
     stats.style.display='none';
     return;
   }
-  
   stats.style.display='flex';
-  const done=todoItems.filter(t=>t.done).length;
-  const total=todoItems.length;
+  const done=list.items.filter(t=>t.done).length;
+  const total=list.items.length;
+  const ready=list.items.filter(t=>t.readyForChangelog&&!t.usedInChangelog).length;
   const pct=Math.round((done/total)*100);
-  
   $('todo-done').textContent=done;
   $('todo-total').textContent=total;
+  $('todo-ready').textContent=ready;
   $('todo-pct').textContent=pct+'%';
   $('todo-progress-fill').style.width=pct+'%';
   
-  body.innerHTML=`<div class="todo-list">${todoItems.map((t,i)=>`
-    <div class="todo-item${t.done?' done':''}">
-      <div class="todo-check${t.done?' done':''}" onclick="toggleTodoItem(${i})"></div>
-      <span class="todo-text">${esc(t.text)}</span>
-      <button class="todo-del" onclick="deleteTodoItem(${i})">&times;</button>
-    </div>
-  `).join('')}</div>`;
+  body.innerHTML=`<div class="todo-list">${list.items.map(t=>{
+    const classes=['todo-item'];
+    if(t.done)classes.push('done');
+    if(t.readyForChangelog&&!t.usedInChangelog)classes.push('ready-for-cl');
+    if(t.usedInChangelog)classes.push('used-in-cl');
+    const isEditing=editingTodoItemId===t.id;
+    return`
+      <div class="${classes.join(' ')}">
+        <div class="todo-check${t.done?' done':''}" onclick="toggleTodoItem('${t.id}')"></div>
+        <div class="todo-item-content">
+          ${isEditing?`<input class="todo-text-input" id="todo-edit-${t.id}" value="${esc(t.text)}" onkeydown="if(event.key==='Enter'){saveTodoEdit('${t.id}')}if(event.key==='Escape'){cancelTodoEdit()}" onblur="saveTodoEdit('${t.id}')">`
+          :`<span class="todo-text">${esc(t.text)}</span>`}
+          ${t.comment?`<div class="todo-comment">💬 ${esc(t.comment)}</div>`:''}
+        </div>
+        <div class="todo-badges">
+          ${t.readyForChangelog&&!t.usedInChangelog?`<span class="todo-badge ready">READY</span>`:''}
+          ${t.usedInChangelog?`<span class="todo-badge used">USED</span>`:''}
+        </div>
+        <div class="todo-item-actions">
+          <button class="todo-action-btn" onclick="editTodoItem('${t.id}')" title="Edit">✏</button>
+          <button class="todo-action-btn" style="background:rgba(255,159,67,0.15);color:var(--orange)" onclick="editTodoComment('${t.id}')" title="Comment">💬</button>
+          ${t.done&&!t.readyForChangelog?`<button class="todo-action-btn cl" onclick="markReadyForChangelog('${t.id}')" title="Ready for Changelog">📋</button>`:''}
+          ${t.readyForChangelog&&!t.usedInChangelog?`<button class="todo-action-btn" onclick="unmarkReadyForChangelog('${t.id}')" title="Unmark">↩</button>`:''}
+          ${t.usedInChangelog?`<button class="todo-action-btn del" onclick="clearUsedItem('${t.id}')" title="Clear">✕</button>`:''}
+          <button class="todo-action-btn del" onclick="deleteTodoItem('${t.id}')" title="Delete">🗑</button>
+          <button class="todo-action-btn" style="background:rgba(123,104,238,0.15);color:var(--v)" onclick="convertTodoToTask('${t.id}')" title="Convert to Task">📌</button>
+        </div>
+      </div>`;
+  }).join('')}</div>`;
+  if(editingTodoItemId){const inp=$('todo-edit-'+editingTodoItemId);if(inp){inp.focus();inp.select();}}
 }
 
-function toggleTodoItem(i){
-  if(todoItems[i])todoItems[i].done=!todoItems[i].done;
-  renderTodoList();
-  saveTodoDraft();
+function toggleTodoItem(id){
+  const list=getCurrentTodoList();
+  const item=list.items.find(t=>t.id===id);
+  if(item){item.done=!item.done;if(!item.done)item.readyForChangelog=false;}
+  saveTodoLists();renderTodoList();
 }
 
-function deleteTodoItem(i){
-  todoItems.splice(i,1);
-  renderTodoList();
-  saveTodoDraft();
+function editTodoItem(id){editingTodoItemId=id;renderTodoList();}
+
+function saveTodoEdit(id){
+  const inp=$('todo-edit-'+id);if(!inp)return;
+  const newText=inp.value.trim();
+  if(!newText){cancelTodoEdit();return;}
+  const list=getCurrentTodoList();
+  const item=list.items.find(t=>t.id===id);
+  if(item)item.text=newText;
+  editingTodoItemId=null;
+  saveTodoLists();renderTodoList();toast('Item updated');
 }
 
-function clearTodoList(){
-  if(!todoItems.length)return;
-  if(!confirm('Clear all to-do items?'))return;
-  todoItems=[];
-  renderTodoList();
-  saveTodoDraft();
-  toast('List cleared');
+function cancelTodoEdit(){editingTodoItemId=null;renderTodoList();}
+
+function editTodoComment(id){
+  const list=getCurrentTodoList();
+  const item=list.items.find(t=>t.id===id);
+  if(!item)return;
+  const comment=prompt('Add comment (shows in Discord):',item.comment||'');
+  if(comment===null)return;
+  item.comment=comment.trim();
+  saveTodoLists();renderTodoList();
+  toast(comment.trim()?'Comment added':'Comment removed');
 }
 
-function saveTodoDraft(){
-  try{localStorage.setItem('pc_todo_draft',JSON.stringify(todoItems));}catch(e){}
-  toast('Draft saved');
+function markReadyForChangelog(id){
+  const list=getCurrentTodoList();
+  const item=list.items.find(t=>t.id===id);
+  if(item&&item.done)item.readyForChangelog=true;
+  saveTodoLists();renderTodoList();toast('Marked ready');
 }
 
-function loadTodoDraft(){
-  try{
-    const saved=localStorage.getItem('pc_todo_draft');
-    if(saved)todoItems=JSON.parse(saved);
-  }catch(e){}
+function unmarkReadyForChangelog(id){
+  const list=getCurrentTodoList();
+  const item=list.items.find(t=>t.id===id);
+  if(item)item.readyForChangelog=false;
+  saveTodoLists();renderTodoList();
+}
+
+function markAllReadyForChangelog(){
+  const list=getCurrentTodoList();
+  let count=0;
+  list.items.forEach(item=>{
+    if(item.done&&!item.readyForChangelog&&!item.usedInChangelog){item.readyForChangelog=true;count++;}
+  });
+  saveTodoLists();renderTodoList();toast(`Marked ${count} item(s) ready`);
+}
+
+function clearUsedItem(id){
+  const list=getCurrentTodoList();
+  list.items=list.items.filter(t=>t.id!==id);
+  saveTodoLists();renderTodoList();toast('Item cleared');
+}
+
+function clearUsedItems(){
+  const list=getCurrentTodoList();
+  const count=list.items.filter(t=>t.usedInChangelog).length;
+  if(!count){toast('No used items');return;}
+  if(!confirm(`Clear ${count} used item(s)?`))return;
+  list.items=list.items.filter(t=>!t.usedInChangelog);
+  saveTodoLists();renderTodoList();toast(`Cleared ${count}`);
+}
+
+function deleteTodoItem(id){
+  const list=getCurrentTodoList();
+  list.items=list.items.filter(t=>t.id!==id);
+  saveTodoLists();renderTodoList();
+}
+
+function convertTodoToTask(id){
+  const list=getCurrentTodoList();
+  const item=list.items.find(t=>t.id===id);
+  if(!item)return;
+  if(!confirm(`Convert "${item.text}" to a task?`))return;
+  // Pre-fill task modal with todo item text
+  openTaskModal();
+  $('m-title').value=item.text;
+  if(item.comment)$('m-desc').value=item.comment;
+  // Remove from todo list
+  list.items=list.items.filter(t=>t.id!==id);
+  saveTodoLists();
+  toast('Fill in resource & save task');
+}
+
+function getTodoReadyItems(){
+  const items=[];
+  todoLists.forEach(list=>{
+    list.items.filter(item=>item.readyForChangelog&&!item.usedInChangelog).forEach(item=>{
+      items.push({...item,listName:list.name,listId:list.id});
+    });
+  });
+  return items;
+}
+
+function markTodoUsedInChangelog(id){
+  todoLists.forEach(list=>{
+    const item=list.items.find(i=>i.id===id);
+    if(item)item.usedInChangelog=true;
+  });
+  saveTodoLists();
 }
 
 async function postTodoToDiscord(){
-  if(!todoItems.length){toast('No items to post','err');return;}
-  if(!cfg.devhook){toast('No webhook configured','err');return;}
-  
-  const done=todoItems.filter(t=>t.done).length;
-  const total=todoItems.length;
+  const list=getCurrentTodoList();
+  if(!list.items.length){toast('No items','err');return;}
+  if(!cfg.devhook){toast('No webhook','err');return;}
+  const done=list.items.filter(t=>t.done).length;
+  const total=list.items.length;
   const pct=Math.round((done/total)*100);
-  
-  // Build checklist text
-  const listText=todoItems.map(t=>`${t.done?'✅':'⬜'} ${t.text}`).join('\n');
-  
+  const listText=list.items.map(t=>`${t.done?'✅':'⬜'} ${t.text}${t.comment?' — *'+t.comment+'*':''}`).join('\n');
   const embed={
-    title:'📋 To-Do List Progress',
+    title:`📋 ${list.name} Progress`,
     description:`**Progress:** ${done}/${total} (${pct}%)\n\n${listText}`,
     color:pct===100?0x10b981:0x7B68EE,
     footer:{text:'Phase City - The city that builds itself.!',icon_url:PC_LOGO},
     thumbnail:{url:PC_LOGO},
     timestamp:new Date().toISOString()
   };
-  
   try{
-    const res=await fetch(cfg.devhook,{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({embeds:[embed]})
-    });
-    if(res.ok){
-      toast('Posted to Discord!');
-    }else{
-      toast('Failed to post','err');
-    }
-  }catch(e){
-    toast('Network error','err');
-  }
+    const res=await fetch(cfg.devhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({embeds:[embed]})});
+    if(res.ok)toast('Posted!');else toast('Failed','err');
+  }catch(e){toast('Error','err');}
 }
 
 // ATTACHMENTS
@@ -1562,16 +1732,20 @@ document.addEventListener('DOMContentLoaded',()=>{
 // CHANGELOG GENERATOR
 const CL_SECTIONS=['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES','COMING SOON','COMMUNITY CREDITS'];
 let clSelectedTasks=new Set();
+let clSelectedTodos=new Set();
+let dragClTodoId=null;
 let clBuckets={};
 let clPreviewMode='styled';
 
 function openChangelog(){
   clSelectedTasks=new Set();
+  clSelectedTodos=new Set();
   clBuckets={};
   CL_SECTIONS.forEach(s=>clBuckets[s]=[]);
   $('cl-version').value='v1.0.0';
   $('cl-date').value=new Date().toISOString().split('T')[0];
   renderClTaskList();
+  renderClTodoList();
   renderClBuckets();
   renderClPreview();
   $('cl-modal').style.display='flex';
@@ -1592,7 +1766,39 @@ function renderClTaskList(){
       <span class="task-res">${esc(t.resourceName||'')}</span>
     </div>
   `).join(''):'<div style="padding:12px;color:#444;font-size:10px;text-align:center">No tasks in Done or In Progress</div>';
-  $('cl-selected-count').textContent=clSelectedTasks.size+' selected';
+  $('cl-task-count').textContent=doneTasks.length;
+}
+function renderClTodoList(){
+  const readyItems=getTodoReadyItems();
+  $('cl-todo-count').textContent=readyItems.length;
+  $('cl-todo-list').innerHTML=readyItems.length?readyItems.map(t=>`
+    <div class="cl-task-item todo-item-cl${clSelectedTodos.has(t.id)?' selected':''}" 
+         draggable="true" 
+         ondragstart="dragClTodoId='${t.id}';event.dataTransfer.effectAllowed='copy'"
+         ondragend="dragClTodoId=null"
+         onclick="toggleClTodo('${t.id}')">
+      <input type="checkbox" ${clSelectedTodos.has(t.id)?'checked':''} onclick="event.stopPropagation();toggleClTodo('${t.id}')">
+      <span class="task-name">${esc(t.text)}</span>
+      <span class="task-source">${esc(t.listName)}</span>
+    </div>
+  `).join(''):'<div style="padding:12px;color:#444;font-size:10px;text-align:center">No to-do items ready</div>';
+}
+
+function toggleClTodo(id){
+  if(clSelectedTodos.has(id))clSelectedTodos.delete(id);
+  else clSelectedTodos.add(id);
+  renderClTodoList();
+}
+
+function clSelectAllTodo(){
+  clSelectedTodos=new Set();
+  getTodoReadyItems().forEach(t=>clSelectedTodos.add(t.id));
+  renderClTodoList();
+}
+
+function clClearTodo(){
+  clSelectedTodos=new Set();
+  renderClTodoList();
 }
 function toggleClTask(id){
   if(clSelectedTasks.has(id))clSelectedTasks.delete(id);
@@ -1672,8 +1878,17 @@ function addSelectedToBucket(sec){
     const t=tasks.find(x=>x.id===id);
     if(t&&!clBuckets[sec].includes(t.title))clBuckets[sec].push(t.title);
   });
+  clSelectedTodos.forEach(id=>{
+    const todoItems=getTodoReadyItems();
+    const t=todoItems.find(x=>x.id===id);
+    if(t&&!clBuckets[sec].includes(t.text)){
+      clBuckets[sec].push(t.text);
+      markTodoUsedInChangelog(t.id);
+    }
+  });
   renderClBuckets();
   renderClPreview();
+  renderClTodoList();
 }
 function addCustomItem(sec,text){
   if(!text.trim())return;
@@ -1701,6 +1916,21 @@ function dropIntoBucket(e,targetSec){
       renderClPreview();
     }
     dragClTaskId=null;
+    return;
+  }
+  
+  // Handle drop from todo list
+  if(dragClTodoId){
+    const todoItems=getTodoReadyItems();
+    const t=todoItems.find(x=>x.id===dragClTodoId);
+    if(t&&!clBuckets[targetSec].includes(t.text)){
+      clBuckets[targetSec].push(t.text);
+      markTodoUsedInChangelog(t.id);
+      renderClBuckets();
+      renderClPreview();
+      renderClTodoList();
+    }
+    dragClTodoId=null;
     return;
   }
   
