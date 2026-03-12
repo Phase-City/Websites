@@ -749,7 +749,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
             <div class="cl-active-bucket-footer">
               <input placeholder="Add custom item..." id="cl-bucket-input" onkeydown="if(event.key==='Enter'){addCustomToActiveBucket();this.value=''}">
               <button class="btn-sm btn-edit" onclick="addCustomToActiveBucket()">+ ADD</button>
-              <button class="btn-sm btn-edit" onclick="addSelectedToActiveBucket()">+ SELECTED</button>
+              <button class="btn-sm btn-edit" id="cl-bucket-action-btn" onclick="addSelectedToActiveBucket()">+ SELECTED</button>
             </div>
           </div>
         </div>
@@ -1780,8 +1780,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // CHANGELOG GENERATOR
-const CL_SECTIONS=['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES','COMING SOON','COMMUNITY CREDITS'];
-const CL_ICONS={'NEW FEATURES':'🆕','IMPROVEMENTS':'⚡','BUG FIXES':'🐛','TWEAKS & ADJUSTMENTS':'🔧','KNOWN ISSUES':'⚠️','COMING SOON':'🔮','COMMUNITY CREDITS':'🏆'};
+const CL_SECTIONS=['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES','COMING SOON', 'UPDATES', 'COMMUNITY CREDITS'];
+const CL_ICONS={'NEW FEATURES':'🆕','IMPROVEMENTS':'⚡','BUG FIXES':'🐛','TWEAKS & ADJUSTMENTS':'🔧','KNOWN ISSUES':'⚠️','COMING SOON':'🔮', 'UPDATES':'📢', 'COMMUNITY CREDITS':'🏆'};
 let clSelectedTasks=new Set();
 let clSelectedTodos=new Set();
 let dragClTodoId=null;
@@ -1910,6 +1910,16 @@ function renderActiveBucket(){
   // Update placeholder based on section
   const inp=$('cl-bucket-input');
   inp.placeholder=clActiveSection==='COMMUNITY CREDITS'?'@username...':'Add custom item...';
+  
+  // Update action button based on section
+  const actionBtn=$('cl-bucket-action-btn');
+  if(clActiveSection==='COMMUNITY CREDITS'){
+    actionBtn.textContent='👥 PULL CREDITS';
+    actionBtn.onclick=autoPullCredits;
+  }else{
+    actionBtn.textContent='+ SELECTED';
+    actionBtn.onclick=addSelectedToActiveBucket;
+  }
 }
 
 function dropIntoActiveBucket(e){
