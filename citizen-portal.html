@@ -17,8 +17,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 .container{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:40px 24px}
 /* HEADER */
 .header{text-align:center;margin-bottom:50px}
-.logo{width:100px;height:100px;margin:0 auto 24px;border-radius:18px;overflow:hidden;box-shadow:0 0 60px rgba(123,104,238,0.6);display:flex;align-items:center;justify-content:center;background:rgba(123,104,238,0.18)}
-.logo img{width:100%;height:100%;object-fit:contain}
+.logo{width:120px;height:120px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center}
+.logo img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 30px rgba(123,104,238,0.5))}
 .logo-fallback{font-size:36px;font-weight:900;color:#fff}
 .title{font-size:36px;font-weight:900;letter-spacing:5px;text-transform:uppercase;background:linear-gradient(90deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;text-shadow:0 0 40px rgba(123,104,238,0.5)}
 .subtitle{font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--c);letter-spacing:5px;text-shadow:0 0 20px rgba(92,225,230,0.4)}
@@ -136,13 +136,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     <div class="field">
       <label class="label">Bug Category</label>
       <div class="type-badges" id="bug-category">
-        <span class="type-badge on" data-val="UI/Visual">UI/Visual</span>
-        <span class="type-badge" data-val="Gameplay">Gameplay</span>
+        <span class="type-badge on" data-val="UI">UI</span>
         <span class="type-badge" data-val="Jobs">Jobs</span>
-        <span class="type-badge" data-val="Phone">Phone</span>
-        <span class="type-badge" data-val="Vehicle">Vehicle</span>
+        <span class="type-badge" data-val="Phone/Comms">Phone/Comms</span>
+        <span class="type-badge" data-val="Vehicles">Vehicles</span>
+        <span class="type-badge" data-val="Economy">Economy</span>
+        <span class="type-badge" data-val="Housing">Housing</span>
+        <span class="type-badge" data-val="Illegal">Illegal</span>
         <span class="type-badge" data-val="Inventory">Inventory</span>
-        <span class="type-badge" data-val="Other">Other</span>
+        <span class="type-badge" data-val="Mapping">Mapping</span>
+        <span class="type-badge" data-val="General">General</span>
       </div>
     </div>
     <div class="field">
@@ -285,11 +288,19 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
 </div>
 
 <script>
-// CONFIG - Set your Discord webhook URLs here
+// CONFIG - Discord webhook URLs
+// Staff channels (private - internal tracking)
 const WEBHOOKS = {
   bug: 'https://discord.com/api/webhooks/1480044840879263918/ifTTUl-fOemHzJydenutZ413bMaTgcBbl_yy3quy9WW_xnGk8B7_qQNI4A5vW_gXzJCj',
   suggestion: 'https://discord.com/api/webhooks/1480044539069726771/Nox47E54fjaZh4yXongOnM8SwQC6lBL4xzyO-IpASJukS-zuwdXtTEFnIvJ8hA0wfF_y',
   crash: 'https://discord.com/api/webhooks/1480044951470342257/S6MD0_mUbyw8z6jkZPVVwP7jJCM_AK7LsARv4ZMPG2Dkl5Wf-wHgGk_Atay1hUCPVsae'
+};
+
+// Forum channels (public - community discussion & voting)
+const FORUM_WEBHOOKS = {
+  bug: 'https://discord.com/api/webhooks/1480285544163577866/-fPcaGOITtQrI2po3JiXcevLdoBPZAODqewvYxiSniBNRwiztNNJ-6ixzRC2xm3IV5QN',
+  suggestion: 'https://discord.com/api/webhooks/1480279904703483995/NgWBzPOYafQ9g2sA7yaJx_cfG7Q3fyN6xbN3ET8kCyxXJmPf0VffiMOPPyZQCRZcRuED',
+  crash: 'https://discord.com/api/webhooks/1480285139643924733/ax_W7NeLdu2hnQHqtza0Ts1Hdm6NqJG6tJOJAL8hJofnnDPFV3tbLEUjQYIwh1F78xc4'
 };
 
 let currentTab = 'bug';
@@ -481,67 +492,140 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-async function sendToDiscord(webhook, embed) {
-  if (!webhook) {
-    console.warn('Webhook not configured');
-    showSuccess();
-    return;
-  }
+// Send to staff webhook only (no thread)
+async function sendToStaff(webhook, embed) {
+  if (!webhook) return;
   try {
-    const res = await fetch(webhook, {
+    await fetch(webhook, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ embeds: [embed] })
     });
-    if (res.ok) showSuccess();
-    else alert('Submission failed. Please try again or contact staff on Discord.');
-  } catch (e) {
-    alert('Network error. Please try again.');
-  }
+  } catch (e) { console.warn('Staff webhook failed', e); }
 }
 
-async function sendToDiscordWithFile(webhook, embed, file) {
-  if (!webhook) {
-    console.warn('Webhook not configured');
-    showSuccess();
-    return;
-  }
+async function sendToStaffWithFile(webhook, embed, file) {
+  if (!webhook) return;
   try {
     const formData = new FormData();
     formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
-    if (file) {
-      formData.append('file', file, file.name);
+    if (file) formData.append('file', file, file.name);
+    await fetch(webhook, { method: 'POST', body: formData });
+  } catch (e) { console.warn('Staff webhook failed', e); }
+}
+
+async function sendToStaffWithMultipleFiles(webhook, embed, files) {
+  if (!webhook) return;
+  try {
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
+    files.forEach((file, i) => formData.append(`file${i}`, file, file.name));
+    await fetch(webhook, { method: 'POST', body: formData });
+  } catch (e) { console.warn('Staff webhook failed', e); }
+}
+
+// Send to forum channel (creates thread)
+async function sendToForum(webhook, threadName, embed) {
+  if (!webhook) return false;
+  try {
+    const res = await fetch(webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ thread_name: threadName, embeds: [embed] })
+    });
+    return res.ok;
+  } catch (e) { console.warn('Forum webhook failed', e); return false; }
+}
+
+async function sendToForumWithFile(webhook, threadName, embed, file) {
+  if (!webhook) return false;
+  try {
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify({ thread_name: threadName, embeds: [embed] }));
+    if (file) formData.append('file', file, file.name);
+    const res = await fetch(webhook, { method: 'POST', body: formData });
+    return res.ok;
+  } catch (e) { console.warn('Forum webhook failed', e); return false; }
+}
+
+async function sendToForumWithMultipleFiles(webhook, threadName, embed, files) {
+  if (!webhook) return false;
+  try {
+    const formData = new FormData();
+    formData.append('payload_json', JSON.stringify({ thread_name: threadName, embeds: [embed] }));
+    files.forEach((file, i) => formData.append(`file${i}`, file, file.name));
+    const res = await fetch(webhook, { method: 'POST', body: formData });
+    return res.ok;
+  } catch (e) { console.warn('Forum webhook failed', e); return false; }
+}
+
+// Main submit handlers - send to BOTH staff and forum
+async function submitToDiscord(type, threadName, embed, files, btnId) {
+  const btn = btnId ? document.getElementById(btnId) : null;
+  const resetBtn = () => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '&#10148; SUBMIT';
     }
-    const res = await fetch(webhook, {
-      method: 'POST',
-      body: formData
-    });
-    if (res.ok) showSuccess();
+  };
+  
+  let success = false;
+  
+  try {
+    // Send to forum (public - community can discuss/vote)
+    if (files && files.length > 0) {
+      success = await sendToForumWithMultipleFiles(FORUM_WEBHOOKS[type], threadName, embed, files);
+    } else {
+      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed);
+    }
+    
+    // Also send to staff channel (private - internal tracking)
+    if (files && files.length > 0) {
+      await sendToStaffWithMultipleFiles(WEBHOOKS[type], embed, files);
+    } else {
+      await sendToStaff(WEBHOOKS[type], embed);
+    }
+    
+    resetBtn();
+    if (success) showSuccess();
     else alert('Submission failed. Please try again or contact staff on Discord.');
   } catch (e) {
+    resetBtn();
     alert('Network error. Please try again.');
   }
 }
 
-async function sendToDiscordWithMultipleFiles(webhook, embed, files) {
-  if (!webhook) {
-    console.warn('Webhook not configured');
-    showSuccess();
-    return;
-  }
+async function submitToDiscordWithSingleFile(type, threadName, embed, file, btnId) {
+  const btn = btnId ? document.getElementById(btnId) : null;
+  const resetBtn = () => {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '&#10148; SUBMIT';
+    }
+  };
+  
+  let success = false;
+  
   try {
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
-    files.forEach((file, i) => {
-      formData.append(`file${i}`, file, file.name);
-    });
-    const res = await fetch(webhook, {
-      method: 'POST',
-      body: formData
-    });
-    if (res.ok) showSuccess();
+    // Send to forum (public)
+    if (file) {
+      success = await sendToForumWithFile(FORUM_WEBHOOKS[type], threadName, embed, file);
+    } else {
+      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed);
+    }
+    
+    // Also send to staff channel (private)
+    if (file) {
+      await sendToStaffWithFile(WEBHOOKS[type], embed, file);
+    } else {
+      await sendToStaff(WEBHOOKS[type], embed);
+    }
+    
+    resetBtn();
+    if (success) showSuccess();
     else alert('Submission failed. Please try again or contact staff on Discord.');
   } catch (e) {
+    resetBtn();
     alert('Network error. Please try again.');
   }
 }
@@ -549,24 +633,21 @@ async function sendToDiscordWithMultipleFiles(webhook, embed, files) {
 function showSuccess() {
   document.querySelectorAll('.form-card').forEach(f => f.style.display = 'none');
   document.getElementById('form-success').style.display = 'block';
+  // Clear all form data after a short delay
+  setTimeout(() => resetAllForms(), 500);
 }
 
 // JSONbin integration - creates task in taskboard
+const JSONBIN_CONFIG = {
+  apikey: '$2a$10$vnuI42JSDbgHxD5.1GzMS.kqNW5x.ZFjdkuIK8TQ4ff7YjMNaUnA6',
+  binid: '69acc6f1ae596e708f6b1f98'
+};
+
 function genTaskId(){return 'cp-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)}
 
 async function createTaskInTaskboard(taskData) {
   try {
-    // Read config from localStorage (shared with taskboard on same domain)
-    const cfgStr = localStorage.getItem('pc_cfg');
-    if (!cfgStr) {
-      console.log('No taskboard config found - task not created');
-      return;
-    }
-    const cfg = JSON.parse(cfgStr);
-    if (!cfg.apikey || !cfg.binid) {
-      console.log('Taskboard not configured - task not created');
-      return;
-    }
+    const cfg = JSONBIN_CONFIG;
     
     // Fetch current tasks
     const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}/latest`, {
@@ -647,7 +728,7 @@ function submitBug() {
       { name: '⚠️ Severity', value: severity, inline: true },
       { name: '📝 Description', value: what.slice(0, 1000) },
     ],
-    footer: { text: 'Phase City Citizen Portal' },
+    footer: { text: 'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!' },
     timestamp: new Date().toISOString()
   };
   const media = document.getElementById('bug-media').value.trim();
@@ -665,11 +746,11 @@ function submitBug() {
     submitter: discord
   });
   
-  if (bugFiles.length) {
-    sendToDiscordWithMultipleFiles(WEBHOOKS.bug, embed, bugFiles);
-  } else {
-    sendToDiscord(WEBHOOKS.bug, embed);
-  }
+  // Thread name for forum post (truncate for Discord's 100 char limit)
+  const threadName = `🐛 [${category}] ${what.slice(0, 70)}${what.length > 70 ? '...' : ''}`;
+  
+  // Submit to both forum (public) and staff (private)
+  submitToDiscord('bug', threadName, embed, bugFiles, 'bug-submit-btn');
 }
 
 function submitSuggestion() {
@@ -691,7 +772,7 @@ function submitSuggestion() {
       { name: '📁 Category', value: category, inline: true },
       { name: '📝 Suggestion', value: idea.slice(0, 1000) },
     ],
-    footer: { text: 'Phase City Citizen Portal' },
+    footer: { text: 'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!' },
     timestamp: new Date().toISOString()
   };
   const ref = document.getElementById('sug-ref').value.trim();
@@ -707,11 +788,11 @@ function submitSuggestion() {
     submitter: discord
   });
   
-  if (sugFiles.length) {
-    sendToDiscordWithMultipleFiles(WEBHOOKS.suggestion, embed, sugFiles);
-  } else {
-    sendToDiscord(WEBHOOKS.suggestion, embed);
-  }
+  // Thread name for forum post (truncate for Discord's 100 char limit)
+  const threadName = `💡 [${category}] ${idea.slice(0, 70)}${idea.length > 70 ? '...' : ''}`;
+  
+  // Submit to both forum (public) and staff (private)
+  submitToDiscord('suggestion', threadName, embed, sugFiles, 'sug-submit-btn');
 }
 
 function submitCrash() {
@@ -736,7 +817,7 @@ function submitCrash() {
       { name: '🔄 Frequency', value: freq, inline: true },
       { name: '📝 What Happened', value: what.slice(0, 1000) },
     ],
-    footer: { text: 'Phase City Citizen Portal' },
+    footer: { text: 'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!' },
     timestamp: new Date().toISOString()
   };
   if (error) embed.fields.push({ name: '⚠️ Error Message', value: '```' + error.slice(0, 500) + '```' });
@@ -752,11 +833,11 @@ function submitCrash() {
     submitter: discord
   });
   
-  if (crashFile) {
-    sendToDiscordWithFile(WEBHOOKS.crash, embed, crashFile);
-  } else {
-    sendToDiscord(WEBHOOKS.crash, embed);
-  }
+  // Thread name for forum post (truncate for Discord's 100 char limit)
+  const threadName = `💥 [${crashType}] ${what.slice(0, 70)}${what.length > 70 ? '...' : ''}`;
+  
+  // Submit to both forum (public) and staff (private)
+  submitToDiscordWithSingleFile('crash', threadName, embed, crashFile, 'crash-submit-btn');
 }
 </script>
 </body>

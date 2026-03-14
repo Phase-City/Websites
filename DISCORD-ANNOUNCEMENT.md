@@ -1,81 +1,141 @@
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎉  PHASE CITY CITIZEN PORTAL  🎉
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+════════════════════════════════════════════════════════
+🌃  **PHASE CITY DEV OPERATIONS CENTER — NOW LIVE**
+════════════════════════════════════════════════════════
 
-Your voice matters. We're building Phase City FOR YOU — and now you have a direct line to the dev team.
+@everyone
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+We've been cooking something **MASSIVE** behind the scenes.
 
-🔗 **CITIZEN PORTAL**
-[INSERT YOUR HOSTED LINK HERE]
+You've always had a direct line to the dev team through Discord — but let's be real, things got lost in the sauce. DMs buried. Bug reports scattered across 47 different channels. Screenshots that nobody could find when it mattered.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**That era is over.**
 
-**WHAT CAN YOU DO?**
+Introducing the **Phase City Dev Operations Center** — a custom-built, enterprise-grade development ecosystem that puts YOU at the center of how we build this city.
 
-🐛 **REPORT BUGS**
-┣ • Found a glitch? Let us know exactly what happened
-┣ • Select the category (UI, Gameplay, Jobs, Phone, etc.)
-┣ • Rate the severity so we know what to prioritize
-┗ • Include screenshots or video clips
+This isn't some generic form slapped on a website. This is innovation. This is next level. This is how professional studios operate — and now Phase City has it too.
 
-💡 **SUBMIT SUGGESTIONS**
-┣ • Got an idea for a new feature?
-┣ • Want to improve something that already exists?
-┣ • Looking to enhance the roleplay experience?
-┗ • Drop your ideas — we read EVERY submission
+════════════════════════════════════════════════════════
+🎫  **THE CITIZEN PORTAL**
+════════════════════════════════════════════════════════
 
-💥 **CRASH REPORTS**
-┣ • Game crashed? Kicked? Frozen?
-┣ • Upload your FiveM crash dump directly
-┣ • Help us track down those nasty bugs
-┗ • Get back to RP faster
+🔗 **https://www.phasecity.net/citizen-portal.html**
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Your dedicated command center for communicating with the dev team.
 
-**WHY USE THE PORTAL?**
+**🐛 BUG REPORTS — ACTUALLY GET FIXED NOW**
+Not just a text box. A full diagnostic submission system:
+┣ • Category selection across 10+ areas (UI, Jobs, Phone, Vehicles, Economy...)
+┣ • Severity ratings that prioritize what matters
+┣ • **DRAG & DROP** screenshots and videos — up to 5 files, 8MB each
+┣ • Every report instantly hits our internal task board
+┗ • No more "did anyone see my bug report?" — WE SEE EVERYTHING.
 
-✅ Your report goes DIRECTLY to the dev team
-✅ Organized by category so nothing gets lost
-✅ Faster response than random DMs
-✅ Your Discord username is captured for credits
-✅ Quality reports = shoutouts in patch notes!
+**💡 SUGGESTIONS — SHAPE THE CITY**
+Your ideas don't just go into a suggestion channel to die.
+┣ • Category-organized so the right dev sees the right idea
+┣ • Attach mockups, reference images, inspiration
+┗ • **Quality suggestions get built. Period.**
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**💥 CRASH REPORTS — KILL THE GREMLINS**
+Game crashed? We want that data.
+┣ • Upload your FiveM crash dump ZIP directly (up to 10MB)
+┣ • Crash type identification & frequency tracking
+┗ • Help us murder bugs before they murder your RP
 
-**HOW TO SUBMIT A QUALITY REPORT**
+════════════════════════════════════════════════════════
+🗣️  **NEW: COMMUNITY FORUMS — YOUR VOICE MATTERS**
+════════════════════════════════════════════════════════
 
-DO ✅
-┣ • Be specific — "The ATM at Fleeca on Vinewood crashes"
-┣ • Include steps to reproduce the bug
-┣ • Attach screenshots or clips when possible
-┣ • Check if someone already reported it
-┗ • Be patient — we're a small team doing big things
+Here's where it gets **CRAZY.**
 
-DON'T ❌
-┣ • "It's broken" with no details
-┣ • Report the same bug 10 times
-┣ • Use it for support requests (open a ticket instead)
-┗ • Be rude — we're all here to make Phase City better
+Every submission from the Citizen Portal now creates a **public forum thread** that the ENTIRE community can engage with!
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**#citizen-bug-reports** • **#citizen-suggestions** • **#citizen-crash-reports**
 
-**GET FEATURED IN PATCH NOTES**
+✦ **👍👎 VOTE** on reports and suggestions — show us what matters most to YOU
+✦ **💬 DISCUSS** — add your own observations, reproduce bugs, expand on ideas
+✦ **🔍 SEARCH** — see what others have reported before submitting duplicates
+✦ **📊 COMMUNITY PRIORITY** — the most upvoted issues get attention first
 
-Citizens who submit quality bug reports and suggestions will be credited in our official changelogs! 
+This is **transparent development**. You see what we see. You shape what we build.
 
-Your username → COMMUNITY CREDITS section 🏆
+════════════════════════════════════════════════════════
+⚡  **THE MAGIC BEHIND THE SCENES**
+════════════════════════════════════════════════════════
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Every single submission from the Citizen Portal **automatically**:
 
-We're building something special here. Phase City isn't just another server — it's a community. And YOU are part of that.
+✦ Creates a **public forum thread** for community discussion
+✦ Creates a **tracked dev task** in our internal Task Board
+✦ Assigns priority based on YOUR severity rating
+✦ Tags with category, resource, and your Discord username
+✦ Uploads attachments directly to the thread
 
-Every bug report makes the city better.
-Every suggestion shapes the future.
-Every crash dump helps us fix the unfixable.
+We built a REAL development pipeline. The same kind Fortune 500 companies pay millions for. Except we built it ourselves. Because that's how Phase City operates.
 
-**Let's build this together.**
+════════════════════════════════════════════════════════
+📢  **CHANGELOGS & ROADMAPS**
+════════════════════════════════════════════════════════
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-- OG
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Every patch, every update, every fix — documented and shared.
+
+Our **Changelog Generator** creates beautiful Discord embeds:
+🆕 New Features  ⚡ Improvements  🐛 Bug Fixes
+🔧 Tweaks  ⚠️ Known Issues  🔮 Coming Soon
+🏆 **Community Credits** — YOUR NAME when your report leads to a fix
+
+Our **Roadmap Generator** shows you exactly where Phase City is heading:
+◦ Planned  ⚡ In Development  🔜 Coming Soon
+
+**Full transparency. No secrets. You see what we see.**
+
+════════════════════════════════════════════════════════
+🏆  **GET YOUR NAME IN THE CREDITS**
+════════════════════════════════════════════════════════
+
+This isn't just a feedback form. This is your opportunity to be part of the build.
+
+**Quality bug reports get credited.**
+**Quality suggestions get credited.**
+**Your Discord username lives forever in our patch notes.**
+
+Every changelog we post has a **COMMUNITY CREDITS** section. That's where legends are made.
+
+════════════════════════════════════════════════════════
+🔥  **WHY THIS MATTERS**
+════════════════════════════════════════════════════════
+
+Most FiveM servers have a suggestion channel that nobody reads.
+Most FiveM servers lose bug reports in the Discord void.
+Most FiveM servers don't let the community discuss and vote on issues.
+
+**We're not most servers.**
+
+Phase City is building something different. Something professional. Something that respects your time, your ideas, and your investment in this community.
+
+You wanted a direct line to the devs? 
+Now you have a **direct pipeline**.
+
+You wanted your voice to matter?
+Now the **community decides what's important**.
+
+The city that builds itself? 
+Nah — **the city that WE build. Together.**
+
+════════════════════════════════════════════════════════
+🚀  **LINKS**
+════════════════════════════════════════════════════════
+
+🎫 **Citizen Portal:** https://www.phasecity.net/citizen-portal.html
+🌐 **Main Site:** https://www.phasecity.net
+
+════════════════════════════════════════════════════════
+
+Welcome to the future of FiveM development.
+
+Welcome to Phase City.
+
+**— The OG KiLLz**
+*Phase City - The city that builds itself.!*
+
+════════════════════════════════════════════════════════
