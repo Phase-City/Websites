@@ -890,7 +890,7 @@ async function syncData(showMsg=true){
     if(!r.ok)throw new Error();
     const data=(await r.json()).record||{};
     if(data.tasks)tasks=data.tasks;if(data.categories)categories=data.categories;if(data.resources)resources=data.resources;if(data.notes)notes=data.notes;if(data.todoLists){todoLists=data.todoLists;if(!todoLists.find(l=>l.id===currentTodoListId))currentTodoListId=todoLists[0]?.id||'default';}
-    saveLocal();saveTodoLists();render();renderTodo();setSS('SYNCED '+new Date().toLocaleTimeString());if(showMsg)toast('Synced with team');
+    saveLocal();saveTodoLists();render();renderTodoList();setSS('SYNCED '+new Date().toLocaleTimeString());if(showMsg)toast('Synced with team');
   }catch(e){setSS('SYNC FAILED');if(showMsg)toast('Sync failed — check keys','err');}
   btn.style.opacity='1';btn.innerHTML='&#8635; SYNC';
 }
