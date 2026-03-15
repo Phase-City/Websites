@@ -620,6 +620,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
     <div class="field"><label class="label">Bin ID</label><input class="inp" id="cfg-binid" placeholder="64abc123...your bin id..."></div>
     <div class="field"><label class="label">Team Password (set / change)</label><input class="inp" id="cfg-pw" type="password" placeholder="Leave blank to keep current"></div>
     <div class="field"><label class="label">Team Members (comma separated)</label><input class="inp" id="cfg-members" placeholder="The OG KiLLz, Mike, Dev3"></div>
+    <div class="field"><label class="label">Discord ID Mapping (for @pings)</label><div id="cfg-discord-ids" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div><div style="display:flex;gap:8px"><input class="inp" id="cfg-did-name" placeholder="username" style="flex:1"><input class="inp" id="cfg-did-id" placeholder="Discord ID (e.g. 123456789012345678)" style="flex:2"><button class="btn btn-primary" onclick="addDiscordId()" style="padding:8px 14px;font-size:11px">+ ADD</button></div></div>
     <div class="rm-divider" style="margin:16px 0"></div>
     <div class="cfg-step"><div class="cfg-step-num">&#128276; DISCORD NOTIFICATIONS</div><p>Task updates auto-post to #dev-tasks. Configure what triggers notifications:</p></div>
     <div class="field">
@@ -829,7 +830,8 @@ const DEFAULT_CATS=["[ogz]", "[dependencies]", "[root]", "[qbx]", "[ox]", "[g-sc
 const DEFAULT_RES=[{id:'r001',name:'ogz_blipz',category:'[ogz]'},{id:'r002',name:'ogz_cribz',category:'[ogz]'},{id:'r003',name:'ogz_illegaladmin',category:'[ogz]'},{id:'r004',name:'ogz_pedlife_v2',category:'[ogz]'},{id:'r005',name:'ogz_propmanager',category:'[ogz]'},{id:'r006',name:'ogz_rentals',category:'[ogz]'},{id:'r007',name:'ogz_resources',category:'[ogz]'},{id:'r008',name:'ogz_fitbit',category:'[dependencies]'},{id:'r009',name:'ogz_minigame_bridge',category:'[dependencies]'},{id:'r010',name:'ogz_skillsrep',category:'[dependencies]'},{id:'r011',name:'bl_dialog',category:'[dependencies]'},{id:'r012',name:'cdev_lib',category:'[dependencies]'},{id:'r013',name:'community_bridge',category:'[dependencies]'},{id:'r014',name:'Dm-throwitems',category:'[dependencies]'},{id:'r015',name:'evo_sound_player',category:'[dependencies]'},{id:'r016',name:'fmLib',category:'[dependencies]'},{id:'r017',name:'jg-vehiclemileage',category:'[dependencies]'},{id:'r018',name:'kimi_callbacks',category:'[dependencies]'},{id:'r019',name:'lc_utils',category:'[dependencies]'},{id:'r020',name:'loaf_lib',category:'[dependencies]'},{id:'r021',name:'menuv',category:'[dependencies]'},{id:'r022',name:'prompt_anim_core_2_new',category:'[dependencies]'},{id:'r023',name:'RageUI',category:'[dependencies]'},{id:'r024',name:'sn_lib',category:'[dependencies]'},{id:'r025',name:'wasabi_bridge',category:'[dependencies]'},{id:'r026',name:'xsound',category:'[dependencies]'},{id:'r027',name:'qbx_core',category:'[root]'},{id:'r028',name:'jg-hud',category:'[root]'},{id:'r029',name:'vertex-hub',category:'[root]'},{id:'r030',name:'qbx_binoculars',category:'[qbx]'},{id:'r031',name:'qbx_density',category:'[qbx]'},{id:'r032',name:'qbx_divegear',category:'[qbx]'},{id:'r033',name:'qbx_management',category:'[qbx]'},{id:'r034',name:'qbx_radialmenu',category:'[qbx]'},{id:'r035',name:'qbx_smallresources',category:'[qbx]'},{id:'r036',name:'qbx_vehicles',category:'[qbx]'},{id:'r037',name:'oxmysql',category:'[ox]'},{id:'r038',name:'ox_compat',category:'[ox]'},{id:'r039',name:'ox_doorlock',category:'[ox]'},{id:'r040',name:'ox_inventory',category:'[ox]'},{id:'r041',name:'ox_lib',category:'[ox]'},{id:'r042',name:'ox_target',category:'[ox]'},{id:'r043',name:'g-adv-paycheck',category:'[g-scripts]'},{id:'r044',name:'g-bossmenu',category:'[g-scripts]'},{id:'r045',name:'g-dutyV2',category:'[g-scripts]'},{id:'r046',name:'g-multijob',category:'[g-scripts]'},{id:'r047',name:'g-order-system',category:'[g-scripts]'},{id:'r048',name:'gg_busjob',category:'[jobs]'},{id:'r049',name:'gg_electricianjob',category:'[jobs]'},{id:'r050',name:'gg_garbagejob',category:'[jobs]'},{id:'r051',name:'gg_gruppejob',category:'[jobs]'},{id:'r052',name:'gg_taxijob',category:'[jobs]'},{id:'r053',name:'lation_detecting',category:'[jobs]'},{id:'r054',name:'lation_diving',category:'[jobs]'},{id:'r055',name:'kub_trucking',category:'[jobs]'},{id:'r056',name:'RxMining',category:'[jobs]'},{id:'r057',name:'RxZ_Smelters',category:'[jobs]'},{id:'r058',name:'r14-evidence',category:'[jobs]'},{id:'r059',name:'wasabi_ambulance',category:'[jobs]'},{id:'r060',name:'wasabi_crutch',category:'[jobs]'},{id:'r061',name:'wasabi_gps',category:'[jobs]'},{id:'r062',name:'wasabi_police',category:'[jobs]'},{id:'r063',name:'gg_boosting',category:'[illegal]'},{id:'r064',name:'lation_selling',category:'[illegal]'},{id:'r065',name:'tk_drugs',category:'[illegal]'},{id:'r066',name:'projectx-burner',category:'[illegal]'},{id:'r067',name:'projectx-masks',category:'[illegal]'},{id:'r068',name:'projectx-tasks',category:'[illegal]'},{id:'r069',name:'projectx-atmrobbery',category:'[illegal]'},{id:'r070',name:'projectx-houserobbery-v2',category:'[illegal]'},{id:'r071',name:'projectx-storerobbery-fm',category:'[illegal]'},{id:'r072',name:'crm-appearance',category:'[crm]'},{id:'r073',name:'crm-banking',category:'[crm]'},{id:'r074',name:'crm-core',category:'[crm]'},{id:'r075',name:'crm-loadingscreen',category:'[crm]'},{id:'r076',name:'crm-multicharacter',category:'[crm]'},{id:'r077',name:'crm-pausemenu',category:'[crm]'},{id:'r078',name:'crm-tattoos',category:'[crm]'},{id:'r079',name:'eatgo-app',category:'[phone]'},{id:'r080',name:'lb-newsapp',category:'[phone]'},{id:'r081',name:'lb-phone',category:'[phone]'},{id:'r082',name:'lb-phoneprop',category:'[phone]'},{id:'r083',name:'lbphone-insurance',category:'[phone]'},{id:'r084',name:'slrn_groups',category:'[phone]'},{id:'r085',name:'ws_emergency',category:'[phone]'},{id:'r086',name:'jg-advancedgarages',category:'[business]'},{id:'r087',name:'jg-dealerships',category:'[business]'},{id:'r088',name:'jg-mechanic',category:'[business]'},{id:'r089',name:'sn_furniture',category:'[housing]'},{id:'r090',name:'sn_properties',category:'[housing]'},{id:'r091',name:'envi-bridge',category:'[envi]'},{id:'r092',name:'envi-computer',category:'[envi]'},{id:'r093',name:'envi-hack-minigames-computer-edition',category:'[envi]'},{id:'r094',name:'envi-interact',category:'[envi]'},{id:'r095',name:'envi-pawnshop',category:'[envi]'},{id:'r096',name:'envi-zone-tool',category:'[envi]'},{id:'r097',name:'eagle_radar',category:'[mike]'},{id:'r098',name:'pc_economy',category:'[mike]'},{id:'r099',name:'pc_membership',category:'[mike]'},{id:'r100',name:'pc_queue',category:'[mike]'},{id:'r101',name:'ws_dispatch',category:'[mike]'},{id:'r102',name:'ws_gov',category:'[mike]'},{id:'r103',name:'ws_mdt',category:'[mike]'},{id:'r104',name:'bl_ui',category:'[minigames]'},{id:'r105',name:'tgg-minigames',category:'[minigames]'},{id:'r106',name:'lc_fuel',category:'[fuel]'},{id:'r107',name:'pixel-consumables',category:'[consumables]'},{id:'r108',name:'Renewed-Lib',category:'[renewed]'},{id:'r109',name:'Renewed-Vehiclekeys',category:'[renewed]'},{id:'r110',name:'Renewed-Weathersync',category:'[renewed]'},{id:'r111',name:'pma-voice',category:'[voice]'},{id:'r112',name:'zerio-radio',category:'[voice]'},{id:'r113',name:'AdvancedParking',category:'[standalone]'},{id:'r114',name:'amzn_admin_classic',category:'[standalone]'},{id:'r115',name:'bob74_ipl',category:'[standalone]'},{id:'r116',name:'cdev_chat',category:'[standalone]'},{id:'r117',name:'chowhathair',category:'[standalone]'},{id:'r118',name:'cr-stopmusic',category:'[standalone]'},{id:'r119',name:'fd_laptop',category:'[standalone]'},{id:'r120',name:'fivem-base-vehicle-handling',category:'[standalone]'},{id:'r121',name:'jg-handling',category:'[standalone]'},{id:'r122',name:'jg-stress-addon',category:'[standalone]'},{id:'r123',name:'kxCamera',category:'[standalone]'},{id:'r124',name:'Levi-Forceffp',category:'[standalone]'},{id:'r125',name:'lvc',category:'[standalone]'},{id:'r126',name:'MarkoMods-Menu',category:'[standalone]'},{id:'r127',name:'mnr_sitanywhere',category:'[standalone]'},{id:'r128',name:'MrNewbCustomPlates',category:'[standalone]'},{id:'r129',name:'MugShotBase64',category:'[standalone]'},{id:'r130',name:'object_gizmo',category:'[standalone]'},{id:'r131',name:'PolyZone',category:'[standalone]'},{id:'r132',name:'rpemotes',category:'[standalone]'},{id:'r133',name:'screenshot-basic',category:'[standalone]'},{id:'r134',name:'sd-dumpsters',category:'[standalone]'},{id:'r135',name:'snipe-menu',category:'[standalone]'},{id:'r136',name:'bcs_licensemanager',category:'[bcs]'},{id:'r137',name:'King-Greenscreen',category:'[bcs]'},{id:'r138',name:'cfx_onx_mp_faces',category:'[clothing]'},{id:'r139',name:'cfx_onx_mp_faces_replace',category:'[clothing]'},{id:'r140',name:'cfx_onx_mp_faces_replace_v2',category:'[clothing]'},{id:'r141',name:'fd_missing_textures',category:'[clothing]'},{id:'r142',name:'cfx-sent6-jakers',category:'[vehicles]'},{id:'r143',name:'sr1x',category:'[vehicles]'},{id:'r144',name:'beanbagshotgun',category:'[weapons]'},{id:'r145',name:'GlizzyWeaponsv1',category:'[weapons]'},{id:'r146',name:'MarkoMods-2011',category:'[weapons]'},{id:'r147',name:'MarkoMods-2S',category:'[weapons]'},{id:'r148',name:'MarkoMods-A45',category:'[weapons]'},{id:'r149',name:'MarkoMods-AGC',category:'[weapons]'},{id:'r150',name:'MarkoMods-KVR',category:'[weapons]'},{id:'r151',name:'MarkoMods-M320',category:'[weapons]'},{id:'r152',name:'MarkoMods-MB47',category:'[weapons]'},{id:'r153',name:'MarkoMods-P5',category:'[weapons]'},{id:'r154',name:'MarkoMods-PM4',category:'[weapons]'},{id:'r155',name:'MarkoMods-Shared',category:'[weapons]'},{id:'r156',name:'MarkoMods-TacticalSniper',category:'[weapons]'},{id:'r157',name:'MarkoMods-X17-Addon',category:'[weapons]'},{id:'r158',name:'MarkoMods-X17-Replace',category:'[weapons]'},{id:'r159',name:'PolarsArmoury_Glizzy',category:'[weapons]'}];
 
 let tasks=[],categories=[...DEFAULT_CATS],resources=[...DEFAULT_RES];
-let cfg={apikey:'',binid:'',password:'phasecity2026',members:['The OG KiLLz','Mike','Ray','Zach','Unassigned'],devhook:'https://discord.com/api/webhooks/1480042376423669800/NbacBKO0NxC2ZuTBnwaQjHoL88xUYLgGffm9L0IKUSgofiL6QcfodhbJ3lFnAHe6rT2B',notifyCreate:true,notifyDone:true,notifyCritical:false};
+let cfg={apikey:'',binid:'',password:'phasecity2026',members:['The OG KiLLz','Mike','Ray','Zach','Unassigned'],discordIds:{},devhook:'https://discord.com/api/webhooks/1480042376423669800/NbacBKO0NxC2ZuTBnwaQjHoL88xUYLgGffm9L0IKUSgofiL6QcfodhbJ3lFnAHe6rT2B',notifyCreate:true,notifyDone:true,notifyCritical:false};
+let discordMembers={};
 let currentView='kanban',editId=null,selectedRes=null,rmTabCurrent='res';
 
 // MULTI-LIST TO-DO SYSTEM
@@ -864,6 +866,16 @@ function saveLocal(){
   try{sessionStorage.setItem('pc_tasks',JSON.stringify(tasks));sessionStorage.setItem('pc_cats',JSON.stringify(categories));sessionStorage.setItem('pc_res',JSON.stringify(resources));sessionStorage.setItem('pc_notes',JSON.stringify(notes));}catch(e){}
 }
 function saveCfgLocal(){try{localStorage.setItem('pc_cfg',JSON.stringify(cfg));}catch(e){}}
+async function loadDiscordMembers(){
+  try{
+    const res=await fetch('discord-members.json');
+    if(!res.ok)return;
+    const data=await res.json();
+    discordMembers=data.members||{};
+    console.log(`✅ Loaded ${Object.keys(discordMembers).length} Discord members (synced: ${data.lastSync})`);
+  }catch(e){console.log('ℹ️ No discord-members.json found - run sync script or use manual mapping');}
+}
+loadDiscordMembers();
 function saveTodoLists(){
   try{localStorage.setItem('pc_todo_lists',JSON.stringify(todoLists));localStorage.setItem('pc_current_todo_list',currentTodoListId);}catch(e){}
 }
@@ -911,7 +923,8 @@ function openCfg(){
   $('cfg-notify-create').checked=cfg.notifyCreate!==false;
   $('cfg-notify-done').checked=cfg.notifyDone!==false;
   $('cfg-notify-critical').checked=cfg.notifyCritical!==false;
-  $('cfg-modal').style.display='flex';
+  renderDiscordIds();
+$('cfg-modal').style.display='flex';
 }
 function closeCfg(){$('cfg-modal').style.display='none';}
 function saveCfg(){
@@ -923,6 +936,25 @@ function saveCfg(){
   cfg.notifyDone=$('cfg-notify-done').checked;
   cfg.notifyCritical=$('cfg-notify-critical').checked;
   saveCfgLocal();$('setup-banner').style.display=(cfg.apikey&&cfg.binid)?'none':'flex';closeCfg();toast('Config saved');render();
+}
+
+function renderDiscordIds(){
+  const container=$('cfg-discord-ids');
+  const entries=Object.entries(cfg.discordIds);
+  container.innerHTML=entries.length?entries.map(([name,id])=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(123,104,238,0.08);border:1px solid var(--border);border-radius:6px"><span style="flex:1;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--c)">@${name}</span><span style="flex:2;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--vlight)">${id}</span><button class="btn-sm btn-del" onclick="removeDiscordId('${name}')">✕</button></div>`).join(''):'<div style="font-family:\'Share Tech Mono\',monospace;font-size:11px;color:var(--vlight);opacity:0.6">No Discord IDs mapped yet</div>';
+}
+function addDiscordId(){
+  const name=$('cfg-did-name').value.trim().replace(/^@/,'');
+  const id=$('cfg-did-id').value.trim();
+  if(!name||!id){toast('Enter both username and Discord ID','err');return;}
+  if(!/^\d{17,19}$/.test(id)){toast('Discord ID must be 17-19 digits','err');return;}
+  cfg.discordIds[name]=id;
+  $('cfg-did-name').value='';$('cfg-did-id').value='';
+  renderDiscordIds();
+}
+function removeDiscordId(name){
+  delete cfg.discordIds[name];
+  renderDiscordIds();
 }
 
 // DISCORD TASK NOTIFICATIONS
@@ -1780,8 +1812,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 // CHANGELOG GENERATOR
-const CL_SECTIONS=['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES','COMING SOON', 'UPDATES', 'COMMUNITY CREDITS'];
-const CL_ICONS={'NEW FEATURES':'🆕','IMPROVEMENTS':'⚡','BUG FIXES':'🐛','TWEAKS & ADJUSTMENTS':'🔧','KNOWN ISSUES':'⚠️','COMING SOON':'🔮', 'UPDATES':'📢', 'COMMUNITY CREDITS':'🏆'};
+const CL_SECTIONS=['NEW FEATURES','UPDATES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES','COMING SOON','COMMUNITY CREDITS'];
+const CL_ICONS={'NEW FEATURES':'🆕','UPDATES':'📢','IMPROVEMENTS':'⚡','BUG FIXES':'🐛','TWEAKS & ADJUSTMENTS':'🔧','KNOWN ISSUES':'⚠️','COMING SOON':'🔮','COMMUNITY CREDITS':'🏆'};
 let clSelectedTasks=new Set();
 let clSelectedTodos=new Set();
 let dragClTodoId=null;
@@ -2142,7 +2174,7 @@ function renderClPreview(){
     html+=`<div class="cl-embed-header">🌙 PHASE CITY | Change Log ${esc(ver)}</div>`;
     html+=`<div class="cl-embed-date"><strong>Released:</strong> ${date}</div>\n`;
     
-    ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
+    ['NEW FEATURES','UPDATES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
       if(clBuckets[sec]?.length){
         const icon=CL_ICONS[sec];
         html+=`<div class="cl-embed-field">`;
@@ -2175,7 +2207,7 @@ function renderClPreview(){
     $('cl-preview').innerHTML=html;
   }else{
     let txt=`🌙 PHASE CITY | Change Log ${ver}\n\nReleased: ${date}\n\n`;
-    ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
+    ['NEW FEATURES','UPDATES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
       if(clBuckets[sec]?.length){
         const icon=CL_ICONS[sec];
         txt+=`${icon} ${sec}\n`;
@@ -2202,7 +2234,7 @@ function getPlainChangelog(){
   const dateVal=$('cl-date').value;
   const date=dateVal?new Date(dateVal+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Today';
   let txt=`🌙 PHASE CITY | Change Log ${ver}\n\nReleased: ${date}\n\n`;
-  ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
+  ['NEW FEATURES','UPDATES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
     if(clBuckets[sec]?.length){
       const icon=CL_ICONS[sec];
       txt+=`${icon} ${sec}\n`;
@@ -2241,7 +2273,7 @@ function buildChangelogEmbed(){
   const fields=[];
   
   // Main sections (not credits/coming soon)
-  ['NEW FEATURES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
+  ['NEW FEATURES','UPDATES','IMPROVEMENTS','BUG FIXES','TWEAKS & ADJUSTMENTS','KNOWN ISSUES'].forEach(sec=>{
     if(clBuckets[sec]?.length){
       const icon=CL_ICONS[sec];
       const items=clBuckets[sec].map(item=>`• ${item}`).join('\n');
@@ -2255,13 +2287,18 @@ function buildChangelogEmbed(){
     fields.push({name:`🔮 COMING SOON`,value:items,inline:false});
   }
   
-  // Community Credits - special formatting
+  // Community Credits - special formatting with Discord pings
   if(clBuckets['COMMUNITY CREDITS']?.length){
-    const credits=clBuckets['COMMUNITY CREDITS'].join(' • ');
+    const credits=clBuckets['COMMUNITY CREDITS'].map(name=>{
+      const clean=name.replace(/^@/,'').toLowerCase();
+      const discordId=cfg.discordIds[clean]||discordMembers[clean]||Object.entries(cfg.discordIds).find(([k])=>k.toLowerCase()===clean)?.[1];
+      return discordId?`<@${discordId}>`:name;
+    }).join(' • ');
     fields.push({name:`🏆 COMMUNITY CREDITS`,value:credits,inline:false});
   }
   
   return{
+    content:'<@&1465887552060920017>',
     embeds:[{
       title:`🌙 PHASE CITY | Change Log ${ver}`,
       description:`**Released:** ${ts.display}`,
