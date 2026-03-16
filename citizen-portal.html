@@ -550,7 +550,7 @@ async function sendToForum(webhook, threadName, embed, discordUsername) {
   try {
     const ping = discordUsername ? getDiscordPing(discordUsername) : null;
     const payload = { thread_name: threadName, embeds: [embed] };
-    if (ping) payload.content = `${ping} Your submission has been received! The community can now discuss and vote on it below. 💜`;
+    if (ping) payload.content = `${ping} Submission received.! <:Phase_City:1471628635063586914>`;
     const res = await fetch(webhook, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -579,7 +579,7 @@ async function sendToForumWithMultipleFiles(webhook, threadName, embed, files, d
   try {
     const ping = discordUsername ? getDiscordPing(discordUsername) : null;
     const payload = { thread_name: threadName, embeds: [embed] };
-    if (ping) payload.content = `${ping} Your submission has been received! The community can now discuss and vote on it below. 💜`;
+    if (ping) payload.content = `${ping} Submission received.! <:Phase_City:1471628635063586914>`;
     const formData = new FormData();
     formData.append('payload_json', JSON.stringify(payload));
     files.forEach((file, i) => formData.append(`file${i}`, file, file.name));
@@ -821,7 +821,7 @@ function submitSuggestion() {
   const threadName = `💡 [${category}] ${idea.slice(0, 70)}${idea.length > 70 ? '...' : ''}`;
   
   // Submit to both forum (public) and staff (private)
-  submitToDiscord('suggestion', threadName, embed, sugFiles, 'sug-submit-btn');
+  submitToDiscord('suggestion', threadName, embed, sugFiles, 'sug-submit-btn', discord);
 }
 
 function submitCrash() {
