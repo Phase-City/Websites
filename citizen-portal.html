@@ -305,6 +305,26 @@ const FORUM_WEBHOOKS = {
 
 let currentTab = 'bug';
 
+// Discord member mapping for pings
+let discordMembers = {};
+async function loadDiscordMembers() {
+  try {
+    const res = await fetch('discord-members.json');
+    if (res.ok) {
+      const data = await res.json();
+      discordMembers = data.members || {};
+      console.log(`✅ Loaded ${Object.keys(discordMembers).length} Discord members for pings`);
+    }
+  } catch (e) { console.log('ℹ️ No discord-members.json - pings disabled'); }
+}
+loadDiscordMembers();
+
+function getDiscordPing(username) {
+  const clean = username.replace(/^@/, '').replace(/#\d+$/, '').toLowerCase().trim();
+  const id = discordMembers[clean];
+  return id ? `<@${id}>` : null;
+}
+
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
@@ -525,34 +545,43 @@ async function sendToStaffWithMultipleFiles(webhook, embed, files) {
 }
 
 // Send to forum channel (creates thread)
-async function sendToForum(webhook, threadName, embed) {
+async function sendToForum(webhook, threadName, embed, discordUsername) {
   if (!webhook) return false;
   try {
+    const ping = discordUsername ? getDiscordPing(discordUsername) : null;
+    const payload = { thread_name: threadName, embeds: [embed] };
+    if (ping) payload.content = `${ping} Submission received.! <:Phase_City:1471628635063586914>`;
     const res = await fetch(webhook, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ thread_name: threadName, embeds: [embed] })
+      body: JSON.stringify(payload)
     });
     return res.ok;
   } catch (e) { console.warn('Forum webhook failed', e); return false; }
 }
 
-async function sendToForumWithFile(webhook, threadName, embed, file) {
+async function sendToForumWithFile(webhook, threadName, embed, file, discordUsername) {
   if (!webhook) return false;
   try {
+    const ping = discordUsername ? getDiscordPing(discordUsername) : null;
+    const payload = { thread_name: threadName, embeds: [embed] };
+    if (ping) payload.content = `${ping} Your crash report has been received! We'll investigate and the community can help troubleshoot below. 💜`;
     const formData = new FormData();
-    formData.append('payload_json', JSON.stringify({ thread_name: threadName, embeds: [embed] }));
+    formData.append('payload_json', JSON.stringify(payload));
     if (file) formData.append('file', file, file.name);
     const res = await fetch(webhook, { method: 'POST', body: formData });
     return res.ok;
   } catch (e) { console.warn('Forum webhook failed', e); return false; }
 }
 
-async function sendToForumWithMultipleFiles(webhook, threadName, embed, files) {
+async function sendToForumWithMultipleFiles(webhook, threadName, embed, files, discordUsername) {
   if (!webhook) return false;
   try {
+    const ping = discordUsername ? getDiscordPing(discordUsername) : null;
+    const payload = { thread_name: threadName, embeds: [embed] };
+    if (ping) payload.content = `${ping} Submission received.! <:Phase_City:1471628635063586914>`;
     const formData = new FormData();
-    formData.append('payload_json', JSON.stringify({ thread_name: threadName, embeds: [embed] }));
+    formData.append('payload_json', JSON.stringify(payload));
     files.forEach((file, i) => formData.append(`file${i}`, file, file.name));
     const res = await fetch(webhook, { method: 'POST', body: formData });
     return res.ok;
@@ -560,7 +589,7 @@ async function sendToForumWithMultipleFiles(webhook, threadName, embed, files) {
 }
 
 // Main submit handlers - send to BOTH staff and forum
-async function submitToDiscord(type, threadName, embed, files, btnId) {
+async function submitToDiscord(type, threadName, embed, files, btnId, discordUsername) {
   const btn = btnId ? document.getElementById(btnId) : null;
   const resetBtn = () => {
     if (btn) {
@@ -574,9 +603,9 @@ async function submitToDiscord(type, threadName, embed, files, btnId) {
   try {
     // Send to forum (public - community can discuss/vote)
     if (files && files.length > 0) {
-      success = await sendToForumWithMultipleFiles(FORUM_WEBHOOKS[type], threadName, embed, files);
+      success = await sendToForumWithMultipleFiles(FORUM_WEBHOOKS[type], threadName, embed, files, discordUsername);
     } else {
-      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed);
+      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed, discordUsername);
     }
     
     // Also send to staff channel (private - internal tracking)
@@ -595,7 +624,7 @@ async function submitToDiscord(type, threadName, embed, files, btnId) {
   }
 }
 
-async function submitToDiscordWithSingleFile(type, threadName, embed, file, btnId) {
+async function submitToDiscordWithSingleFile(type, threadName, embed, file, btnId, discordUsername) {
   const btn = btnId ? document.getElementById(btnId) : null;
   const resetBtn = () => {
     if (btn) {
@@ -609,9 +638,9 @@ async function submitToDiscordWithSingleFile(type, threadName, embed, file, btnI
   try {
     // Send to forum (public)
     if (file) {
-      success = await sendToForumWithFile(FORUM_WEBHOOKS[type], threadName, embed, file);
+      success = await sendToForumWithFile(FORUM_WEBHOOKS[type], threadName, embed, file, discordUsername);
     } else {
-      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed);
+      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed, discordUsername);
     }
     
     // Also send to staff channel (private)
@@ -750,7 +779,7 @@ function submitBug() {
   const threadName = `🐛 [${category}] ${what.slice(0, 70)}${what.length > 70 ? '...' : ''}`;
   
   // Submit to both forum (public) and staff (private)
-  submitToDiscord('bug', threadName, embed, bugFiles, 'bug-submit-btn');
+  submitToDiscord('bug', threadName, embed, bugFiles, 'bug-submit-btn', discord);
 }
 
 function submitSuggestion() {
@@ -792,7 +821,7 @@ function submitSuggestion() {
   const threadName = `💡 [${category}] ${idea.slice(0, 70)}${idea.length > 70 ? '...' : ''}`;
   
   // Submit to both forum (public) and staff (private)
-  submitToDiscord('suggestion', threadName, embed, sugFiles, 'sug-submit-btn');
+  submitToDiscord('suggestion', threadName, embed, sugFiles, 'sug-submit-btn', discord);
 }
 
 function submitCrash() {
@@ -837,7 +866,7 @@ function submitCrash() {
   const threadName = `💥 [${crashType}] ${what.slice(0, 70)}${what.length > 70 ? '...' : ''}`;
   
   // Submit to both forum (public) and staff (private)
-  submitToDiscordWithSingleFile('crash', threadName, embed, crashFile, 'crash-submit-btn');
+  submitToDiscordWithSingleFile('crash', threadName, embed, crashFile, 'crash-submit-btn', discord);
 }
 </script>
 </body>
