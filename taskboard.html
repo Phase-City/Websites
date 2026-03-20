@@ -922,14 +922,14 @@ async function syncData(showMsg=true){
     const r=await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}/latest`,{headers:{'X-Master-Key':cfg.apikey}});
     if(!r.ok)throw new Error();
     const data=(await r.json()).record||{};
-    if(data.tasks)tasks=data.tasks;if(data.categories)categories=data.categories;if(data.resources)resources=data.resources;if(data.notes)notes=data.notes;if(data.todoLists){todoLists=mergeTodoLists(todoLists,data.todoLists);if(!todoLists.find(l=>l.id===currentTodoListId))currentTodoListId=todoLists[0]?.id||'default';}
+    if(data.tasks)tasks=data.tasks;if(data.categories)categories=data.categories;if(data.resources)resources=data.resources;if(data.notes)notes=data.notes;
     saveLocal();saveTodoLists();render();renderTodoList();setSS('SYNCED '+new Date().toLocaleTimeString());if(showMsg)toast('Synced with team');
   }catch(e){setSS('SYNC FAILED');if(showMsg)toast('Sync failed — check keys','err');}
   btn.style.opacity='1';btn.innerHTML='&#8635; SYNC';
 }
 async function pushData(){
   saveLocal();if(!cfg.apikey||!cfg.binid)return;setSS('SAVING...');
-  try{await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':cfg.apikey},body:JSON.stringify({tasks,categories,resources,notes,todoLists})});setSS('SAVED '+new Date().toLocaleTimeString());}
+  try{await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':cfg.apikey},body:JSON.stringify({tasks,categories,resources,notes})});setSS('SAVED '+new Date().toLocaleTimeString());}
   catch(e){setSS('SAVE FAILED');}
 }
 const setSS=msg=>$('sync-status').textContent=msg;
