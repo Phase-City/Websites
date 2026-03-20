@@ -1182,7 +1182,7 @@ async function saveTask(){
   const now=new Date().toISOString();
   const td={title,description:$('m-desc').value.trim(),resourceId:selectedRes.id,resourceName:selectedRes.name,category:selectedRes.category,priority:$('m-priority').value,assignee:$('m-assignee').value,status:$('m-status').value,attachments:[...currentAttachments],checklist:[...currentChecklist]};
   const isNew=!editId;
-  if(editId){tasks=tasks.map(t=>t.id===editId?{...t,...td,updatedAt:now}:t);toast('Task updated');}
+  if(editId){const oldTask=tasks.find(t=>t.id===editId);const oldStatus=oldTask?.status;const updatedTask={...oldTask,...td,updatedAt:now};tasks=tasks.map(t=>t.id===editId?updatedTask:t);toast('Task updated');if(td.status!==oldStatus){if(td.status==='Done')notifyDiscord('done',updatedTask);else notifyDiscord('status',updatedTask,oldStatus);}}
   else{const newTask={id:genId(),...td,createdAt:now,updatedAt:now};tasks.push(newTask);toast('Task created');notifyDiscord('create',newTask);}
   closeTaskModal();render();await pushData();
 }
