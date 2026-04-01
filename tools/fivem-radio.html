@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Radio Frequencies</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:20px}
+.container{max-width:920px;margin:0 auto}
+h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
+.subtitle{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:24px}
+
+/* Buttons */
+.btn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:600;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-sm{padding:5px 12px;font-size:.75rem;border-radius:4px}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--error)}
+.btn-cyan{background:var(--cyan);color:#000}
+
+/* File bar */
+.file-bar{display:flex;gap:6px;align-items:center;justify-content:center;margin-bottom:16px}
+.file-name{font-size:.72rem;color:var(--muted);font-family:'Courier New',monospace}
+
+/* Soul tabs */
+.soul-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.soul-tab{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.82rem;transition:all .15s;display:flex;align-items:center;gap:6px}
+.soul-tab:hover{border-color:var(--accent);color:var(--text)}
+.soul-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.soul-tab .remove-soul{opacity:0;font-size:.7rem;cursor:pointer;margin-left:2px;transition:opacity .15s}
+.soul-tab:hover .remove-soul{opacity:.6}
+.soul-tab .remove-soul:hover{opacity:1;color:var(--error)}
+.add-soul-btn{padding:6px 12px;border-radius:6px;border:1px dashed var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.82rem;transition:all .15s}
+.add-soul-btn:hover{border-color:var(--accent);color:var(--accent)}
+.add-soul-inline{display:flex;gap:4px;align-items:center}
+.add-soul-input{background:var(--bg);border:1px solid var(--accent);color:var(--text);padding:5px 10px;border-radius:6px;font-size:.82rem;outline:none;width:150px}
+.add-soul-input::placeholder{color:#555}
+
+/* Search */
+.search-wrap{margin-bottom:16px}
+.search-wrap input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:6px;font-size:.85rem;outline:none;transition:border-color .2s}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-wrap input::placeholder{color:#555}
+
+/* Cards / Sections */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:16px;overflow:hidden}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+.card-header h2{font-size:.9rem;font-weight:600;color:var(--accent)}
+.card-body{padding:14px 16px}
+
+/* City directory */
+.dept-group{margin-bottom:14px}
+.dept-group:last-child{margin-bottom:0}
+.dept-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(30,30,46,.6)}
+.freq-row{display:flex;align-items:center;padding:5px 0;gap:10px;font-size:.82rem}
+.freq-row:hover{background:rgba(123,104,238,.04);margin:0 -8px;padding:5px 8px;border-radius:4px}
+.freq-num{font-family:'Courier New',monospace;color:var(--cyan);font-weight:700;min-width:36px;cursor:pointer;transition:color .15s}
+.freq-num:hover{color:var(--accent)}
+.freq-name{flex:1;color:var(--text)}
+.freq-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* Personal freq list */
+.personal-row{display:flex;align-items:center;padding:7px 0;gap:10px;font-size:.82rem;border-bottom:1px solid rgba(30,30,46,.4)}
+.personal-row:last-child{border-bottom:none}
+.personal-row:hover{background:rgba(123,104,238,.04);margin:0 -8px;padding:7px 8px;border-radius:4px}
+.personal-cat{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:2px 6px;border-radius:3px;flex-shrink:0}
+.cat-gang{background:rgba(255,71,87,.15);color:var(--error)}
+.cat-business{background:rgba(92,225,230,.15);color:var(--cyan)}
+.cat-personal{background:rgba(123,104,238,.15);color:var(--accent)}
+.cat-event{background:rgba(46,213,115,.15);color:var(--success)}
+.cat-other{background:rgba(136,136,136,.15);color:var(--muted)}
+.personal-name{font-weight:600;color:var(--text);min-width:80px}
+.personal-notes{flex:1;color:var(--muted);font-size:.78rem}
+.personal-actions{display:flex;gap:4px;flex-shrink:0}
+.personal-actions button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.72rem;padding:3px 6px;border-radius:3px;transition:all .12s}
+.personal-actions button:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.personal-actions .del-btn:hover{color:var(--error)}
+
+/* Add form */
+.add-form{border-top:1px solid var(--border);padding-top:12px;margin-top:8px}
+.add-form-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.add-form input,.add-form select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:4px;font-size:.8rem;outline:none}
+.add-form input:focus,.add-form select:focus{border-color:var(--accent)}
+.add-form input::placeholder{color:#444}
+.add-form select{color:var(--muted);cursor:pointer}
+.add-form select option{background:var(--surface);color:var(--text)}
+.input-name{flex:1;min-width:100px}
+.input-freq{width:70px;font-family:'Courier New',monospace}
+.input-notes{flex:2;min-width:120px}
+
+/* Empty state */
+.empty{text-align:center;padding:24px;color:var(--muted);font-size:.85rem}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--success);color:#000;padding:8px 20px;border-radius:6px;font-size:.82rem;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:200}
+.toast.show{opacity:1}
+.toast.error{background:var(--error);color:#fff}
+
+/* Modal */
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;width:90%;max-width:400px}
+.modal h3{color:var(--accent);margin-bottom:14px;font-size:1rem}
+.modal input,.modal select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:6px;font-size:.9rem;outline:none;margin-bottom:10px}
+.modal input:focus,.modal select:focus{border-color:var(--accent)}
+.modal select{color:var(--muted);cursor:pointer}
+.modal select option{background:var(--surface);color:var(--text)}
+.modal label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+
+@media(max-width:600px){
+  .add-form-row{flex-direction:column}
+  .add-form input,.add-form select{width:100%}
+  .input-freq{width:100%}
+  .freq-row,.personal-row{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>RADIO FREQUENCIES</h1>
+  <p class="subtitle">Phase City directory + personal frequency tracker per soul</p>
+
+  <div class="file-bar">
+    <button class="btn btn-sm btn-outline" onclick="pickLoadFile()">Load Profiles</button>
+    <button class="btn btn-sm btn-outline" onclick="pickSaveFile()">Save As</button>
+    <span class="file-name" id="fileName"></span>
+  </div>
+
+  <!-- Soul tabs -->
+  <div class="soul-bar" id="soulBar">
+    <div class="add-soul-inline" id="addSoulForm" style="display:none">
+      <input type="text" class="add-soul-input" id="newSoulName" placeholder="Soul name..." spellcheck="false">
+      <button class="btn btn-sm" onclick="confirmAddSoul()">Add</button>
+      <button class="btn btn-sm btn-outline" onclick="cancelAddSoul()">Cancel</button>
+    </div>
+    <button class="add-soul-btn" id="addSoulBtn" onclick="showAddSoul()">+ Add Soul</button>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Search frequencies..." oninput="renderAll()">
+  </div>
+
+  <!-- City Directory -->
+  <div class="card" id="directoryCard">
+    <div class="card-header">
+      <h2>City Directory</h2>
+      <span style="font-size:.7rem;color:var(--muted)">Official Phase City frequencies</span>
+    </div>
+    <div class="card-body" id="directoryBody"></div>
+  </div>
+
+  <!-- Personal Frequencies -->
+  <div class="card" id="personalCard" style="display:none">
+    <div class="card-header">
+      <h2>Personal Frequencies</h2>
+      <span id="personalCount" style="font-size:.7rem;color:var(--muted)"></span>
+    </div>
+    <div class="card-body">
+      <div id="personalList"></div>
+      <div class="add-form">
+        <div class="add-form-row">
+          <input type="text" class="input-name" id="addName" placeholder="Name (e.g. My Crew)">
+          <input type="text" class="input-freq" id="addFreq" placeholder="Freq #">
+          <select id="addCat">
+            <option value="Gang">Gang</option>
+            <option value="Business">Business</option>
+            <option value="Personal" selected>Personal</option>
+            <option value="Event">Event</option>
+            <option value="Other">Other</option>
+          </select>
+          <input type="text" class="input-notes" id="addNotes" placeholder="Notes (optional)">
+          <button class="btn btn-sm" onclick="addFrequency()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No soul state -->
+  <div class="empty" id="noSoul">
+    Add a soul above to start tracking personal frequencies.
+  </div>
+</div>
+
+<!-- Edit modal -->
+<div class="modal-bg" id="editModal" style="display:none" onclick="if(event.target===this)closeEditModal()">
+  <div class="modal">
+    <h3>Edit Frequency</h3>
+    <label>Name</label>
+    <input type="text" id="editName">
+    <label>Frequency</label>
+    <input type="text" id="editFreq">
+    <label>Category</label>
+    <select id="editCat">
+      <option value="Gang">Gang</option>
+      <option value="Business">Business</option>
+      <option value="Personal">Personal</option>
+      <option value="Event">Event</option>
+      <option value="Other">Other</option>
+    </select>
+    <label>Notes</label>
+    <input type="text" id="editNotes">
+    <div class="modal-btns">
+      <button class="btn btn-sm btn-outline" onclick="closeEditModal()">Cancel</button>
+      <button class="btn btn-sm" onclick="saveEdit()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// --- City Directory Data ---
+var CITY_DIRECTORY = [
+  { dept: 'Police', color: '#4a90d9', entries: [
+    { freq: '1', name: 'Main Dispatch' },
+    { freq: '2', name: 'TAC 1' },
+    { freq: '3', name: 'TAC 2' },
+    { freq: '4', name: 'TAC 3' },
+    { freq: '5', name: 'TAC 4' },
+    { freq: '6', name: 'SWAT' },
+  ]},
+  { dept: 'EMS / Fire', color: '#e74c3c', entries: [
+    { freq: '7', name: 'Main EMS' },
+    { freq: '8', name: 'Hospital' },
+  ]},
+  { dept: 'DOJ', color: '#f39c12', entries: [
+    { freq: '9', name: 'Court' },
+  ]},
+  { dept: 'Civilian', color: '#2ecc71', entries: [
+    { freq: '10', name: 'General' },
+    { freq: '11', name: 'Taxi' },
+    { freq: '12', name: 'Mechanic' },
+    { freq: '13', name: 'Tow' },
+  ]},
+];
+
+// --- State ---
+var data = { souls: [] };
+var activeSoulId = null;
+var fileHandle = null;
+var editingId = null;
+var toastTimer = null;
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// --- Toast ---
+function showToast(msg, isError) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { t.className = 'toast'; }, 2200);
+}
+
+// --- File System Access ---
+async function saveData() {
+  if (fileHandle) {
+    try {
+      var writable = await fileHandle.createWritable();
+      await writable.write(JSON.stringify(data, null, 2));
+      await writable.close();
+    } catch(e) {
+      showToast('Save failed: ' + e.message, true);
+    }
+  }
+}
+
+async function pickSaveFile() {
+  try {
+    fileHandle = await window.showSaveFilePicker({
+      suggestedName: 'fivem-radio.json',
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+    });
+    await saveData();
+    document.getElementById('fileName').textContent = fileHandle.name;
+    showToast('Save file set — data will auto-save');
+  } catch {}
+}
+
+async function pickLoadFile() {
+  try {
+    var handles = await window.showOpenFilePicker({
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+    });
+    fileHandle = handles[0];
+    document.getElementById('fileName').textContent = fileHandle.name;
+    var file = await fileHandle.getFile();
+    var text = await file.text();
+    var parsed = JSON.parse(text);
+    data = parsed.souls ? parsed : { souls: [] };
+    renderSoulBar();
+    if (data.souls.length > 0) {
+      selectSoul(data.souls[0].id);
+    } else {
+      activeSoulId = null;
+      renderAll();
+    }
+    showToast('Loaded ' + data.souls.length + ' soul(s)');
+  } catch {}
+}
+
+// --- Soul Management ---
+function getActiveSoul() {
+  if (!activeSoulId) return null;
+  return data.souls.find(function(s) { return s.id === activeSoulId; }) || null;
+}
+
+function renderSoulBar() {
+  var bar = document.getElementById('soulBar');
+  var addBtn = document.getElementById('addSoulBtn');
+  var addForm = document.getElementById('addSoulForm');
+  bar.querySelectorAll('.soul-tab').forEach(function(t) { t.remove(); });
+
+  data.souls.forEach(function(soul) {
+    var tab = document.createElement('div');
+    tab.className = 'soul-tab' + (soul.id === activeSoulId ? ' active' : '');
+    tab.innerHTML = '<span>' + esc(soul.name) + '</span><span class="remove-soul" title="Delete soul">&times;</span>';
+    tab.querySelector('span').onclick = function() { selectSoul(soul.id); };
+    tab.querySelector('.remove-soul').onclick = function(e) {
+      e.stopPropagation();
+      removeSoul(soul.id);
+    };
+    bar.insertBefore(tab, addForm);
+  });
+}
+
+function selectSoul(id) {
+  activeSoulId = id;
+  renderSoulBar();
+  renderAll();
+}
+
+function showAddSoul() {
+  document.getElementById('addSoulBtn').style.display = 'none';
+  document.getElementById('addSoulForm').style.display = 'flex';
+  document.getElementById('newSoulName').value = '';
+  document.getElementById('newSoulName').focus();
+}
+
+function cancelAddSoul() {
+  document.getElementById('addSoulBtn').style.display = '';
+  document.getElementById('addSoulForm').style.display = 'none';
+}
+
+function confirmAddSoul() {
+  var name = document.getElementById('newSoulName').value.trim();
+  if (!name) return;
+  var soul = { id: genId(), name: name, frequencies: [] };
+  data.souls.push(soul);
+  cancelAddSoul();
+  selectSoul(soul.id);
+  saveData();
+  showToast('Soul added: ' + name);
+}
+
+function removeSoul(id) {
+  var soul = data.souls.find(function(s) { return s.id === id; });
+  if (!soul) return;
+  if (!confirm('Delete soul "' + soul.name + '" and all their frequencies?')) return;
+  data.souls = data.souls.filter(function(s) { return s.id !== id; });
+  if (activeSoulId === id) {
+    activeSoulId = data.souls.length > 0 ? data.souls[0].id : null;
+  }
+  renderSoulBar();
+  renderAll();
+  saveData();
+  showToast('Soul deleted');
+}
+
+// Enter key for add soul
+document.getElementById('newSoulName').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') { confirmAddSoul(); e.preventDefault(); }
+  if (e.key === 'Escape') cancelAddSoul();
+});
+
+// --- Copy ---
+function copyFreq(freq) {
+  navigator.clipboard.writeText(freq).then(function() {
+    showToast('Copied: ' + freq);
+  });
+}
+
+// --- Rendering ---
+function renderAll() {
+  renderDirectory();
+  renderPersonal();
+}
+
+function getSearchTerm() {
+  return document.getElementById('searchInput').value.toLowerCase().trim();
+}
+
+function renderDirectory() {
+  var body = document.getElementById('directoryBody');
+  var search = getSearchTerm();
+  var html = '';
+
+  CITY_DIRECTORY.forEach(function(dept) {
+    var filtered = dept.entries.filter(function(e) {
+      if (!search) return true;
+      return e.name.toLowerCase().includes(search) || e.freq.toLowerCase().includes(search) || dept.dept.toLowerCase().includes(search);
+    });
+    if (filtered.length === 0) return;
+
+    html += '<div class="dept-group">';
+    html += '<div class="dept-label"><span class="freq-dot" style="display:inline-block;vertical-align:middle;margin-right:6px;background:' + dept.color + '"></span>' + esc(dept.dept) + '</div>';
+    filtered.forEach(function(e) {
+      html += '<div class="freq-row">';
+      html += '<span class="freq-num" onclick="copyFreq(\'' + esc(e.freq) + '\')" title="Click to copy">' + esc(e.freq) + '</span>';
+      html += '<span class="freq-name">' + esc(e.name) + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+
+  if (!html) {
+    html = '<div style="text-align:center;color:var(--muted);font-size:.82rem;padding:8px">No matching frequencies</div>';
+  }
+  body.innerHTML = html;
+}
+
+function renderPersonal() {
+  var soul = getActiveSoul();
+  var card = document.getElementById('personalCard');
+  var noSoul = document.getElementById('noSoul');
+
+  if (!soul) {
+    card.style.display = 'none';
+    noSoul.style.display = '';
+    return;
+  }
+
+  card.style.display = '';
+  noSoul.style.display = 'none';
+
+  var search = getSearchTerm();
+  var list = document.getElementById('personalList');
+  var countEl = document.getElementById('personalCount');
+
+  var freqs = soul.frequencies.filter(function(f) {
+    if (!search) return true;
+    return f.name.toLowerCase().includes(search) ||
+           f.freq.toLowerCase().includes(search) ||
+           (f.notes || '').toLowerCase().includes(search) ||
+           f.category.toLowerCase().includes(search);
+  });
+
+  countEl.textContent = soul.frequencies.length + ' saved';
+
+  if (freqs.length === 0 && soul.frequencies.length === 0) {
+    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:.82rem;padding:12px">No personal frequencies yet. Add one below.</div>';
+    return;
+  }
+
+  if (freqs.length === 0) {
+    list.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:.82rem;padding:8px">No matching frequencies</div>';
+    return;
+  }
+
+  var html = '';
+  freqs.forEach(function(f) {
+    var catClass = 'cat-' + f.category.toLowerCase();
+    html += '<div class="personal-row">';
+    html += '<span class="personal-cat ' + catClass + '">' + esc(f.category) + '</span>';
+    html += '<span class="freq-num" onclick="copyFreq(\'' + esc(f.freq) + '\')" title="Click to copy">' + esc(f.freq) + '</span>';
+    html += '<span class="personal-name">' + esc(f.name) + '</span>';
+    html += '<span class="personal-notes">' + esc(f.notes || '') + '</span>';
+    html += '<span class="personal-actions">';
+    html += '<button onclick="openEditModal(\'' + f.id + '\')" title="Edit">edit</button>';
+    html += '<button class="del-btn" onclick="deleteFreq(\'' + f.id + '\')" title="Delete">del</button>';
+    html += '</span>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
+}
+
+// --- Add / Edit / Delete ---
+function addFrequency() {
+  var soul = getActiveSoul();
+  if (!soul) { showToast('Select a soul first', true); return; }
+
+  var name = document.getElementById('addName').value.trim();
+  var freq = document.getElementById('addFreq').value.trim();
+  var cat = document.getElementById('addCat').value;
+  var notes = document.getElementById('addNotes').value.trim();
+
+  if (!name || !freq) { showToast('Name and frequency are required', true); return; }
+
+  soul.frequencies.push({
+    id: genId(),
+    name: name,
+    freq: freq,
+    notes: notes,
+    category: cat
+  });
+
+  document.getElementById('addName').value = '';
+  document.getElementById('addFreq').value = '';
+  document.getElementById('addNotes').value = '';
+
+  renderPersonal();
+  saveData();
+  showToast('Frequency added');
+}
+
+// Enter key on add form
+['addName', 'addFreq', 'addNotes'].forEach(function(id) {
+  document.getElementById(id).addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { addFrequency(); e.preventDefault(); }
+  });
+});
+
+function deleteFreq(id) {
+  var soul = getActiveSoul();
+  if (!soul) return;
+  soul.frequencies = soul.frequencies.filter(function(f) { return f.id !== id; });
+  renderPersonal();
+  saveData();
+  showToast('Frequency deleted');
+}
+
+function openEditModal(id) {
+  var soul = getActiveSoul();
+  if (!soul) return;
+  var f = soul.frequencies.find(function(x) { return x.id === id; });
+  if (!f) return;
+
+  editingId = id;
+  document.getElementById('editName').value = f.name;
+  document.getElementById('editFreq').value = f.freq;
+  document.getElementById('editCat').value = f.category;
+  document.getElementById('editNotes').value = f.notes || '';
+  document.getElementById('editModal').style.display = '';
+  document.getElementById('editName').focus();
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+  editingId = null;
+}
+
+function saveEdit() {
+  var soul = getActiveSoul();
+  if (!soul || !editingId) return;
+  var f = soul.frequencies.find(function(x) { return x.id === editingId; });
+  if (!f) return;
+
+  var name = document.getElementById('editName').value.trim();
+  var freq = document.getElementById('editFreq').value.trim();
+  if (!name || !freq) { showToast('Name and frequency are required', true); return; }
+
+  f.name = name;
+  f.freq = freq;
+  f.category = document.getElementById('editCat').value;
+  f.notes = document.getElementById('editNotes').value.trim();
+
+  closeEditModal();
+  renderPersonal();
+  saveData();
+  showToast('Frequency updated');
+}
+
+// Enter key in edit modal
+['editName', 'editFreq', 'editNotes'].forEach(function(id) {
+  document.getElementById(id).addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { saveEdit(); e.preventDefault(); }
+    if (e.key === 'Escape') closeEditModal();
+  });
+});
+
+// --- Init ---
+renderDirectory();
+</script>
+</body>
+</html>

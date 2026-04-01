@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Color Code Builder</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:20px}
+.container{max-width:920px;margin:0 auto}
+h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
+.subtitle{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:24px}
+.section{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.section-header{padding:12px 16px}
+.section-header h2{font-size:.9rem;font-weight:600;color:var(--accent)}
+.section-body{padding:0 16px 14px}
+.btn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:600;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-sm{padding:4px 10px;font-size:.75rem;border-radius:4px}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-outline.active{border-color:var(--accent);color:var(--accent)}
+.copy-btn{background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:.75rem;padding:4px 10px;border-radius:4px;transition:all .15s}
+.copy-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.copy-btn.copied{border-color:var(--success);color:var(--success)}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:16px}
+.tab{padding:6px 14px;border-radius:6px 6px 0 0;border:1px solid var(--border);border-bottom:none;background:var(--bg);color:var(--muted);cursor:pointer;font-size:.8rem;transition:all .15s}
+.tab.active{background:var(--surface);color:var(--accent);border-color:var(--accent);border-bottom:1px solid var(--surface);margin-bottom:-1px;z-index:1}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* Editor */
+.editor{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.toolbar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.toolbar-group{display:flex;align-items:center;gap:4px}
+.toolbar-sep{width:1px;height:22px;background:var(--border);margin:0 4px}
+.color-tool{width:28px;height:28px;border-radius:5px;border:2px solid transparent;cursor:pointer;transition:all .12s;position:relative;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+.color-tool:hover{transform:scale(1.15);z-index:1}
+.color-tool.active{border-color:#fff;box-shadow:0 0 8px rgba(255,255,255,.25)}
+.color-tool.active::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:12px;height:3px;border-radius:2px;background:var(--accent)}
+.active-label{font-size:.72rem;color:var(--muted);margin-left:2px}
+.editor-area{min-height:120px;padding:16px 18px;font-family:'Courier New',monospace;font-size:1.05rem;line-height:1.8;color:#fff;outline:none;word-break:break-word;cursor:text}
+.editor-area:empty::before{content:attr(data-placeholder);color:#444;pointer-events:none}
+.editor-area *{font-family:inherit;font-size:inherit;line-height:inherit}
+.presets-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.preset-chip{padding:3px 10px;border-radius:4px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:.72rem;color:var(--muted);transition:all .15s}
+.preset-chip:hover{border-color:var(--accent);color:var(--accent)}
+.shortcut-hint{font-size:.65rem;color:#444;margin-left:auto}
+
+/* Output */
+.output-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.output-box{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 12px;font-family:'Courier New',monospace;font-size:.78rem;color:var(--cyan);word-break:break-all;user-select:all}
+.output-label{font-size:.7rem;color:var(--muted);min-width:35px}
+
+/* Reference table */
+table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:8px}
+th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.3px}
+td{padding:5px 8px;border-bottom:1px solid rgba(30,30,46,.5)}
+.color-dot{display:inline-block;width:14px;height:14px;border-radius:3px;vertical-align:middle;margin-right:6px}
+
+/* Dropzone */
+.dropzone{border:2px dashed var(--border);border-radius:8px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.dropzone:hover,.dropzone.dragover{border-color:var(--accent);background:rgba(123,104,238,.06)}
+.dropzone .drop-icon{font-size:2rem;opacity:.4}
+.dropzone .drop-text{color:var(--muted);font-size:.85rem}
+.dropzone .drop-hint{color:#555;font-size:.72rem}
+.drop-preview{margin:12px 0;text-align:center}
+.drop-preview img{max-width:100%;max-height:250px;border-radius:6px;border:1px solid var(--border)}
+.extract-status{text-align:center;padding:8px;font-size:.82rem;min-height:24px}
+.extract-result{margin-top:12px}
+.extract-preview{background:#1a1a2e;border:1px solid var(--border);border-radius:6px;padding:16px 20px;font-family:'Courier New',monospace;font-size:1.1rem;line-height:1.8;word-break:break-all;margin-bottom:12px;min-height:40px}
+.extract-actions{display:flex;gap:8px;flex-wrap:wrap}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status-error{color:var(--error)}
+.status-loading{color:var(--cyan)}
+.status-ok{color:var(--success)}
+
+@media(max-width:600px){
+  .output-row{flex-direction:column}
+  .output-box{min-width:100%}
+  .color-tool{width:24px;height:24px}
+  .shortcut-hint{display:none}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FIVEM COLOR CODE BUILDER</h1>
+  <p class="subtitle">Type colored text directly — click a color, then type</p>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('builder')">Builder</div>
+    <div class="tab" onclick="switchTab('reference')">Reference</div>
+    <div class="tab" onclick="switchTab('extract')">Extract</div>
+  </div>
+
+  <!-- BUILDER TAB -->
+  <div class="tab-content active" id="tab-builder">
+    <div class="editor">
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="toolbar-group" id="colorTools"></div>
+        <div class="toolbar-sep"></div>
+        <div class="presets-row">
+          <span style="font-size:.7rem;color:#555">Presets:</span>
+          <button class="preset-chip" onclick="loadPreset('gradient')">Rainbow</button>
+          <button class="preset-chip" onclick="loadPreset('alert')">Alert</button>
+          <button class="preset-chip" onclick="loadPreset('rp')">RP Action</button>
+          <button class="preset-chip" onclick="loadPreset('name')">Name Tag</button>
+          <button class="preset-chip" onclick="loadPreset('money')">Money</button>
+        </div>
+        <div class="toolbar-sep"></div>
+        <button class="btn-sm btn-outline" onclick="clearEditor()">Clear</button>
+        <span class="shortcut-hint">Ctrl+0-9 to switch colors</span>
+      </div>
+
+      <!-- Editable Area -->
+      <div class="editor-area" id="editor" contenteditable="true" data-placeholder="Start typing here... select a color above to change text color" spellcheck="false"></div>
+    </div>
+
+    <!-- Compact Output -->
+    <div class="section">
+      <div class="section-header"><h2>Output</h2></div>
+      <div class="section-body">
+        <div class="output-row">
+          <span class="output-label">Raw</span>
+          <div class="output-box" id="outputRaw"></div>
+          <button class="copy-btn" onclick="copyOutput('raw')">Copy</button>
+        </div>
+        <div class="output-row">
+          <span class="output-label">Lua</span>
+          <div class="output-box" id="outputLua"></div>
+          <button class="copy-btn" onclick="copyOutput('lua')">Copy</button>
+        </div>
+        <div class="output-row">
+          <span class="output-label">Esc</span>
+          <div class="output-box" id="outputEscaped"></div>
+          <button class="copy-btn" onclick="copyOutput('escaped')">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFERENCE TAB -->
+  <div class="tab-content" id="tab-reference">
+    <div class="section">
+      <div class="section-header"><h2>FiveM Color Codes Reference</h2></div>
+      <div class="section-body">
+        <table id="refTable">
+          <thead><tr><th>Code</th><th>Color</th><th>Name</th><th>Hex</th><th>Usage</th></tr></thead>
+          <tbody id="refBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header"><h2>Tips</h2></div>
+      <div class="section-body" style="font-size:.82rem;line-height:1.7;color:var(--muted)">
+        <p><strong style="color:var(--text)">How it works:</strong> Color codes like <code style="color:var(--cyan)">^1</code> change all text after them until the next code or end of string.</p>
+        <p><strong style="color:var(--text)">Reset:</strong> Use <code style="color:var(--cyan)">^0</code> or <code style="color:var(--cyan)">^7</code> to return to default white.</p>
+        <p><strong style="color:var(--text)">In Lua:</strong> Use directly in strings: <code style="color:var(--cyan)">print("^1Red ^2Green ^0White")</code></p>
+        <p><strong style="color:var(--text)">Chat:</strong> Works in chat messages, server names, and most text rendered by FiveM.</p>
+        <p><strong style="color:var(--text)">Caret literal:</strong> Use <code style="color:var(--cyan)">^^</code> to display an actual <code>^</code> character.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXTRACT TAB -->
+  <div class="tab-content" id="tab-extract">
+    <div class="section">
+      <div class="section-header"><h2>Extract Colors from Screenshot</h2></div>
+      <div class="section-body">
+        <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+          <div class="drop-icon">&#128247;</div>
+          <div class="drop-text">Drop a screenshot of FiveM colored text here</div>
+          <div class="drop-hint">or click to browse &bull; also supports Ctrl+V paste</div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(this.files[0])">
+        <div class="drop-preview" id="dropPreview" style="display:none">
+          <img id="previewImg">
+        </div>
+        <canvas id="extractCanvas" style="display:none"></canvas>
+        <div class="extract-status" id="extractStatus"></div>
+        <div class="extract-result" id="extractResult" style="display:none">
+          <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">Detected colored text</div>
+          <div class="extract-preview" id="extractPreview"></div>
+          <div style="font-size:.75rem;color:var(--muted);margin-bottom:6px">Raw output</div>
+          <div class="output-row">
+            <div class="output-box" id="extractRaw"></div>
+            <button class="copy-btn" onclick="copyExtract()">Copy</button>
+          </div>
+          <div class="extract-actions" style="margin-top:10px">
+            <button class="btn" onclick="useInBuilder()">Use in Builder</button>
+            <button class="btn btn-sm btn-outline" onclick="resetExtract()">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const COLORS = [
+  { code: 0, name: 'White (Reset)', hex: '#FFFFFF', fg: '#000' },
+  { code: 1, name: 'Red',           hex: '#FF0000', fg: '#fff' },
+  { code: 2, name: 'Green',         hex: '#00FF00', fg: '#000' },
+  { code: 3, name: 'Yellow',        hex: '#FFFF00', fg: '#000' },
+  { code: 4, name: 'Blue',          hex: '#0000FF', fg: '#fff' },
+  { code: 5, name: 'Cyan',          hex: '#00FFFF', fg: '#000' },
+  { code: 6, name: 'Magenta',       hex: '#FF00FF', fg: '#fff' },
+  { code: 7, name: 'White',         hex: '#FFFFFF', fg: '#000' },
+  { code: 8, name: 'Dark Red',      hex: '#B20000', fg: '#fff' },
+  { code: 9, name: 'Gray',          hex: '#808080', fg: '#fff' },
+];
+
+const PRESETS = {
+  gradient: [
+    {text:'R',color:1},{text:'a',color:2},{text:'i',color:3},{text:'n',color:4},
+    {text:'b',color:5},{text:'o',color:6},{text:'w',color:1},{text:' ',color:0},{text:'Text',color:0}
+  ],
+  alert: [
+    {text:'[WARNING] ',color:1},{text:'Server restart in ',color:3},{text:'5',color:1},{text:' minutes!',color:3}
+  ],
+  rp: [
+    {text:'* ',color:6},{text:'John ',color:3},{text:'slowly walks toward the door',color:6},{text:' *',color:0}
+  ],
+  name: [
+    {text:'[',color:4},{text:'Phase ',color:5},{text:'City',color:1},{text:'] ',color:4},{text:'Player',color:0}
+  ],
+  money: [
+    {text:'+$5,000',color:2},{text:' | ',color:0},{text:'-$2,300',color:1},{text:' | Balance: ',color:0},{text:'$12,700',color:3}
+  ],
+};
+
+let activeColor = 0;
+const editor = document.getElementById('editor');
+
+// --- Init ---
+
+function init() {
+  renderColorTools();
+  renderRefTable();
+  setActiveColor(0);
+
+  editor.addEventListener('input', syncFromEditor);
+  editor.addEventListener('keydown', handleEditorKeydown);
+  editor.addEventListener('paste', handlePaste);
+
+  // Ensure new text gets the active color
+  editor.addEventListener('keypress', e => {
+    // Don't interfere with Enter or special keys
+    if (e.key === 'Enter' || e.ctrlKey || e.metaKey) return;
+  });
+
+  syncFromEditor();
+}
+
+function renderColorTools() {
+  const container = document.getElementById('colorTools');
+  container.innerHTML = COLORS.map(c => `
+    <button class="color-tool" id="ct${c.code}" style="background:${c.hex};color:${c.fg}"
+      onclick="handleColorClick(${c.code})" title="^${c.code} ${c.name} (Ctrl+${c.code})">
+      ${c.code}
+    </button>
+  `).join('');
+}
+
+function renderRefTable() {
+  document.getElementById('refBody').innerHTML = COLORS.map(c => `
+    <tr>
+      <td style="font-family:monospace;font-weight:bold;color:${c.hex === '#FFFFFF' ? '#ccc' : c.hex}">^${c.code}</td>
+      <td><span class="color-dot" style="background:${c.hex}"></span></td>
+      <td>${c.name}</td>
+      <td style="font-family:monospace;color:var(--muted)">${c.hex}</td>
+      <td style="font-family:monospace;font-size:.75rem;color:var(--cyan)">print("^${c.code}${c.name.split(' ')[0]} text")</td>
+    </tr>
+  `).join('');
+}
+
+// --- Color toolbar ---
+
+function setActiveColor(code) {
+  activeColor = code;
+  document.querySelectorAll('.color-tool').forEach(el => el.classList.remove('active'));
+  document.getElementById('ct' + code).classList.add('active');
+  // Apply color for next typed text
+  document.execCommand('foreColor', false, COLORS[code].hex);
+  editor.focus();
+}
+
+function handleColorClick(code) {
+  const sel = window.getSelection();
+  // If there's a selection inside the editor, recolor it
+  if (sel && !sel.isCollapsed && editor.contains(sel.anchorNode)) {
+    document.execCommand('foreColor', false, COLORS[code].hex);
+    activeColor = code;
+    document.querySelectorAll('.color-tool').forEach(el => el.classList.remove('active'));
+    document.getElementById('ct' + code).classList.add('active');
+    syncFromEditor();
+  } else {
+    setActiveColor(code);
+  }
+}
+
+// --- Editor keyboard handling ---
+
+function handleEditorKeydown(e) {
+  // Ctrl+0-9 to switch colors
+  if ((e.ctrlKey || e.metaKey) && e.key >= '0' && e.key <= '9') {
+    e.preventDefault();
+    setActiveColor(parseInt(e.key));
+    return;
+  }
+
+  // On Enter, ensure new line keeps current color
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    document.execCommand('insertHTML', false, '<br>');
+    document.execCommand('foreColor', false, COLORS[activeColor].hex);
+    syncFromEditor();
+    return;
+  }
+}
+
+function handlePaste(e) {
+  e.preventDefault();
+  const text = e.clipboardData.getData('text/plain');
+  // Insert as plain text with current active color
+  const span = document.createElement('span');
+  span.style.color = COLORS[activeColor].hex;
+  span.textContent = text;
+  document.execCommand('insertHTML', false, span.outerHTML);
+  syncFromEditor();
+}
+
+// --- Sync editor DOM -> raw string ---
+
+function syncFromEditor() {
+  const raw = editorToRaw();
+  document.getElementById('outputRaw').textContent = raw;
+  document.getElementById('outputLua').textContent = raw ? `"${raw.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"` : '';
+  document.getElementById('outputEscaped').textContent = raw ? raw.replace(/\^/g, '\\^') : '';
+}
+
+function editorToRaw() {
+  let result = '';
+  let lastColorCode = -1;
+
+  function walk(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent;
+      if (!text) return;
+      const color = getNodeColor(node);
+      const code = rgbToFiveMCode(color);
+      if (code !== lastColorCode) {
+        result += `^${code}`;
+        lastColorCode = code;
+      }
+      result += text;
+    } else if (node.nodeName === 'BR') {
+      result += '\n';
+    } else {
+      for (const child of node.childNodes) {
+        walk(child);
+      }
+    }
+  }
+
+  walk(editor);
+  return result;
+}
+
+function getNodeColor(textNode) {
+  let el = textNode.parentElement;
+  while (el && el !== editor) {
+    const color = el.style.color || el.getAttribute('color');
+    if (color) return color;
+    el = el.parentElement;
+  }
+  return '#FFFFFF';
+}
+
+function rgbToFiveMCode(color) {
+  if (!color) return 0;
+  // Parse various color formats
+  let r, g, b;
+  if (color.startsWith('#')) {
+    const hex = color.replace('#', '');
+    const n = parseInt(hex.length === 3 ?
+      hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2] : hex, 16);
+    r = (n >> 16) & 255; g = (n >> 8) & 255; b = n & 255;
+  } else if (color.startsWith('rgb')) {
+    const m = color.match(/(\d+)/g);
+    if (!m) return 0;
+    [r, g, b] = m.map(Number);
+  } else {
+    return 0;
+  }
+
+  let best = 0, bestDist = Infinity;
+  for (const c of COLORS) {
+    const [cr, cg, cb] = hexToRgb(c.hex);
+    const d = (r - cr) ** 2 + (g - cg) ** 2 + (b - cb) ** 2;
+    if (d < bestDist) { bestDist = d; best = c.code; }
+  }
+  return best;
+}
+
+// --- Presets ---
+
+function loadPreset(name) {
+  const preset = PRESETS[name];
+  if (!preset) return;
+  editor.innerHTML = '';
+  preset.forEach(seg => {
+    const span = document.createElement('span');
+    span.style.color = COLORS[seg.color].hex;
+    span.textContent = seg.text;
+    editor.appendChild(span);
+  });
+  syncFromEditor();
+}
+
+function clearEditor() {
+  editor.innerHTML = '';
+  syncFromEditor();
+  setActiveColor(0);
+}
+
+// --- Load raw ^N string into editor (for extract -> builder) ---
+
+function loadRawIntoEditor(raw) {
+  editor.innerHTML = '';
+  let currentColor = 0;
+  let buffer = '';
+
+  function flush() {
+    if (!buffer) return;
+    const span = document.createElement('span');
+    span.style.color = COLORS[currentColor].hex;
+    span.textContent = buffer;
+    editor.appendChild(span);
+    buffer = '';
+  }
+
+  let i = 0;
+  while (i < raw.length) {
+    if (raw[i] === '^' && i + 1 < raw.length && raw[i + 1] >= '0' && raw[i + 1] <= '9') {
+      flush();
+      currentColor = parseInt(raw[i + 1]);
+      i += 2;
+    } else {
+      buffer += raw[i];
+      i++;
+    }
+  }
+  flush();
+  syncFromEditor();
+}
+
+// --- Tabs ---
+
+function switchTab(name) {
+  switchTabTo(name);
+}
+
+function switchTabTo(name) {
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.textContent.toLowerCase() === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// --- Output copy ---
+
+function copyOutput(type) {
+  const elId = type === 'raw' ? 'outputRaw' : type === 'lua' ? 'outputLua' : 'outputEscaped';
+  const text = document.getElementById(elId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(elId).parentElement.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1200);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// --- Extract from image ---
+
+let extractedString = '';
+
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function nearestFiveM(r, g, b) {
+  let best = 0, bestDist = Infinity;
+  for (const c of COLORS) {
+    const [cr, cg, cb] = hexToRgb(c.hex);
+    const d = (r - cr) ** 2 + (g - cg) ** 2 + (b - cb) ** 2;
+    if (d < bestDist) { bestDist = d; best = c.code; }
+  }
+  return best;
+}
+
+const dropzone = document.getElementById('dropzone');
+dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+dropzone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropzone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleFile(file);
+});
+
+document.addEventListener('paste', e => {
+  // Only handle image paste if we're on the extract tab or editor doesn't have focus
+  if (editor.contains(document.activeElement) || editor === document.activeElement) return;
+  const items = e.clipboardData?.items;
+  if (!items) return;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      handleFile(item.getAsFile());
+      switchTabTo('extract');
+      break;
+    }
+  }
+});
+
+function handleFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = document.getElementById('previewImg');
+    img.onload = () => processImage(img);
+    img.src = e.target.result;
+    document.getElementById('dropPreview').style.display = '';
+    document.getElementById('extractResult').style.display = 'none';
+    setExtractStatus('loading', '<span class="spinner"></span>Processing image...');
+  };
+  reader.readAsDataURL(file);
+}
+
+async function processImage(img) {
+  const canvas = document.getElementById('extractCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  ctx.drawImage(img, 0, 0);
+
+  try {
+    setExtractStatus('loading', '<span class="spinner"></span>Running OCR (first load may take a moment)...');
+
+    const result = await Tesseract.recognize(canvas, 'eng', {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          const pct = Math.round((m.progress || 0) * 100);
+          setExtractStatus('loading', `<span class="spinner"></span>Recognizing text... ${pct}%`);
+        }
+      }
+    });
+
+    const symbols = result.data.symbols || [];
+    if (!symbols.length) {
+      setExtractStatus('error', 'No text detected in image. Try a clearer screenshot.');
+      return;
+    }
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
+
+    let output = '';
+    let lastColor = -1;
+
+    for (const sym of symbols) {
+      const bbox = sym.bbox;
+      const cx = Math.round((bbox.x0 + bbox.x1) / 2);
+      const cy = Math.round((bbox.y0 + bbox.y1) / 2);
+      const idx = (cy * canvas.width + cx) * 4;
+      const r = pixels[idx], g = pixels[idx + 1], b = pixels[idx + 2];
+
+      const brightness = r * 0.299 + g * 0.587 + b * 0.114;
+      let colorCode;
+      if (brightness < 30) {
+        const cy2 = Math.round(bbox.y0 + (bbox.y1 - bbox.y0) * 0.35);
+        const idx2 = (cy2 * canvas.width + cx) * 4;
+        const r2 = pixels[idx2], g2 = pixels[idx2 + 1], b2 = pixels[idx2 + 2];
+        const brightness2 = r2 * 0.299 + g2 * 0.587 + b2 * 0.114;
+        colorCode = brightness2 < 30 ? 0 : nearestFiveM(r2, g2, b2);
+      } else {
+        colorCode = nearestFiveM(r, g, b);
+      }
+
+      if (colorCode !== lastColor) {
+        output += `^${colorCode}`;
+        lastColor = colorCode;
+      }
+      output += sym.text;
+    }
+
+    extractedString = output;
+    renderExtractResult(output);
+    setExtractStatus('ok', `Extracted ${symbols.length} characters`);
+  } catch (err) {
+    setExtractStatus('error', 'OCR failed: ' + (err.message || 'Unknown error'));
+  }
+}
+
+function renderExtractResult(raw) {
+  const el = document.getElementById('extractPreview');
+  let html = '';
+  let currentColor = '#FFFFFF';
+  let i = 0;
+  while (i < raw.length) {
+    if (raw[i] === '^' && i + 1 < raw.length && raw[i + 1] >= '0' && raw[i + 1] <= '9') {
+      currentColor = COLORS[parseInt(raw[i + 1])].hex;
+      i += 2;
+      continue;
+    }
+    html += `<span style="color:${currentColor}">${esc(raw[i])}</span>`;
+    i++;
+  }
+  el.innerHTML = html;
+  document.getElementById('extractRaw').textContent = raw;
+  document.getElementById('extractResult').style.display = '';
+}
+
+function useInBuilder() {
+  loadRawIntoEditor(extractedString);
+  switchTabTo('builder');
+}
+
+function resetExtract() {
+  document.getElementById('dropPreview').style.display = 'none';
+  document.getElementById('extractResult').style.display = 'none';
+  document.getElementById('extractStatus').innerHTML = '';
+  document.getElementById('fileInput').value = '';
+  extractedString = '';
+}
+
+function copyExtract() {
+  const text = document.getElementById('extractRaw').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('extractRaw').parentElement.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1200);
+  });
+}
+
+function setExtractStatus(type, msg) {
+  const el = document.getElementById('extractStatus');
+  el.className = 'extract-status ' + (type === 'error' ? 'status-error' : type === 'loading' ? 'status-loading' : 'status-ok');
+  el.innerHTML = msg;
+}
+
+init();
+</script>
+</body>
+</html>

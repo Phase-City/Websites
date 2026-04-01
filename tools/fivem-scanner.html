@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Server Scanner</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:20px}
+.container{max-width:920px;margin:0 auto}
+h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
+.subtitle{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:24px}
+.search-bar{display:flex;gap:8px;margin-bottom:16px}
+.search-bar input{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:6px;font-size:.9rem;outline:none;transition:border-color .2s}
+.search-bar input:focus{border-color:var(--accent)}
+.search-bar input::placeholder{color:#555}
+.btn{background:var(--accent);color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-size:.85rem;font-weight:600;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-sm{padding:4px 10px;font-size:.75rem;border-radius:4px}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline.active{border-color:var(--accent);color:var(--accent)}
+.toolbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.toolbar .spacer{flex:1}
+#status{text-align:center;padding:8px;font-size:.85rem;min-height:24px}
+.status-error{color:var(--error)}
+.status-loading{color:var(--cyan)}
+.status-ok{color:var(--success)}
+#results{display:none}
+.section{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none;transition:background .2s}
+.section-header:hover{background:rgba(123,104,238,.06)}
+.section-header h2{font-size:.9rem;font-weight:600;color:var(--accent)}
+.section-header .badge{background:var(--accent);color:#fff;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:600}
+.section-header .arrow{color:var(--muted);font-size:.7rem;transition:transform .2s}
+.section.collapsed .section-body{display:none}
+.section.collapsed .arrow{transform:rotate(-90deg)}
+.section-body{padding:0 16px 14px}
+.filter-input{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:4px;font-size:.8rem;outline:none;width:200px;margin-bottom:10px}
+.filter-input:focus{border-color:var(--accent)}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.info-item{padding:8px 10px;background:var(--bg);border-radius:4px}
+.info-item .label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.info-item .value{font-size:.85rem;word-break:break-all}
+.info-item .value.name{color:var(--cyan);font-size:1rem;font-weight:600}
+.server-desc{padding:8px 10px;background:var(--bg);border-radius:4px;margin-bottom:8px;font-size:.82rem;color:var(--muted);line-height:1.5}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-weight:600;cursor:pointer;user-select:none;font-size:.75rem;text-transform:uppercase;letter-spacing:.3px}
+th:hover{color:var(--accent)}
+th .sort-arrow{margin-left:4px;font-size:.65rem}
+td{padding:5px 8px;border-bottom:1px solid rgba(30,30,46,.5);vertical-align:top}
+tr:hover td{background:rgba(123,104,238,.04)}
+.id-cell{font-family:'Courier New',monospace;font-size:.75rem;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copy-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.7rem;padding:2px 4px;border-radius:2px}
+.copy-btn:hover{color:var(--cyan)}
+.resources-wrap{display:flex;flex-wrap:wrap;gap:5px}
+.resource-badge{background:var(--bg);border:1px solid var(--border);padding:3px 8px;border-radius:4px;font-size:.75rem;font-family:'Courier New',monospace;transition:border-color .15s}
+.resource-badge:hover{border-color:var(--accent)}
+.raw-json{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;font-family:'Courier New',monospace;font-size:.72rem;max-height:400px;overflow:auto;white-space:pre-wrap;word-break:break-all;color:var(--muted);display:none;margin-top:12px}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--cyan);border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:16px}
+.tab{padding:8px 18px;border-radius:6px 6px 0 0;border:1px solid var(--border);border-bottom:none;background:var(--bg);color:var(--muted);cursor:pointer;font-size:.85rem;font-weight:600;transition:all .15s}
+.tab.active{background:var(--surface);color:var(--accent);border-color:var(--accent);border-bottom:1px solid var(--surface);margin-bottom:-1px;z-index:1}
+.tab-content{display:none}
+.tab-content.active{display:block}
+/* Find Player */
+.find-result{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;padding:14px 16px;transition:border-color .15s}
+.find-result:hover{border-color:var(--accent)}
+.find-result .server-name{color:var(--cyan);font-weight:600;font-size:.9rem;margin-bottom:6px}
+.find-result .server-meta{font-size:.75rem;color:var(--muted);margin-bottom:8px;display:flex;gap:12px;flex-wrap:wrap}
+.find-result .player-match{font-size:.82rem;padding:4px 8px;background:var(--bg);border-radius:4px;display:inline-flex;align-items:center;gap:6px;margin:2px}
+.find-result .player-match .match-name{color:var(--accent)}
+.find-progress{background:var(--border);border-radius:4px;height:6px;margin:10px 0;overflow:hidden}
+.find-progress-bar{height:100%;background:var(--accent);border-radius:4px;transition:width .3s}
+.find-stats{font-size:.75rem;color:var(--muted);text-align:center;margin-bottom:8px}
+.find-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.ping-good{color:var(--success)}
+.ping-ok{color:#ffa502}
+.ping-bad{color:var(--error)}
+@media(max-width:600px){
+  .search-bar{flex-direction:column}
+  .info-grid{grid-template-columns:1fr}
+  .filter-input{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FIVEM SERVER SCANNER</h1>
+  <p class="subtitle">Scan servers or find players across all FiveM</p>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('scanner')">Server Scanner</div>
+    <div class="tab" onclick="switchTab('findplayer')">Find Player</div>
+  </div>
+
+  <div class="tab-content active" id="tab-scanner">
+  <div class="search-bar">
+    <input type="text" id="serverInput" placeholder="e.g. cfx.re/join/abc123 or 192.168.1.1:30120" spellcheck="false" autocomplete="off">
+    <button class="btn" id="scanBtn" onclick="scan()">SCAN</button>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn btn-sm btn-outline" id="refreshToggle" onclick="toggleAutoRefresh()" style="display:none">Auto-Refresh: OFF</button>
+    <button class="btn btn-sm btn-outline" id="rawToggle" onclick="toggleRawJson()" style="display:none">Raw JSON</button>
+    <span class="spacer"></span>
+    <span id="proxyInfo" style="font-size:.7rem;color:var(--muted)"></span>
+  </div>
+
+  <div id="status"></div>
+
+  <div id="results">
+    <div class="section" id="infoSection">
+      <div class="section-header" onclick="toggleSection('infoSection')">
+        <h2>Server Info</h2>
+        <span class="arrow">&#9660;</span>
+      </div>
+      <div class="section-body">
+        <div class="server-desc" id="serverDesc" style="display:none"></div>
+        <div class="info-grid" id="infoGrid"></div>
+      </div>
+    </div>
+
+    <div class="section" id="playersSection">
+      <div class="section-header" onclick="toggleSection('playersSection')">
+        <h2>Players <span class="badge" id="playerCount">0</span></h2>
+        <span class="arrow">&#9660;</span>
+      </div>
+      <div class="section-body">
+        <input type="text" class="filter-input" placeholder="Filter players..." oninput="filterPlayers(this.value)">
+        <div style="overflow-x:auto">
+          <table id="playerTable">
+            <thead><tr>
+              <th onclick="sortPlayers('id')">ID <span class="sort-arrow"></span></th>
+              <th onclick="sortPlayers('name')">Name <span class="sort-arrow"></span></th>
+              <th onclick="sortPlayers('ping')">Ping <span class="sort-arrow"></span></th>
+              <th>Identifiers</th>
+            </tr></thead>
+            <tbody id="playerBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="resourcesSection">
+      <div class="section-header" onclick="toggleSection('resourcesSection')">
+        <h2>Resources <span class="badge" id="resourceCount">0</span></h2>
+        <span class="arrow">&#9660;</span>
+      </div>
+      <div class="section-body">
+        <input type="text" class="filter-input" placeholder="Filter resources..." oninput="filterResources(this.value)">
+        <div class="resources-wrap" id="resourcesWrap"></div>
+      </div>
+    </div>
+
+    <div class="section" id="varsSection">
+      <div class="section-header" onclick="toggleSection('varsSection')">
+        <h2>Server Variables <span class="badge" id="varCount">0</span></h2>
+        <span class="arrow">&#9660;</span>
+      </div>
+      <div class="section-body">
+        <input type="text" class="filter-input" placeholder="Filter variables..." oninput="filterVars(this.value)">
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Key</th><th>Value</th></tr></thead>
+            <tbody id="varsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <pre class="raw-json" id="rawJson"></pre>
+  </div>
+
+  <!-- FIND PLAYER TAB -->
+  <div class="tab-content" id="tab-findplayer">
+    <div class="search-bar">
+      <input type="text" id="playerSearchInput" placeholder="Enter player name to search..." spellcheck="false" autocomplete="off">
+      <button class="btn" id="findBtn" onclick="findPlayer()">FIND</button>
+    </div>
+    <div class="find-controls">
+      <label style="font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:4px">
+        <input type="checkbox" id="exactMatch"> Exact match
+      </label>
+      <span class="spacer" style="flex:1"></span>
+      <button class="btn btn-sm btn-outline" id="stopFindBtn" onclick="stopFind()" style="display:none">Stop</button>
+    </div>
+    <div id="findStatus" style="text-align:center;padding:8px;font-size:.85rem;min-height:24px"></div>
+    <div class="find-progress" id="findProgress" style="display:none">
+      <div class="find-progress-bar" id="findProgressBar" style="width:0%"></div>
+    </div>
+    <div class="find-stats" id="findStats"></div>
+    <div id="findResults"></div>
+  </div>
+</div>
+
+<script>
+const CORS_PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
+let currentData = null;
+let rawData = null;
+let autoRefreshInterval = null;
+let playerSortKey = 'id';
+let playerSortAsc = true;
+let allPlayers = [];
+let allResources = [];
+let allVars = [];
+let usedProxy = '';
+
+// --- Input parsing ---
+
+function parseInput(raw) {
+  raw = raw.trim();
+  if (!raw) return null;
+
+  // cfx.re/join/{hash}
+  const cfxMatch = raw.match(/cfx\.re\/join\/(\w+)/i);
+  if (cfxMatch) return { type: 'cfx', hash: cfxMatch[1] };
+
+  // Just a hash (4-8 alphanumeric, no dots)
+  if (/^[a-z0-9]{4,8}$/i.test(raw)) return { type: 'cfx', hash: raw };
+
+  // IP:port
+  const ipPortMatch = raw.match(/^([\d.]+):(\d+)$/);
+  if (ipPortMatch) return { type: 'direct', ip: ipPortMatch[1], port: parseInt(ipPortMatch[2]) };
+
+  // IP without port
+  if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(raw)) return { type: 'direct', ip: raw, port: 30120 };
+
+  // Try to extract from full URL with IP
+  const urlIpMatch = raw.match(/([\d.]+):(\d+)/);
+  if (urlIpMatch) return { type: 'direct', ip: urlIpMatch[1], port: parseInt(urlIpMatch[2]) };
+
+  // Hostname:port (e.g. myserver.com:30120)
+  const hostPortMatch = raw.match(/^([a-z0-9.-]+\.[a-z]{2,}):(\d+)$/i);
+  if (hostPortMatch) return { type: 'direct', ip: hostPortMatch[1], port: parseInt(hostPortMatch[2]) };
+
+  // Bare hostname (e.g. myserver.com) - default port 30120
+  if (/^[a-z0-9.-]+\.[a-z]{2,}$/i.test(raw)) return { type: 'direct', ip: raw, port: 30120 };
+
+  return null;
+}
+
+// --- Fetch with CORS proxy fallback ---
+
+async function proxiedFetch(url) {
+  // Try direct first
+  try {
+    const r = await fetchWithTimeout(url, 6000);
+    if (r.ok) { usedProxy = 'direct'; return r; }
+  } catch {}
+
+  // Try proxies
+  for (let i = 0; i < CORS_PROXIES.length; i++) {
+    const proxyUrl = CORS_PROXIES[i](url);
+    try {
+      const r = await fetchWithTimeout(proxyUrl, 8000);
+      if (r.ok) {
+        usedProxy = `proxy ${i + 1}`;
+        return r;
+      }
+    } catch {}
+  }
+  throw new Error(`Failed to fetch: ${url}`);
+}
+
+function fetchWithTimeout(url, ms) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timeout));
+}
+
+// --- Data fetchers ---
+
+async function fetchViaCfx(hash) {
+  setStatus('loading', `<span class="spinner"></span>Querying cfx.re API for ${hash}...`);
+  const r = await proxiedFetch(`https://servers-frontend.fivem.net/api/servers/single/${hash}`);
+  const json = await r.json();
+  rawData = json;
+
+  const d = json.Data || json.data || json;
+  return normalize({
+    name: stripColors(d.hostname || d.sv_hostname || ''),
+    description: stripColors(d.vars?.sv_projectDesc || ''),
+    playerCount: d.clients ?? d.selfReportedClients ?? 0,
+    maxPlayers: d.sv_maxclients ?? d.svMaxclients ?? 0,
+    players: (d.players || []).map(p => ({
+      id: p.id ?? 0,
+      name: p.name || 'Unknown',
+      ping: p.ping ?? 0,
+      identifiers: p.identifiers || []
+    })),
+    gameType: d.gametype || '',
+    mapName: d.mapname || '',
+    resources: d.resources || [],
+    variables: d.vars || {},
+    gameBuild: d.vars?.sv_enforceGameBuild || '',
+    locale: d.vars?.locale || '',
+    tags: d.vars?.tags ? d.vars.tags.split(',').map(t => t.trim()) : [],
+    serverVersion: d.server || '',
+    onesync: d.vars?.onesync_enabled === 'true',
+    connectEndpoints: d.connectEndPoints || [],
+    upvotePower: d.upvotePower ?? 0,
+    ownerID: d.ownerID ?? '',
+    private: d.private ?? false,
+    iconVersion: d.iconVersion ?? 0,
+    cfxHash: hash
+  });
+}
+
+async function fetchViaDirect(ip, port) {
+  const base = `http://${ip}:${port}`;
+  let info = {}, players = [], dynamic = {};
+  const errors = [];
+
+  setStatus('loading', `<span class="spinner"></span>Querying ${ip}:${port}...`);
+
+  const results = await Promise.allSettled([
+    proxiedFetch(`${base}/info.json`).then(r => r.json()),
+    proxiedFetch(`${base}/players.json`).then(r => r.json()),
+    proxiedFetch(`${base}/dynamic.json`).then(r => r.json()),
+  ]);
+
+  if (results[0].status === 'fulfilled') info = results[0].value;
+  else errors.push('info.json');
+
+  if (results[1].status === 'fulfilled') players = results[1].value;
+  else errors.push('players.json');
+
+  if (results[2].status === 'fulfilled') dynamic = results[2].value;
+  else errors.push('dynamic.json');
+
+  if (errors.length === 3) throw new Error('All endpoints failed. Server may be offline or blocking requests.');
+
+  rawData = { info, players, dynamic, failedEndpoints: errors };
+
+  const vars = info.vars || {};
+  const allResources = [
+    ...(dynamic.resources || []),
+    ...(info.resources || []).map(r => typeof r === 'string' ? r : r.name)
+  ];
+  const uniqueResources = [...new Set(allResources)];
+
+  return normalize({
+    name: stripColors(dynamic.hostname || vars.sv_hostname || info.server || ''),
+    description: stripColors(vars.sv_projectDesc || ''),
+    playerCount: dynamic.clients ?? players.length ?? 0,
+    maxPlayers: dynamic.sv_maxclients ?? vars.sv_maxClients ?? 0,
+    players: (Array.isArray(players) ? players : []).map(p => ({
+      id: p.id ?? 0,
+      name: p.name || 'Unknown',
+      ping: p.ping ?? 0,
+      identifiers: p.identifiers || []
+    })),
+    gameType: dynamic.gametype || vars.gametype || '',
+    mapName: dynamic.mapname || '',
+    resources: uniqueResources,
+    variables: vars,
+    gameBuild: vars.sv_enforceGameBuild || '',
+    locale: vars.locale || '',
+    tags: vars.tags ? vars.tags.split(',').map(t => t.trim()) : [],
+    serverVersion: info.server || '',
+    onesync: vars.onesync_enabled === 'true',
+    connectEndpoints: [`${ip}:${port}`],
+    upvotePower: 0,
+    ownerID: '',
+    private: false,
+    iconVersion: 0,
+    cfxHash: ''
+  });
+}
+
+function normalize(data) {
+  data.maxPlayers = parseInt(data.maxPlayers) || 0;
+  data.playerCount = parseInt(data.playerCount) || data.players.length;
+  return data;
+}
+
+// Strip FiveM color codes (^1, ^2, etc.) and some HTML
+function stripColors(str) {
+  if (!str) return '';
+  return str.replace(/\^[0-9]/g, '').replace(/<[^>]*>/g, '').trim();
+}
+
+// --- Main scan ---
+
+async function scan() {
+  const input = document.getElementById('serverInput').value;
+  const parsed = parseInput(input);
+  if (!parsed) {
+    setStatus('error', 'Invalid input. Enter an IP:port, cfx.re/join link, or server hash.');
+    return;
+  }
+
+  const btn = document.getElementById('scanBtn');
+  btn.disabled = true;
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('rawJson').style.display = 'none';
+  usedProxy = '';
+
+  try {
+    if (parsed.type === 'cfx') {
+      currentData = await fetchViaCfx(parsed.hash);
+    } else {
+      currentData = await fetchViaDirect(parsed.ip, parsed.port);
+    }
+    renderAll(currentData);
+    setStatus('ok', `Loaded successfully (${usedProxy})`);
+    document.getElementById('proxyInfo').textContent = `via ${usedProxy}`;
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('refreshToggle').style.display = '';
+    document.getElementById('rawToggle').style.display = '';
+  } catch (e) {
+    let msg = e.message || 'Unknown error';
+    if (msg.includes('Nope')) msg = 'Server has request paranoia enabled and is blocking info requests.';
+    setStatus('error', msg);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// --- Renderers ---
+
+function renderAll(data) {
+  renderInfo(data);
+  renderPlayers(data.players);
+  renderResources(data.resources);
+  renderVars(data.variables);
+}
+
+function renderInfo(d) {
+  const desc = document.getElementById('serverDesc');
+  if (d.description) {
+    desc.textContent = d.description;
+    desc.style.display = '';
+  } else {
+    desc.style.display = 'none';
+  }
+
+  const items = [
+    { label: 'Server Name', value: d.name, cls: 'name' },
+    { label: 'Players', value: `${d.playerCount} / ${d.maxPlayers}` },
+    { label: 'Game Type', value: d.gameType || '-' },
+    { label: 'Map', value: d.mapName || '-' },
+    { label: 'Game Build', value: d.gameBuild || '-' },
+    { label: 'Locale', value: d.locale || '-' },
+    { label: 'OneSync', value: d.onesync ? 'Enabled' : 'Disabled' },
+    { label: 'FXServer', value: d.serverVersion || '-' },
+    { label: 'Endpoint', value: d.connectEndpoints.join(', ') || '-' },
+    { label: 'Tags', value: d.tags.length ? d.tags.join(', ') : '-' },
+  ];
+  if (d.cfxHash) items.push({ label: 'CFX Hash', value: d.cfxHash });
+  if (d.ownerID) items.push({ label: 'Owner ID', value: d.ownerID });
+  if (d.upvotePower) items.push({ label: 'Upvote Power', value: d.upvotePower });
+
+  const grid = document.getElementById('infoGrid');
+  grid.innerHTML = items.map(i => `
+    <div class="info-item">
+      <div class="label">${esc(i.label)}</div>
+      <div class="value${i.cls ? ' ' + i.cls : ''}">${esc(String(i.value))}${
+        (i.label === 'Endpoint' || i.label === 'CFX Hash') ? ` <button class="copy-btn" onclick="copyText('${esc(String(i.value))}')">copy</button>` : ''
+      }</div>
+    </div>
+  `).join('');
+}
+
+function renderPlayers(players) {
+  allPlayers = players;
+  document.getElementById('playerCount').textContent = players.length;
+  playerSortKey = 'id';
+  playerSortAsc = true;
+  renderPlayerRows(players);
+}
+
+function renderPlayerRows(players) {
+  const tbody = document.getElementById('playerBody');
+  if (!players.length) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:16px">No players online</td></tr>';
+    return;
+  }
+  tbody.innerHTML = players.map(p => {
+    const pingCls = p.ping < 60 ? 'ping-good' : p.ping < 120 ? 'ping-ok' : 'ping-bad';
+    const ids = (p.identifiers || []).join(', ');
+    return `<tr>
+      <td>${p.id}</td>
+      <td>${esc(p.name)}</td>
+      <td class="${pingCls}">${p.ping}ms</td>
+      <td class="id-cell" title="${esc(ids)}">${esc(ids) || '-'} ${ids ? `<button class="copy-btn" onclick="copyText('${esc(ids)}')">copy</button>` : ''}</td>
+    </tr>`;
+  }).join('');
+}
+
+function sortPlayers(key) {
+  if (playerSortKey === key) playerSortAsc = !playerSortAsc;
+  else { playerSortKey = key; playerSortAsc = true; }
+
+  const sorted = [...allPlayers].sort((a, b) => {
+    let va = a[key], vb = b[key];
+    if (typeof va === 'string') va = va.toLowerCase();
+    if (typeof vb === 'string') vb = vb.toLowerCase();
+    if (va < vb) return playerSortAsc ? -1 : 1;
+    if (va > vb) return playerSortAsc ? 1 : -1;
+    return 0;
+  });
+  renderPlayerRows(sorted);
+}
+
+function filterPlayers(query) {
+  const q = query.toLowerCase();
+  const filtered = allPlayers.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    String(p.id).includes(q) ||
+    (p.identifiers || []).some(id => id.toLowerCase().includes(q))
+  );
+  renderPlayerRows(filtered);
+}
+
+function renderResources(resources) {
+  allResources = resources.sort((a, b) => a.localeCompare(b));
+  document.getElementById('resourceCount').textContent = resources.length;
+  renderResourceBadges(allResources);
+}
+
+function renderResourceBadges(resources) {
+  document.getElementById('resourcesWrap').innerHTML = resources.map(r =>
+    `<span class="resource-badge">${esc(r)}</span>`
+  ).join('');
+}
+
+function filterResources(query) {
+  const q = query.toLowerCase();
+  renderResourceBadges(allResources.filter(r => r.toLowerCase().includes(q)));
+}
+
+function renderVars(vars) {
+  const entries = Object.entries(vars).sort((a, b) => a[0].localeCompare(b[0]));
+  allVars = entries;
+  document.getElementById('varCount').textContent = entries.length;
+  renderVarRows(entries);
+}
+
+function renderVarRows(entries) {
+  const tbody = document.getElementById('varsBody');
+  if (!entries.length) {
+    tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:var(--muted);padding:16px">No variables</td></tr>';
+    return;
+  }
+  tbody.innerHTML = entries.map(([k, v]) =>
+    `<tr><td style="font-family:monospace;color:var(--cyan)">${esc(k)}</td><td style="font-family:monospace;word-break:break-all">${esc(String(v))}</td></tr>`
+  ).join('');
+}
+
+function filterVars(query) {
+  const q = query.toLowerCase();
+  renderVarRows(allVars.filter(([k, v]) => k.toLowerCase().includes(q) || String(v).toLowerCase().includes(q)));
+}
+
+// --- UI helpers ---
+
+function toggleSection(id) {
+  document.getElementById(id).classList.toggle('collapsed');
+}
+
+function setStatus(type, msg) {
+  const el = document.getElementById('status');
+  el.className = type === 'error' ? 'status-error' : type === 'loading' ? 'status-loading' : 'status-ok';
+  el.innerHTML = msg;
+}
+
+function toggleAutoRefresh() {
+  const btn = document.getElementById('refreshToggle');
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+    btn.textContent = 'Auto-Refresh: OFF';
+    btn.classList.remove('active');
+  } else {
+    autoRefreshInterval = setInterval(() => scan(), 30000);
+    btn.textContent = 'Auto-Refresh: ON (30s)';
+    btn.classList.add('active');
+  }
+}
+
+function toggleRawJson() {
+  const el = document.getElementById('rawJson');
+  const btn = document.getElementById('rawToggle');
+  if (el.style.display === 'none' || !el.style.display) {
+    el.textContent = JSON.stringify(rawData, null, 2);
+    el.style.display = 'block';
+    btn.classList.add('active');
+  } else {
+    el.style.display = 'none';
+    btn.classList.remove('active');
+  }
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    // Brief visual feedback
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// --- Tabs ---
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => {
+    if (t.textContent.toLowerCase().replace(/\s/g, '') === name.replace(/\s/g, '') ||
+        (name === 'scanner' && t.textContent === 'Server Scanner') ||
+        (name === 'findplayer' && t.textContent === 'Find Player')) {
+      t.classList.add('active');
+    }
+  });
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// --- Find Player ---
+
+let findAbort = null;
+const MASTER_API = 'https://servers-frontend.fivem.net/api/servers/';
+
+async function findPlayer() {
+  const query = document.getElementById('playerSearchInput').value.trim();
+  if (!query) {
+    setFindStatus('error', 'Enter a player name to search.');
+    return;
+  }
+
+  const exact = document.getElementById('exactMatch').checked;
+  const btn = document.getElementById('findBtn');
+  const stopBtn = document.getElementById('stopFindBtn');
+  btn.disabled = true;
+  stopBtn.style.display = '';
+  document.getElementById('findResults').innerHTML = '';
+  document.getElementById('findProgress').style.display = '';
+  document.getElementById('findProgressBar').style.width = '0%';
+  document.getElementById('findStats').textContent = '';
+
+  findAbort = new AbortController();
+  let serversSearched = 0;
+  let totalMatches = 0;
+  let totalServers = 0;
+
+  try {
+    setFindStatus('loading', '<span class="spinner"></span>Fetching server list from master API...');
+
+    const r = await proxiedFetchForFind(MASTER_API, findAbort.signal);
+    const text = await r.text();
+
+    // The API returns a stream of JSON objects separated by newlines or as an array
+    let servers = [];
+    try {
+      servers = JSON.parse(text);
+      if (!Array.isArray(servers)) servers = [servers];
+    } catch {
+      // Try line-delimited JSON
+      servers = text.split('\n').filter(l => l.trim()).map(l => {
+        try { return JSON.parse(l); } catch { return null; }
+      }).filter(Boolean);
+    }
+
+    totalServers = servers.length;
+    setFindStatus('loading', `<span class="spinner"></span>Searching ${totalServers} servers for "${esc(query)}"...`);
+
+    const queryLower = query.toLowerCase();
+
+    for (let i = 0; i < servers.length; i++) {
+      if (findAbort.signal.aborted) break;
+
+      const srv = servers[i];
+      const data = srv.Data || srv.data || srv;
+      const players = data.players || [];
+
+      if (!players.length) {
+        serversSearched++;
+        if (i % 50 === 0) updateFindProgress(serversSearched, totalServers, totalMatches);
+        continue;
+      }
+
+      const matches = players.filter(p => {
+        if (!p.name) return false;
+        if (exact) return p.name.toLowerCase() === queryLower;
+        return p.name.toLowerCase().includes(queryLower);
+      });
+
+      if (matches.length) {
+        totalMatches += matches.length;
+        const serverName = stripColors(data.hostname || data.vars?.sv_hostname || 'Unknown Server');
+        const playerCount = data.clients ?? data.selfReportedClients ?? players.length;
+        const maxPlayers = data.sv_maxclients ?? data.svMaxclients ?? '?';
+        const endpoints = (data.connectEndPoints || []).join(', ') || '-';
+        const gameType = data.gametype || '-';
+        const cfxHash = srv.EndPoint || '';
+        const isPrivate = data.private ? '<span style="color:var(--error)"> [WHITELISTED]</span>' : '<span style="color:var(--success)"> [PUBLIC]</span>';
+
+        const resultHtml = `
+          <div class="find-result">
+            <div class="server-name">${esc(serverName)}${isPrivate}</div>
+            <div class="server-meta">
+              <span>Players: ${playerCount}/${maxPlayers}</span>
+              <span>Type: ${esc(gameType)}</span>
+              <span>Endpoint: ${esc(endpoints)}</span>
+              ${cfxHash ? `<span>Hash: ${esc(cfxHash)}</span>` : ''}
+            </div>
+            <div>
+              ${matches.map(p => {
+                const ids = (p.identifiers || []).join(', ');
+                return `<span class="player-match">
+                  <span class="match-name">${esc(p.name)}</span>
+                  <span style="color:var(--muted);font-size:.72rem">ID:${p.id ?? '?'}</span>
+                  <span style="color:var(--muted);font-size:.72rem">Ping:${p.ping ?? '?'}ms</span>
+                  ${ids ? `<button class="copy-btn" onclick="copyText('${esc(ids)}')" title="${esc(ids)}">IDs</button>` : ''}
+                </span>`;
+              }).join('')}
+            </div>
+            ${cfxHash ? `<button class="btn btn-sm btn-outline" style="margin-top:6px" onclick="scanFromFind('${esc(cfxHash)}')">Scan Server</button>` : ''}
+          </div>
+        `;
+        document.getElementById('findResults').insertAdjacentHTML('beforeend', resultHtml);
+      }
+
+      serversSearched++;
+      if (i % 20 === 0) {
+        updateFindProgress(serversSearched, totalServers, totalMatches);
+        // Yield to UI
+        await new Promise(r => setTimeout(r, 0));
+      }
+    }
+
+    updateFindProgress(serversSearched, totalServers, totalMatches);
+    if (totalMatches === 0) {
+      setFindStatus('error', `No players matching "${query}" found across ${serversSearched} servers.`);
+    } else {
+      setFindStatus('ok', `Found ${totalMatches} match${totalMatches > 1 ? 'es' : ''} across ${serversSearched} servers.`);
+    }
+  } catch (e) {
+    if (e.name === 'AbortError' || findAbort.signal.aborted) {
+      setFindStatus('ok', `Stopped. Found ${totalMatches} match${totalMatches !== 1 ? 'es' : ''} in ${serversSearched} servers.`);
+    } else {
+      setFindStatus('error', 'Failed to fetch server list: ' + (e.message || 'Unknown error'));
+    }
+  } finally {
+    btn.disabled = false;
+    stopBtn.style.display = 'none';
+    document.getElementById('findProgress').style.display = 'none';
+    findAbort = null;
+  }
+}
+
+function stopFind() {
+  if (findAbort) findAbort.abort();
+}
+
+function updateFindProgress(searched, total, matches) {
+  const pct = total > 0 ? Math.round((searched / total) * 100) : 0;
+  document.getElementById('findProgressBar').style.width = pct + '%';
+  document.getElementById('findStats').textContent = `${searched} / ${total} servers searched | ${matches} match${matches !== 1 ? 'es' : ''} found`;
+  if (searched % 100 === 0 || searched === total) {
+    setFindStatus('loading', `<span class="spinner"></span>Searching... ${pct}%`);
+  }
+}
+
+function setFindStatus(type, msg) {
+  const el = document.getElementById('findStatus');
+  el.className = type === 'error' ? 'status-error' : type === 'loading' ? 'status-loading' : 'status-ok';
+  el.innerHTML = msg;
+}
+
+async function proxiedFetchForFind(url, signal) {
+  // Try direct
+  try {
+    const r = await fetch(url, { signal, ...(signal ? {} : {}) });
+    if (r.ok) return r;
+  } catch (e) {
+    if (e.name === 'AbortError') throw e;
+  }
+
+  // Try proxies
+  for (let i = 0; i < CORS_PROXIES.length; i++) {
+    try {
+      const r = await fetch(CORS_PROXIES[i](url), { signal });
+      if (r.ok) return r;
+    } catch (e) {
+      if (e.name === 'AbortError') throw e;
+    }
+  }
+  throw new Error('All proxies failed');
+}
+
+function scanFromFind(hash) {
+  document.getElementById('serverInput').value = hash;
+  switchTab('scanner');
+  scan();
+}
+
+// Enter key listeners
+document.getElementById('serverInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') scan();
+});
+document.getElementById('playerSearchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') findPlayer();
+});
+</script>
+</body>
+</html>

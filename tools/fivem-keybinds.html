@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Keybind Configs</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573;--warn:#ffa502}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:20px}
+.container{max-width:960px;margin:0 auto}
+h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
+.subtitle{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:24px}
+.btn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:600;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-sm{padding:5px 12px;font-size:.75rem;border-radius:4px}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--error)}
+.btn-success{background:var(--success);color:#000}
+.btn-cyan{background:var(--cyan);color:#000}
+
+/* Server tabs */
+.server-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.server-tab{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.82rem;transition:all .15s;display:flex;align-items:center;gap:6px}
+.server-tab:hover{border-color:var(--accent);color:var(--text)}
+.server-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.server-tab .remove-srv{opacity:0;font-size:.7rem;cursor:pointer;margin-left:2px;transition:opacity .15s}
+.server-tab:hover .remove-srv{opacity:.6}
+.server-tab .remove-srv:hover{opacity:1;color:var(--error)}
+.add-server-btn{padding:6px 12px;border-radius:6px;border:1px dashed var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.82rem;transition:all .15s}
+.add-server-btn:hover{border-color:var(--accent);color:var(--accent)}
+.add-soul-inline{display:flex;gap:4px;align-items:center}
+.add-soul-input{background:var(--bg);border:1px solid var(--accent);color:var(--text);padding:5px 10px;border-radius:6px;font-size:.82rem;outline:none;width:150px}
+.add-soul-input::placeholder{color:#555}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+.card-header h2{font-size:.9rem;font-weight:600;color:var(--accent)}
+.card-body{padding:14px 16px}
+
+/* Bind table */
+.bind-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.bind-table th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--border);color:var(--muted);font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.3px}
+.bind-table td{padding:5px 8px;border-bottom:1px solid rgba(30,30,46,.5);vertical-align:middle}
+.bind-table tr:hover td{background:rgba(123,104,238,.04)}
+.key-badge{display:inline-block;background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:4px;font-family:'Courier New',monospace;font-size:.78rem;color:var(--cyan);min-width:30px;text-align:center}
+.action-text{font-family:'Courier New',monospace;font-size:.78rem;color:var(--text)}
+.bind-actions{display:flex;gap:4px}
+.bind-actions button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.72rem;padding:3px 6px;border-radius:3px;transition:all .12s}
+.bind-actions button:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.bind-actions .del-btn:hover{color:var(--error)}
+
+/* Raw output */
+.raw-block{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;font-family:'Courier New',monospace;font-size:.78rem;color:var(--cyan);white-space:pre-wrap;word-break:break-all;max-height:300px;overflow-y:auto;line-height:1.6;user-select:all}
+
+/* Add bind form */
+.add-form{margin-top:12px;border-top:1px solid var(--border);padding-top:12px}
+.device-row{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.dev-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:6px;border:2px solid var(--border);background:var(--bg);color:var(--muted);cursor:pointer;font-size:.75rem;font-weight:700;transition:all .12s;letter-spacing:.3px}
+.dev-btn:hover{border-color:#555;color:var(--text)}
+.dev-btn.active{color:#fff;border-width:2px}
+.dev-btn .dev-icon{font-size:1rem}
+.dev-kb.active{background:#2a2a3e;border-color:#aaa;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5);box-shadow:0 2px 0 #555,inset 0 -1px 0 rgba(255,255,255,.1)}
+.dev-mouse.active{background:#1a1a3e;border-color:var(--accent);color:#fff;box-shadow:0 0 8px rgba(123,104,238,.3)}
+.dev-pad.active{background:#1a2e1a;border-color:var(--success);color:#fff;box-shadow:0 0 8px rgba(46,213,115,.2)}
+.dev-joy.active{background:#2e2a1a;border-color:var(--warn);color:#fff;box-shadow:0 0 8px rgba(255,165,2,.2)}
+.dev-pedal.active{background:#2e1a1a;border-color:var(--error);color:#fff;box-shadow:0 0 8px rgba(255,71,87,.2)}
+.key-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.capture-box{padding:8px 16px;border:2px dashed var(--border);border-radius:6px;background:var(--bg);cursor:pointer;transition:all .15s;white-space:nowrap}
+.capture-box:hover{border-color:var(--accent);background:rgba(123,104,238,.04)}
+.capture-box.capturing{border-color:var(--warn);animation:capturePulse 1s infinite}
+.capture-label{font-size:.82rem;font-weight:600;color:var(--muted)}
+.capture-box.capturing .capture-label{color:var(--warn)}
+.capture-box.captured .capture-label{color:var(--cyan)}
+.command-row{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.add-form input,.add-form select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:4px;font-size:.8rem;outline:none}
+.add-form input:focus,.add-form select:focus{border-color:var(--accent)}
+.add-form input::placeholder{color:#444}
+.input-key{width:90px;font-family:'Courier New',monospace}
+.input-action{flex:1;min-width:120px;font-family:'Courier New',monospace}
+.input-select{background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:6px 8px;border-radius:4px;font-size:.78rem;outline:none;cursor:pointer;min-width:140px}
+.input-select:focus{border-color:var(--accent)}
+.input-select option{background:var(--surface);color:var(--text)}
+.input-select optgroup{color:var(--accent);font-style:normal}
+.modifier-group{display:flex;gap:3px}
+.mod-toggle{display:flex;align-items:center;cursor:pointer;user-select:none}
+.mod-toggle input{display:none}
+.mod-label{padding:4px 8px;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--muted);font-size:.72rem;font-weight:600;font-family:'Courier New',monospace;transition:all .12s}
+.mod-toggle input:checked+.mod-label{background:var(--accent);color:#fff;border-color:var(--accent)}
+.mod-toggle:hover .mod-label{border-color:var(--accent)}
+.mod-plus{color:var(--muted);font-size:.8rem;font-weight:700;line-height:28px}
+.key-mod{color:var(--accent);font-size:.7rem;font-weight:600;margin-right:2px}
+.device-badge{display:inline-block;font-size:.6rem;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:4px;letter-spacing:.3px;vertical-align:middle}
+.device-kb{background:#333;color:var(--muted)}
+.device-mouse{background:#2a1a3e;color:var(--accent)}
+.device-pad{background:#1a2e1a;color:var(--success)}
+@keyframes capturePulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* Modal */
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;width:90%;max-width:400px}
+.modal h3{color:var(--accent);margin-bottom:14px;font-size:1rem}
+.modal input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:6px;font-size:.9rem;outline:none;margin-bottom:12px}
+.modal input:focus{border-color:var(--accent)}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
+
+/* File bar */
+.file-bar{display:flex;gap:6px;align-items:center;justify-content:center;margin-bottom:16px}
+.file-name{font-size:.72rem;color:var(--muted);font-family:'Courier New',monospace}
+/* Advanced toggle */
+.advanced-toggle{display:block;width:100%;text-align:center;padding:8px;background:transparent;border:1px dashed var(--border);color:var(--muted);border-radius:6px;cursor:pointer;font-size:.75rem;margin-bottom:12px;transition:all .15s}
+.advanced-toggle:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Soul meta / server tags */
+.soul-meta-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px}
+.tag-list{display:flex;gap:4px;flex-wrap:wrap}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;background:rgba(123,104,238,.15);color:var(--accent);font-size:.72rem;font-weight:600}
+.tag .tag-x{cursor:pointer;opacity:.5;font-size:.65rem}
+.tag .tag-x:hover{opacity:1;color:var(--error)}
+.tag-input{background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:.75rem;outline:none;width:120px;padding:4px 8px;border-radius:4px}
+.tag-input:focus{border-color:var(--accent)}
+.tag-input::placeholder{color:#444}
+
+/* Import/Export */
+.io-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.paste-area{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--cyan);font-family:'Courier New',monospace;font-size:.78rem;padding:10px;border-radius:6px;outline:none;resize:vertical}
+.paste-area:focus{border-color:var(--accent)}
+.paste-area::placeholder{color:#444}
+.import-result{font-size:.78rem;line-height:28px}
+
+/* Empty state */
+.empty{text-align:center;padding:30px;color:var(--muted);font-size:.85rem}
+
+/* Copied toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--success);color:#000;padding:8px 20px;border-radius:6px;font-size:.82rem;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:200}
+.toast.show{opacity:1}
+
+@media(max-width:600px){
+  .add-row{flex-direction:column}
+  .command-row{flex-direction:column}
+  .command-row>*{width:100%}
+  .key-row{flex-direction:column}
+  .key-row>*{width:100%}
+  .device-row{justify-content:center}
+  .input-select{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FIVEM KEYBIND CONFIGS</h1>
+  <p class="subtitle">Keybind profiles per soul — copy or migrate between servers</p>
+  <div class="file-bar">
+    <button class="btn btn-sm btn-outline" onclick="pickLoadFile()">Load Profiles</button>
+    <button class="btn btn-sm btn-outline" onclick="pickSaveFile()">Save As</button>
+    <span class="file-name" id="fileName"></span>
+  </div>
+
+  <!-- Soul tabs -->
+  <div class="server-bar" id="serverBar">
+    <div class="add-soul-inline" id="addSoulForm" style="display:none">
+      <input type="text" class="add-soul-input" id="newSoulName" placeholder="Soul name..." spellcheck="false">
+      <select class="input-select" id="newSoulFrom" style="font-size:.75rem;padding:5px 6px;min-width:auto"></select>
+      <button class="btn btn-sm" onclick="confirmAddSoul()">Add</button>
+      <button class="btn btn-sm btn-outline" onclick="cancelAddSoul()">Cancel</button>
+    </div>
+    <button class="add-server-btn" id="addSoulBtn" onclick="showAddSoul()">+ Add Soul</button>
+  </div>
+
+  <!-- Main content -->
+  <div id="mainContent" style="display:none">
+
+    <!-- Server tags - inline -->
+    <div class="soul-meta-bar">
+      <span style="font-size:.72rem;color:var(--muted)">Servers:</span>
+      <div class="tag-list" id="serverTags"></div>
+      <input type="text" class="tag-input" id="addTagInput" placeholder="+ add" spellcheck="false">
+    </div>
+
+    <!-- Keybind Table -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Keybinds</h2>
+        <button class="btn btn-sm btn-cyan" onclick="copySwitchCommands()">Copy F8 Commands</button>
+      </div>
+      <div class="card-body">
+        <table class="bind-table">
+          <thead><tr>
+            <th>Key</th>
+            <th>Command</th>
+            <th>Description</th>
+            <th style="width:60px"></th>
+          </tr></thead>
+          <tbody id="bindBody"></tbody>
+        </table>
+        <div id="emptyBinds" class="empty" style="display:none">No keybinds yet. Add one below.</div>
+
+        <!-- Add new bind -->
+        <div class="add-form">
+          <!-- Device selector - visual buttons -->
+          <div class="device-row">
+            <button class="dev-btn dev-kb active" data-dev="keyboard" onclick="pickDevice(this)">
+              <span class="dev-icon">&#9000;</span>KB
+            </button>
+            <button class="dev-btn dev-mouse" data-dev="mouse_button" onclick="pickDevice(this)">
+              <span class="dev-icon">&#128433;</span>Mouse
+            </button>
+            <button class="dev-btn dev-pad" data-dev="game_pad" onclick="pickDevice(this)">
+              <span class="dev-icon">&#127918;</span>Pad
+            </button>
+            <button class="dev-btn dev-joy" data-dev="joy_stick" onclick="pickDevice(this)">
+              <span class="dev-icon">&#128377;</span>Joystick
+            </button>
+            <button class="dev-btn dev-pedal" data-dev="pedal" onclick="pickDevice(this)">
+              <span class="dev-icon">&#9878;</span>Pedal
+            </button>
+          </div>
+
+          <!-- Key capture + manual -->
+          <div class="key-row">
+            <button class="capture-box" id="captureBtn" onclick="startCapture()">
+              <span class="capture-label" id="captureLabel">Click to detect</span>
+            </button>
+            <div class="modifier-group">
+              <label class="mod-toggle" title="Ctrl"><input type="checkbox" id="modCtrl"><span class="mod-label">Ctrl</span></label>
+              <label class="mod-toggle" title="Shift"><input type="checkbox" id="modShift"><span class="mod-label">Shift</span></label>
+              <label class="mod-toggle" title="Alt"><input type="checkbox" id="modAlt"><span class="mod-label">Alt</span></label>
+            </div>
+            <span class="mod-plus" id="modPlus" style="display:none">+</span>
+            <input type="text" class="input-key" id="newKey" placeholder="Key" spellcheck="false">
+          </div>
+
+          <!-- Command + Add -->
+          <div class="command-row">
+            <select class="input-select" id="commonAction" onchange="onCommonSelect()">
+              <option value="">Pick a command...</option>
+              <optgroup label="Emotes">
+                <option value="+emote dance">Dance</option>
+                <option value="+emote wave">Wave</option>
+                <option value="+emote salute">Salute</option>
+                <option value="+emote lean">Lean</option>
+                <option value="+emote crossarms">Cross Arms</option>
+                <option value="+emote kneel">Kneel</option>
+                <option value="+emote sit">Sit</option>
+                <option value="+emote point">Point</option>
+              </optgroup>
+              <optgroup label="Actions">
+                <option value="+handsup">Hands Up</option>
+                <option value="+prone">Go Prone</option>
+                <option value="+crouch">Crouch</option>
+                <option value="+cancelemote">Cancel Emote</option>
+                <option value="+carry">Carry Player</option>
+                <option value="+tackle">Tackle</option>
+              </optgroup>
+              <optgroup label="Vehicle">
+                <option value="+engine">Toggle Engine</option>
+                <option value="+seatbelt">Seatbelt</option>
+                <option value="+cruise">Cruise Control</option>
+                <option value="+lock">Lock Vehicle</option>
+                <option value="+trunk">Open Trunk</option>
+                <option value="+hood">Open Hood</option>
+                <option value="+harness">Racing Harness</option>
+                <option value="+turnsignal_left">Signal Left</option>
+                <option value="+turnsignal_right">Signal Right</option>
+                <option value="+hazards">Hazards</option>
+              </optgroup>
+              <optgroup label="Menus / UI">
+                <option value="+inventory">Inventory</option>
+                <option value="+phone">Phone</option>
+                <option value="+radio">Radio</option>
+                <option value="+menu">Menu</option>
+                <option value="+radial">Radial Menu</option>
+                <option value="+hud">Toggle HUD</option>
+                <option value="+scoreboard">Scoreboard</option>
+              </optgroup>
+              <optgroup label="Police / EMS">
+                <option value="+radar">Radar</option>
+                <option value="+cuff">Cuff/Uncuff</option>
+                <option value="+escort">Escort</option>
+                <option value="+siren">Siren</option>
+                <option value="+spotlight">Spotlight</option>
+              </optgroup>
+            </select>
+            <input type="text" class="input-action" id="newAction" placeholder="or type command" spellcheck="false">
+            <button class="btn btn-sm" onclick="addBind()">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Raw F8 Commands - always visible -->
+    <div class="card" id="rawCard">
+      <div class="card-header">
+        <h2>F8 Commands</h2>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-outline" onclick="copySwitchCommands()">Copy All</button>
+          <button class="btn btn-sm btn-outline" onclick="copyBindsOnly()">Binds Only</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="raw-block" id="rawBlock">Add keybinds above to see F8 commands here.</div>
+      </div>
+    </div>
+
+    <!-- Advanced - import/export only -->
+    <button class="advanced-toggle" id="advToggle" onclick="toggleAdvanced()">Import / Export</button>
+    <div id="advancedSection" style="display:none">
+      <div class="card">
+        <div class="card-body">
+          <p style="font-size:.72rem;color:var(--muted);margin-bottom:6px">Paste <code>bindlist</code> output or <code>citixen.cfg</code> contents:</p>
+          <textarea class="paste-area" id="pasteArea" placeholder='bind keyboard F5 +emote dance&#10;bind mouse_button MOUSE_4 +handsup' rows="4"></textarea>
+          <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+            <button class="btn btn-sm" onclick="parseAndImport()">Import from Paste</button>
+            <span class="import-result" id="importResult"></span>
+            <span style="flex:1"></span>
+            <button class="btn btn-sm btn-outline" onclick="exportSoul()">Export Soul</button>
+            <button class="btn btn-sm btn-outline" onclick="exportAll()">Export All</button>
+            <button class="btn btn-sm btn-outline" onclick="document.getElementById('importFile').click()">Import JSON</button>
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this.files[0])">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No soul selected -->
+  <div id="noServer" class="empty" style="padding:60px 20px">
+    No souls yet. Click <strong>+ Add Soul</strong> above to get started.
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// --- Data ---
+// Structure: { souls: [{ id, name, servers: [], binds: [{ key, action, desc, device, modifiers }] }] }
+// Migration: old "servers" key -> "souls"
+
+var data = { souls: [] };
+var activeSoulId = null;
+var fileHandle = null; // File System Access API handle
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}
+
+// --- File System Storage ---
+
+async function saveData() {
+  if (fileHandle) {
+    try {
+      const writable = await fileHandle.createWritable();
+      await writable.write(JSON.stringify(data, null, 2));
+      await writable.close();
+    } catch(e) {
+      showToast('Save failed: ' + e.message, true);
+    }
+  }
+  // No file handle yet = data stays in memory until they save
+}
+
+async function pickSaveFile() {
+  try {
+    fileHandle = await window.showSaveFilePicker({
+      suggestedName: 'fivem-keybinds.json',
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+    });
+    await saveData();
+    document.getElementById('fileName').textContent = fileHandle.name;
+    showToast('Save file set - data will auto-save');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function pickLoadFile() {
+  try {
+    const [handle] = await window.showOpenFilePicker({
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+    });
+    fileHandle = handle;
+    document.getElementById('fileName').textContent = handle.name;
+    const file = await handle.getFile();
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    // Migrate old format
+    if (parsed.servers && !parsed.souls) {
+      parsed.souls = parsed.servers.map(s => ({ ...s, servers: s.servers || [] }));
+    }
+    if (parsed.souls) parsed.souls.forEach(s => { if (!s.servers) s.servers = []; });
+    data = parsed.souls ? parsed : { souls: [] };
+    renderSoulBar();
+    if (data.souls.length > 0) selectSoul(data.souls[0].id);
+    else { document.getElementById('noServer').style.display = ''; document.getElementById('mainContent').style.display = 'none'; }
+    showToast('Loaded ' + data.souls.length + ' soul(s)');
+  } catch {}
+}
+
+
+// --- Init ---
+
+function init() {
+  renderSoulBar();
+  document.getElementById('noServer').style.display = '';
+  document.getElementById('mainContent').style.display = 'none';
+
+  // Tag input enter key
+  document.getElementById('addTagInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { addServerTag(); e.preventDefault(); }
+  });
+}
+
+// --- Soul management ---
+
+function renderSoulBar() {
+  const bar = document.getElementById('serverBar');
+  const addBtn = bar.querySelector('.add-server-btn');
+  bar.querySelectorAll('.server-tab').forEach(t => t.remove());
+
+  data.souls.forEach(soul => {
+    const tab = document.createElement('div');
+    tab.className = 'server-tab' + (soul.id === activeSoulId ? ' active' : '');
+    tab.innerHTML = `
+      <span onclick="selectSoul('${soul.id}')">${esc(soul.name)}</span>
+      <span class="remove-srv" onclick="event.stopPropagation();removeSoul('${soul.id}')" title="Delete soul">&times;</span>
+    `;
+    tab.onclick = () => selectSoul(soul.id);
+    bar.insertBefore(tab, addBtn);
+  });
+}
+
+function selectSoul(id) {
+  activeSoulId = id;
+  document.getElementById('noServer').style.display = 'none';
+  document.getElementById('mainContent').style.display = '';
+  renderSoulBar();
+  renderServerTags();
+  renderBinds();
+}
+
+function showAddSoul() {
+  document.getElementById('addSoulBtn').style.display = 'none';
+  document.getElementById('addSoulForm').style.display = 'flex';
+  // Populate "copy from" dropdown
+  const sel = document.getElementById('newSoulFrom');
+  sel.innerHTML = '<option value="">Start empty</option>';
+  data.souls.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = 'Copy from: ' + s.name + ' (' + s.binds.length + ' binds)';
+    sel.appendChild(opt);
+  });
+  // Hide dropdown if no souls to copy from
+  sel.style.display = data.souls.length ? '' : 'none';
+  const input = document.getElementById('newSoulName');
+  input.value = '';
+  input.focus();
+}
+
+async function confirmAddSoul() {
+  const input = document.getElementById('newSoulName');
+  const name = input.value.trim();
+  if (!name) return;
+  const copyFromId = document.getElementById('newSoulFrom').value;
+  const copySoul = copyFromId ? data.souls.find(s => s.id === copyFromId) : null;
+  const binds = copySoul ? JSON.parse(JSON.stringify(copySoul.binds)) : [];
+  const servers = copySoul ? [...copySoul.servers] : [];
+  const soul = { id: genId(), name, servers, binds };
+  data.souls.push(soul);
+  if (!fileHandle) await pickSaveFile();
+  else await saveData();
+  cancelAddSoul();
+  selectSoul(soul.id);
+}
+
+function cancelAddSoul() {
+  document.getElementById('addSoulForm').style.display = 'none';
+  document.getElementById('addSoulBtn').style.display = '';
+}
+
+function removeSoul(id) {
+  const soul = data.souls.find(s => s.id === id);
+  if (!soul) return;
+  if (!confirm(`Delete "${soul.name}" and all its keybinds?`)) return;
+  data.souls = data.souls.filter(s => s.id !== id);
+  saveData();
+  if (activeSoulId === id) {
+    activeSoulId = data.souls.length ? data.souls[0].id : null;
+  }
+  if (activeSoulId) {
+    selectSoul(activeSoulId);
+  } else {
+    renderSoulBar();
+    document.getElementById('noServer').style.display = '';
+    document.getElementById('mainContent').style.display = 'none';
+  }
+}
+
+function getActiveSoul() {
+  return data.souls.find(s => s.id === activeSoulId);
+}
+
+// Alias for backward compat with bind functions
+function getActiveServer() { return getActiveSoul(); }
+
+// --- Server tags ---
+
+function renderServerTags() {
+  const soul = getActiveSoul();
+  const container = document.getElementById('serverTags');
+  if (!soul) { container.innerHTML = ''; return; }
+  container.innerHTML = (soul.servers || []).map((s, i) =>
+    `<span class="tag">${esc(s)}<span class="tag-x" onclick="removeServerTag(${i})">&times;</span></span>`
+  ).join('');
+}
+
+function addServerTag() {
+  const soul = getActiveSoul();
+  if (!soul) return;
+  const input = document.getElementById('addTagInput');
+  const tag = input.value.trim();
+  if (!tag) return;
+  if (!soul.servers.includes(tag)) {
+    soul.servers.push(tag);
+    saveData();
+    renderServerTags();
+  }
+  input.value = '';
+}
+
+function removeServerTag(index) {
+  const soul = getActiveSoul();
+  if (!soul) return;
+  soul.servers.splice(index, 1);
+  saveData();
+  renderServerTags();
+}
+
+// --- Keybind management ---
+
+function renderBinds() {
+  const srv = getActiveServer();
+  if (!srv) return;
+
+  const tbody = document.getElementById('bindBody');
+  const empty = document.getElementById('emptyBinds');
+
+  if (!srv.binds.length) {
+    tbody.innerHTML = '';
+    empty.style.display = '';
+  } else {
+    empty.style.display = 'none';
+    tbody.innerHTML = srv.binds.map((b, i) => {
+      const mods = (b.modifiers || []).map(m => `<span class="key-mod">${esc(m)}+</span>`).join('');
+      const dl = getDeviceLabel(b);
+      const dc = getDeviceCls(b);
+      return `<tr>
+        <td><span class="device-badge device-${dc}">${dl}</span>${mods}<span class="key-badge">${esc(b.key)}</span></td>
+        <td><span class="action-text">${esc(b.action)}</span></td>
+        <td style="color:var(--muted);font-size:.78rem">${esc(b.desc || '')}</td>
+        <td>
+          <div class="bind-actions">
+            <button onclick="copyBind(${i})" title="Copy command">copy</button>
+            <button onclick="editBind(${i})" title="Edit">edit</button>
+            <button class="del-btn" onclick="removeBind(${i})" title="Delete">del</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  updateRawBlock();
+}
+
+function addBind() {
+  const srv = getActiveServer();
+  if (!srv) return;
+
+  const keyEl = document.getElementById('newKey');
+  const actionEl = document.getElementById('newAction');
+
+  const key = keyEl.value.trim();
+  const action = actionEl.value.trim();
+  const modifiers = getSelectedModifiers();
+  const device = selectedDevice;
+
+  if (!key || !action) {
+    showToast('Key and command are required', true);
+    return;
+  }
+
+  srv.binds.push({ key, action, desc: '', modifiers, device });
+  saveData();
+  renderBinds();
+
+  keyEl.value = '';
+  actionEl.value = '';
+  document.getElementById('modCtrl').checked = false;
+  document.getElementById('modShift').checked = false;
+  document.getElementById('modAlt').checked = false;
+  setDevice('keyboard');
+  document.getElementById('commonAction').value = '';
+  updateModPlusVisibility();
+  document.getElementById('captureLabel').textContent = 'Click to detect input';
+  document.getElementById('captureBtn').classList.remove('captured');
+
+  showToast('Keybind added');
+}
+
+function onCommonSelect() {
+  const sel = document.getElementById('commonAction');
+  if (sel.value) {
+    document.getElementById('newAction').value = sel.value;
+    sel.value = '';
+  }
+}
+
+function removeBind(index) {
+  const srv = getActiveServer();
+  if (!srv) return;
+  srv.binds.splice(index, 1);
+  saveData();
+  renderBinds();
+}
+
+function editBind(index) {
+  const srv = getActiveServer();
+  if (!srv) return;
+  const b = srv.binds[index];
+
+  const modsStr = (b.modifiers || []).join('+');
+  const currentCombo = modsStr ? modsStr + '+' + b.key : b.key;
+  const keyInput = prompt('Key combo (e.g. Ctrl+Shift+F5, or just F5):', currentCombo);
+  if (keyInput === null) return;
+  const action = prompt('Command:', b.action);
+  if (action === null) return;
+  const desc = prompt('Description:', b.desc || '');
+  if (desc === null) return;
+
+  const parsed = parseKeyCombo(keyInput.trim());
+  if (!parsed.key || !action.trim()) {
+    showToast('Key and command are required', true);
+    return;
+  }
+
+  b.key = parsed.key;
+  b.modifiers = parsed.modifiers;
+  b.action = action.trim();
+  b.desc = desc.trim();
+  saveData();
+  renderBinds();
+}
+
+function copyBind(index) {
+  const srv = getActiveServer();
+  if (!srv) return;
+  const b = srv.binds[index];
+  const cmd = buildBindCommand(b);
+  copyToClipboard(cmd);
+  showToast('Copied: ' + cmd);
+}
+
+function buildBindCommand(b) {
+  const device = b.device || 'keyboard';
+  const fullKey = buildKeyString(b);
+  return `unbind ${device} ${fullKey}\nbind ${device} ${fullKey} ${b.action}`;
+}
+
+function buildBindOnly(b) {
+  const device = b.device || 'keyboard';
+  const fullKey = buildKeyString(b);
+  return `bind ${device} ${fullKey} ${b.action}`;
+}
+
+function buildKeyString(b) {
+  const mods = (b.modifiers || []).map(m => m.toUpperCase());
+  const parts = [];
+  if (mods.includes('CTRL')) parts.push('LCTRL');
+  if (mods.includes('SHIFT')) parts.push('LSHIFT');
+  if (mods.includes('ALT')) parts.push('LALT');
+  parts.push(b.key);
+  return parts.join('+');
+}
+
+function getDeviceLabel(b) {
+  const d = b.device || 'keyboard';
+  if (d === 'mouse_button') return 'MOUSE';
+  if (d === 'game_pad') return 'PAD';
+  if (d === 'joy_stick') return 'JOY';
+  if (d === 'pedal') return 'PEDAL';
+  return 'KB';
+}
+
+function getDeviceCls(b) {
+  const d = b.device || 'keyboard';
+  if (d === 'mouse_button') return 'mouse';
+  if (d === 'game_pad' || d === 'joy_stick' || d === 'pedal') return 'pad';
+  return 'kb';
+}
+
+function getSelectedModifiers() {
+  const mods = [];
+  if (document.getElementById('modCtrl').checked) mods.push('Ctrl');
+  if (document.getElementById('modShift').checked) mods.push('Shift');
+  if (document.getElementById('modAlt').checked) mods.push('Alt');
+  return mods;
+}
+
+function parseKeyCombo(str) {
+  const parts = str.split('+').map(p => p.trim()).filter(Boolean);
+  const modifiers = [];
+  let key = '';
+  for (const p of parts) {
+    const lower = p.toLowerCase();
+    if (lower === 'ctrl' || lower === 'lctrl' || lower === 'rctrl') modifiers.push('Ctrl');
+    else if (lower === 'shift' || lower === 'lshift' || lower === 'rshift') modifiers.push('Shift');
+    else if (lower === 'alt' || lower === 'lalt' || lower === 'ralt') modifiers.push('Alt');
+    else key = p;
+  }
+  return { key, modifiers };
+}
+
+function updateModPlusVisibility() {
+  const any = document.getElementById('modCtrl').checked ||
+              document.getElementById('modShift').checked ||
+              document.getElementById('modAlt').checked;
+  document.getElementById('modPlus').style.display = any ? '' : 'none';
+}
+
+// --- Raw commands ---
+
+function getOtherServerBinds() {
+  // Collect all unique device+key combos from OTHER souls
+  const seen = new Set();
+  const result = [];
+  for (const srv of data.souls) {
+    if (srv.id === activeSoulId) continue;
+    for (const b of srv.binds) {
+      const device = b.device || 'keyboard';
+      const k = device + ':' + buildKeyString(b);
+      if (!seen.has(k)) {
+        seen.add(k);
+        result.push({ device, key: buildKeyString(b) });
+      }
+    }
+  }
+  return result;
+}
+
+function buildSwitchCommands() {
+  const srv = getActiveServer();
+  if (!srv) return '';
+
+  const lines = [];
+
+  // Unbind keys from all other souls
+  const otherBinds = getOtherServerBinds();
+  if (otherBinds.length) {
+    lines.push('# Unbind other souls');
+    for (const ob of otherBinds) {
+      lines.push(`unbind ${ob.device} ${ob.key}`);
+    }
+    lines.push('');
+  }
+
+  // Unbind + Bind this server's keys
+  if (srv.binds.length) {
+    lines.push('# Bind ' + srv.name);
+    for (const b of srv.binds) {
+      lines.push(buildBindCommand(b));
+    }
+  }
+
+  return lines.join('\n');
+}
+
+function updateRawBlock() {
+  const el = document.getElementById('rawBlock');
+  const commands = buildSwitchCommands();
+  el.textContent = commands || 'No binds configured.';
+}
+
+function copySwitchCommands() {
+  const srv = getActiveServer();
+  if (!srv || !srv.binds.length) {
+    showToast('No binds to copy', true);
+    return;
+  }
+  // Strip comment lines for F8 paste
+  const commands = buildSwitchCommands().split('\n').filter(l => !l.startsWith('#') && l.trim()).join('\n');
+  copyToClipboard(commands);
+  const unbindCount = getOtherServerBinds().length;
+  showToast(`Copied ${unbindCount} unbind + ${srv.binds.length} bind commands`);
+}
+
+function copyBindsOnly() {
+  const srv = getActiveServer();
+  if (!srv || !srv.binds.length) {
+    showToast('No binds to copy', true);
+    return;
+  }
+  const text = srv.binds.map(b => buildBindOnly(b)).join('\n');
+  copyToClipboard(text);
+  showToast(`Copied ${srv.binds.length} bind commands (no unbinds)`);
+}
+
+// --- Import / Export ---
+
+function exportSoul() {
+  const soul = getActiveSoul();
+  if (!soul) return;
+  downloadJson({ souls: [soul] }, `keybinds-${soul.name.replace(/\s+/g, '-').toLowerCase()}.json`);
+}
+
+function exportAll() {
+  if (!data.souls.length) {
+    showToast('No souls to export', true);
+    return;
+  }
+  downloadJson(data, 'fivem-keybinds-all.json');
+}
+
+function downloadJson(obj, filename) {
+  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Exported ' + filename);
+}
+
+function importData(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      const list = imported.souls || imported.servers;
+      if (!list || !Array.isArray(list)) {
+        showToast('Invalid keybind file', true);
+        return;
+      }
+      let added = 0;
+      for (const soul of list) {
+        const existing = data.souls.find(s => s.name === soul.name);
+        if (existing) {
+          if (confirm(`"${soul.name}" already exists. Replace it?`)) {
+            existing.binds = soul.binds || [];
+            existing.servers = soul.servers || existing.servers || [];
+            added++;
+          }
+        } else {
+          data.souls.push({ id: genId(), name: soul.name, servers: soul.servers || [], binds: soul.binds || [] });
+          added++;
+        }
+      }
+      saveData();
+      if (data.souls.length && !activeSoulId) {
+        selectSoul(data.souls[0].id);
+      } else {
+        renderSoulBar();
+        renderBinds();
+      }
+      showToast(`Imported ${added} soul(s)`);
+    } catch {
+      showToast('Failed to parse file', true);
+    }
+  };
+  reader.readAsText(file);
+  document.getElementById('importFile').value = '';
+}
+
+// --- Device picker ---
+
+var selectedDevice = 'keyboard';
+
+function pickDevice(btn) {
+  document.querySelectorAll('.dev-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedDevice = btn.dataset.dev;
+}
+
+function setDevice(dev) {
+  selectedDevice = dev;
+  document.querySelectorAll('.dev-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.dev === dev);
+  });
+}
+
+// --- Advanced toggle ---
+
+function toggleAdvanced() {
+  const section = document.getElementById('advancedSection');
+  const btn = document.getElementById('advToggle');
+  if (section.style.display === 'none') {
+    section.style.display = '';
+    btn.textContent = 'Hide advanced options';
+  } else {
+    section.style.display = 'none';
+    btn.textContent = 'Advanced options';
+  }
+}
+
+// --- Paste import ---
+
+function parseAndImport() {
+  const soul = getActiveSoul();
+  if (!soul) return;
+
+  const text = document.getElementById('pasteArea').value.trim();
+  if (!text) { showToast('Paste your bindlist or cfg content first', true); return; }
+
+  const lines = text.split('\n');
+  let imported = 0;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    // Match: bind <device> <key> <command...>
+    const m = trimmed.match(/^bind\s+(\S+)\s+(\S+)\s+(.+)$/i);
+    if (!m) continue;
+
+    const device = m[1].toLowerCase();
+    const rawKey = m[2];
+    const action = m[3].trim();
+
+    // Parse key for modifiers
+    const parts = rawKey.split('+');
+    const modifiers = [];
+    let key = '';
+    for (const p of parts) {
+      const lower = p.toLowerCase();
+      if (lower === 'lctrl' || lower === 'rctrl') modifiers.push('Ctrl');
+      else if (lower === 'lshift' || lower === 'rshift') modifiers.push('Shift');
+      else if (lower === 'lalt' || lower === 'ralt') modifiers.push('Alt');
+      else key = p;
+    }
+
+    // Check for duplicate key+device combo
+    const exists = soul.binds.some(b =>
+      (b.device || 'keyboard') === device && buildKeyString(b) === rawKey
+    );
+    if (exists) continue;
+
+    soul.binds.push({ key, action, desc: '', modifiers, device });
+    imported++;
+  }
+
+  if (imported > 0) {
+    saveData();
+    renderBinds();
+    showToast(`Imported ${imported} bind(s)`);
+    document.getElementById('importResult').textContent = `${imported} added`;
+    document.getElementById('importResult').style.color = 'var(--success)';
+  } else {
+    document.getElementById('importResult').textContent = 'No valid bind lines found';
+    document.getElementById('importResult').style.color = 'var(--error)';
+    showToast('No valid bind lines found. Expected format: bind keyboard F5 +command', true);
+  }
+}
+
+// --- Util ---
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+function showToast(msg, isError) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = isError ? 'var(--error)' : 'var(--success)';
+  el.style.color = isError ? '#fff' : '#000';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// Modifier toggle visibility
+document.getElementById('modCtrl').addEventListener('change', updateModPlusVisibility);
+document.getElementById('modShift').addEventListener('change', updateModPlusVisibility);
+document.getElementById('modAlt').addEventListener('change', updateModPlusVisibility);
+
+// Enter key support
+document.getElementById('newSoulName').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmAddSoul();
+  if (e.key === 'Escape') cancelAddSoul();
+});
+document.getElementById('newKey').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('newAction').focus();
+});
+document.getElementById('newAction').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addBind();
+});
+
+// --- Input Capture / Detection ---
+
+// FiveM key name mapping
+const FIVEM_KEY_MAP = {
+  'F1':'F1','F2':'F2','F3':'F3','F4':'F4','F5':'F5','F6':'F6','F7':'F7','F8':'F8','F9':'F9','F10':'F10','F11':'F11','F12':'F12',
+  'Digit0':'0','Digit1':'1','Digit2':'2','Digit3':'3','Digit4':'4','Digit5':'5','Digit6':'6','Digit7':'7','Digit8':'8','Digit9':'9',
+  'Numpad0':'NUMPAD0','Numpad1':'NUMPAD1','Numpad2':'NUMPAD2','Numpad3':'NUMPAD3','Numpad4':'NUMPAD4',
+  'Numpad5':'NUMPAD5','Numpad6':'NUMPAD6','Numpad7':'NUMPAD7','Numpad8':'NUMPAD8','Numpad9':'NUMPAD9',
+  'NumpadMultiply':'NUMMUL','NumpadAdd':'NUMADD','NumpadSubtract':'NUMSUB','NumpadDecimal':'NUMDEC','NumpadDivide':'NUMDIV',
+  'NumpadEnter':'NUMENTER',
+  'KeyA':'A','KeyB':'B','KeyC':'C','KeyD':'D','KeyE':'E','KeyF':'F','KeyG':'G','KeyH':'H','KeyI':'I','KeyJ':'J',
+  'KeyK':'K','KeyL':'L','KeyM':'M','KeyN':'N','KeyO':'O','KeyP':'P','KeyQ':'Q','KeyR':'R','KeyS':'S','KeyT':'T',
+  'KeyU':'U','KeyV':'V','KeyW':'W','KeyX':'X','KeyY':'Y','KeyZ':'Z',
+  'Space':'SPACE','Enter':'RETURN','Escape':'ESCAPE','Backspace':'BACK','Tab':'TAB',
+  'ArrowUp':'UP','ArrowDown':'DOWN','ArrowLeft':'LEFT','ArrowRight':'RIGHT',
+  'Delete':'DELETE','Insert':'INSERT','Home':'HOME','End':'END','PageUp':'PAGEUP','PageDown':'PAGEDOWN',
+  'CapsLock':'CAPITAL','ScrollLock':'SCROLL','Pause':'PAUSE','PrintScreen':'PRINT',
+  'ShiftLeft':'LSHIFT','ShiftRight':'RSHIFT','ControlLeft':'LCTRL','ControlRight':'RCTRL',
+  'AltLeft':'LALT','AltRight':'RALT',
+  'BracketLeft':'LBRACKET','BracketRight':'RBRACKET',
+  'Semicolon':'SEMICOLON','Quote':'APOSTROPHE','Backquote':'GRAVE','Comma':'COMMA','Period':'PERIOD',
+  'Slash':'SLASH','Backslash':'BACKSLASH','Minus':'MINUS','Equal':'EQUALS',
+};
+
+const FIVEM_MOUSE_MAP = {
+  0: 'MOUSE_LEFT',
+  1: 'MOUSE_MIDDLE',
+  2: 'MOUSE_RIGHT',
+  3: 'MOUSE_4',
+  4: 'MOUSE_5',
+};
+
+let capturing = false;
+let captureKeyHandler = null;
+let captureMouseHandler = null;
+let captureContextHandler = null;
+let captureGamepadRAF = null;
+let captureGamepadBaseline = null;
+let captureTimeout = null;
+
+// Snapshot current gamepad state so we can detect changes
+function snapshotGamepads() {
+  const snap = [];
+  const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+  for (let gi = 0; gi < pads.length; gi++) {
+    const gp = pads[gi];
+    if (!gp) { snap.push(null); continue; }
+    snap.push({
+      buttons: gp.buttons.map(b => b.pressed),
+      axes: gp.axes.map(a => a),
+    });
+  }
+  return snap;
+}
+
+// Check if any gamepad input changed from baseline
+function checkGamepadInput() {
+  if (!capturing) return;
+  const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+  for (let gi = 0; gi < pads.length; gi++) {
+    const gp = pads[gi];
+    if (!gp || !captureGamepadBaseline[gi]) continue;
+    const base = captureGamepadBaseline[gi];
+
+    // Check buttons
+    for (let bi = 0; bi < gp.buttons.length; bi++) {
+      if (gp.buttons[bi].pressed && !base.buttons[bi]) {
+        // Button newly pressed
+        const gpName = gp.id.toLowerCase();
+        let device = 'game_pad';
+        // Try to detect if it's a wheel/joystick vs gamepad
+        if (gpName.includes('wheel') || gpName.includes('thrustmaster') || gpName.includes('logitech g') || gpName.includes('fanatec')) {
+          device = 'joy_stick';
+        }
+        document.getElementById('newKey').value = 'BUTTON_' + bi;
+        setDevice(device);
+        document.getElementById('modCtrl').checked = false;
+        document.getElementById('modShift').checked = false;
+        document.getElementById('modAlt').checked = false;
+        updateModPlusVisibility();
+        showToast(`Detected: ${gp.id} - Button ${bi}`, false);
+        stopCapture();
+        return;
+      }
+    }
+
+    // Check axes (pedals / joystick axes) - detect large movement from baseline
+    for (let ai = 0; ai < gp.axes.length; ai++) {
+      const delta = Math.abs(gp.axes[ai] - base.axes[ai]);
+      if (delta > 0.5) {
+        const gpName = gp.id.toLowerCase();
+        let device = 'game_pad';
+        let axisName = 'AXIS_' + ai;
+
+        // Detect pedals vs joystick
+        if (gpName.includes('pedal')) {
+          device = 'pedal';
+          if (ai === 0) axisName = 'THROTTLE';
+          else if (ai === 1) axisName = 'BRAKE';
+          else if (ai === 2) axisName = 'CLUTCH';
+          else axisName = 'PEDAL_' + ai;
+        } else if (gpName.includes('wheel') || gpName.includes('thrustmaster') || gpName.includes('logitech g') || gpName.includes('fanatec')) {
+          device = 'joy_stick';
+          if (ai === 0) axisName = 'AXIS_X';
+          else if (ai === 1) axisName = 'AXIS_Y';
+          else if (ai === 2) axisName = 'AXIS_Z';
+          else axisName = 'AXIS_' + ai;
+        } else {
+          // Standard gamepad
+          if (ai === 0) axisName = 'LEFT_X';
+          else if (ai === 1) axisName = 'LEFT_Y';
+          else if (ai === 2) axisName = 'RIGHT_X';
+          else if (ai === 3) axisName = 'RIGHT_Y';
+          else axisName = 'AXIS_' + ai;
+        }
+
+        const dir = gp.axes[ai] > base.axes[ai] ? '+' : '-';
+        document.getElementById('newKey').value = axisName + dir;
+        setDevice(device);
+        document.getElementById('modCtrl').checked = false;
+        document.getElementById('modShift').checked = false;
+        document.getElementById('modAlt').checked = false;
+        updateModPlusVisibility();
+        showToast(`Detected: ${gp.id} - Axis ${ai} (${axisName}${dir})`, false);
+        stopCapture();
+        return;
+      }
+    }
+  }
+  captureGamepadRAF = requestAnimationFrame(checkGamepadInput);
+}
+
+function startCapture() {
+  if (capturing) { stopCapture(); return; }
+  capturing = true;
+  const btn = document.getElementById('captureBtn');
+  btn.classList.add('capturing');
+  btn.classList.remove('captured');
+  document.getElementById('captureLabel').textContent = 'Press any key, mouse button, or pedal...';
+  document.getElementById('newKey').value = '';
+  document.getElementById('newKey').placeholder = 'Waiting...';
+
+  captureKeyHandler = function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (['Shift','Control','Alt','Meta'].includes(e.key)) return;
+
+    const fivemKey = FIVEM_KEY_MAP[e.code] || e.code.replace('Key','').replace('Digit','');
+    document.getElementById('newKey').value = fivemKey;
+    setDevice('keyboard');
+
+    document.getElementById('modCtrl').checked = e.ctrlKey;
+    document.getElementById('modShift').checked = e.shiftKey;
+    document.getElementById('modAlt').checked = e.altKey;
+    updateModPlusVisibility();
+
+    stopCapture();
+  };
+
+  captureMouseHandler = function(e) {
+    if (e.button === 0 && e.target.id === 'captureBtn') return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const fivemBtn = FIVEM_MOUSE_MAP[e.button] || ('MOUSE_' + e.button);
+    document.getElementById('newKey').value = fivemBtn;
+    setDevice('mouse_button');
+
+    document.getElementById('modCtrl').checked = e.ctrlKey;
+    document.getElementById('modShift').checked = e.shiftKey;
+    document.getElementById('modAlt').checked = e.altKey;
+    updateModPlusVisibility();
+
+    stopCapture();
+  };
+
+  captureContextHandler = function(e) { e.preventDefault(); };
+
+  document.addEventListener('keydown', captureKeyHandler, true);
+  document.addEventListener('mousedown', captureMouseHandler, true);
+  document.addEventListener('contextmenu', captureContextHandler, true);
+
+  // Start gamepad polling
+  captureGamepadBaseline = snapshotGamepads();
+  captureGamepadRAF = requestAnimationFrame(checkGamepadInput);
+
+  // Auto-cancel after 8 seconds (longer for gamepad users to find buttons)
+  captureTimeout = setTimeout(() => { if (capturing) { showToast('Capture timed out', true); stopCapture(); } }, 8000);
+}
+
+function stopCapture() {
+  capturing = false;
+  const btn = document.getElementById('captureBtn');
+  btn.classList.remove('capturing');
+  const key = document.getElementById('newKey').value;
+  if (key) {
+    const activeBtn = document.querySelector('.dev-btn.active');
+    const deviceLabel = activeBtn ? activeBtn.textContent.trim() : 'KB';
+    document.getElementById('captureLabel').textContent = deviceLabel + ': ' + key;
+    btn.classList.add('captured');
+  } else {
+    document.getElementById('captureLabel').textContent = 'Click to detect input';
+    btn.classList.remove('captured');
+  }
+  document.getElementById('newKey').placeholder = 'Key';
+
+  if (captureKeyHandler) document.removeEventListener('keydown', captureKeyHandler, true);
+  if (captureMouseHandler) document.removeEventListener('mousedown', captureMouseHandler, true);
+  if (captureContextHandler) document.removeEventListener('contextmenu', captureContextHandler, true);
+  if (captureGamepadRAF) cancelAnimationFrame(captureGamepadRAF);
+  if (captureTimeout) clearTimeout(captureTimeout);
+  captureKeyHandler = null;
+  captureMouseHandler = null;
+  captureContextHandler = null;
+}
+
+init();
+</script>
+</body>
+</html>

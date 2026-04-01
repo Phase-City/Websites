@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Tools - Phase City</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#e0e0e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:20px}
+.container{max-width:720px;margin:0 auto}
+h1{text-align:center;font-size:1.8rem;font-weight:700;color:#7B68EE;margin-bottom:4px;letter-spacing:1px}
+.subtitle{text-align:center;color:#888;font-size:.82rem;margin-bottom:32px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+a.card{display:block;background:#12121a;border:1px solid #1e1e2e;border-radius:8px;padding:18px 16px;text-decoration:none;transition:all .15s;position:relative;overflow:hidden}
+a.card:hover{border-color:#7B68EE;transform:translateY(-2px);box-shadow:0 4px 20px rgba(123,104,238,.15)}
+.card-icon{font-size:1.6rem;margin-bottom:8px;display:block}
+.card-title{font-size:.92rem;font-weight:700;color:#e0e0e0;margin-bottom:4px}
+.card-desc{font-size:.72rem;color:#888;line-height:1.4}
+.card-tag{position:absolute;top:10px;right:10px;font-size:.58rem;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.5px;text-transform:uppercase}
+.tag-server{background:rgba(92,225,230,.15);color:#5CE1E6}
+.tag-soul{background:rgba(123,104,238,.15);color:#7B68EE}
+.tag-util{background:rgba(255,165,2,.15);color:#ffa502}
+.section-label{font-size:.7rem;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:1px;margin:24px 0 10px;padding-left:2px}
+.section-label:first-child{margin-top:0}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FIVEM TOOLS</h1>
+  <p class="subtitle">Phase City</p>
+
+  <div class="section-label">Server Tools</div>
+  <div class="grid">
+    <a class="card" href="fivem-scanner.html">
+      <span class="card-icon">&#128301;</span>
+      <span class="card-tag tag-server">Server</span>
+      <div class="card-title">Server Scanner</div>
+      <div class="card-desc">Look up any FiveM server by IP, hostname, or cfx.re link. Find players across all servers.</div>
+    </a>
+    <a class="card" href="fivem-optimizer.html">
+      <span class="card-icon">&#9889;</span>
+      <span class="card-tag tag-util">Utility</span>
+      <div class="card-title">Optimizer</div>
+      <div class="card-desc">Fix NVIDIA/AMD settings and in-game options. Guided wizard + full settings checklist.</div>
+    </a>
+  </div>
+
+  <div class="section-label">Soul / Character Tools</div>
+  <div class="grid">
+    <a class="card" href="fivem-keybinds.html">
+      <span class="card-icon">&#9000;</span>
+      <span class="card-tag tag-soul">Soul</span>
+      <div class="card-title">Keybind Configs</div>
+      <div class="card-desc">Manage F8 keybind profiles per soul. Detect keyboard, mouse, joystick, and pedal inputs.</div>
+    </a>
+    <a class="card" href="fivem-radio.html">
+      <span class="card-icon">&#128225;</span>
+      <span class="card-tag tag-soul">Soul</span>
+      <div class="card-title">Radio Frequencies</div>
+      <div class="card-desc">City directory of official channels plus personal frequency notes per character.</div>
+    </a>
+    <a class="card" href="fivem-finances.html">
+      <span class="card-icon">&#128176;</span>
+      <span class="card-tag tag-soul">Soul</span>
+      <div class="card-title">Income & Stash Tracker</div>
+      <div class="card-desc">Transaction ledger with running balance. Track stash locations and what's stored.</div>
+    </a>
+    <a class="card" href="fivem-map.html">
+      <span class="card-icon">&#128506;</span>
+      <span class="card-tag tag-soul">Soul</span>
+      <div class="card-title">Location Map</div>
+      <div class="card-desc">Interactive GTA V map with custom markers. Pin businesses, stashes, gang territory, and more.</div>
+    </a>
+  </div>
+
+  <div class="section-label">Creative</div>
+  <div class="grid">
+    <a class="card" href="fivem-colors.html">
+      <span class="card-icon">&#127912;</span>
+      <span class="card-tag tag-util">Utility</span>
+      <div class="card-title">Color Code Builder</div>
+      <div class="card-desc">Build colored text with ^0-^9 codes. WYSIWYG editor with live preview and OCR extract.</div>
+    </a>
+  </div>
+</div>
+</body>
+</html>

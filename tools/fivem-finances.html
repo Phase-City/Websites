@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Income & Stash Tracker</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:20px}
+.container{max-width:920px;margin:0 auto}
+h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
+.subtitle{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:24px}
+
+/* Buttons */
+.btn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:600;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-sm{padding:5px 12px;font-size:.75rem;border-radius:4px}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--error)}
+.btn-success{background:var(--success);color:#000}
+.btn-cyan{background:var(--cyan);color:#000}
+
+/* File bar */
+.file-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.file-bar .left{display:flex;gap:6px}
+
+/* Soul tabs */
+.soul-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.soul-tab{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.82rem;transition:all .15s;display:flex;align-items:center;gap:6px}
+.soul-tab:hover{border-color:var(--accent);color:var(--text)}
+.soul-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.soul-tab .remove-soul{opacity:0;font-size:.7rem;cursor:pointer;margin-left:2px;transition:opacity .15s}
+.soul-tab:hover .remove-soul{opacity:.6}
+.soul-tab .remove-soul:hover{opacity:1;color:var(--error)}
+.add-soul-btn{padding:6px 12px;border-radius:6px;border:1px dashed var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.82rem;transition:all .15s}
+.add-soul-btn:hover{border-color:var(--accent);color:var(--accent)}
+.add-soul-inline{display:flex;gap:4px;align-items:center}
+.add-soul-input{background:var(--bg);border:1px solid var(--accent);color:var(--text);padding:5px 10px;border-radius:6px;font-size:.82rem;outline:none;width:160px}
+.add-soul-input::placeholder{color:#555}
+
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.card-header h2{font-size:.9rem;font-weight:600;color:var(--accent)}
+.card-body{padding:14px 16px}
+
+/* Summary stats */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-align:center}
+.stat-box .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px}
+.stat-box .value{font-size:1.3rem;font-weight:700}
+.stat-box .value.positive{color:var(--success)}
+.stat-box .value.negative{color:var(--error)}
+.stat-box .value.neutral{color:var(--cyan)}
+
+/* Balance banner */
+.balance-banner{text-align:center;padding:20px;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.balance-banner .lbl{font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px}
+.balance-banner .amount{font-size:2rem;font-weight:700}
+.balance-banner .amount.positive{color:var(--success)}
+.balance-banner .amount.negative{color:var(--error)}
+
+/* Form inputs */
+.form-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
+.form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
+.form-group label{font-size:.72rem;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
+.form-group input,.form-group select,.form-group textarea{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:6px;font-size:.82rem;outline:none;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group textarea{resize:vertical;min-height:60px}
+
+/* Transaction list */
+.tx-list{max-height:500px;overflow-y:auto}
+.tx-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid rgba(30,30,46,.5);transition:background .1s}
+.tx-item:hover{background:rgba(123,104,238,.04)}
+.tx-item:last-child{border-bottom:none}
+.tx-date{font-size:.72rem;color:var(--muted);min-width:110px;white-space:nowrap}
+.tx-amount{font-weight:700;font-size:.9rem;min-width:90px;text-align:right;font-family:'Courier New',monospace}
+.tx-amount.inc{color:var(--success)}
+.tx-amount.exp{color:var(--error)}
+.tx-cat{display:inline-block;background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:4px;font-size:.72rem;color:var(--cyan);min-width:50px;text-align:center}
+.tx-note{flex:1;font-size:.8rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.72rem;padding:3px 6px;border-radius:3px;transition:all .12s}
+.tx-del:hover{color:var(--error);background:rgba(255,71,87,.1)}
+
+/* Filter */
+.filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filter-bar select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:6px;font-size:.78rem;outline:none}
+
+/* Stash cards */
+.stash-grid{display:grid;gap:10px}
+.stash-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color .15s}
+.stash-card:hover{border-color:rgba(123,104,238,.3)}
+.stash-card .stash-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.stash-card .stash-loc{font-weight:600;font-size:.9rem;color:var(--accent)}
+.stash-card .stash-count{font-size:.72rem;color:var(--muted);background:var(--surface);padding:2px 8px;border-radius:10px}
+.stash-card .stash-items{font-size:.8rem;color:var(--text);line-height:1.6;margin-bottom:6px}
+.stash-card .stash-items span{display:inline-block;background:var(--surface);border:1px solid var(--border);padding:2px 8px;border-radius:4px;margin:2px 3px 2px 0;font-size:.76rem}
+.stash-card .stash-notes{font-size:.76rem;color:var(--muted);font-style:italic;margin-bottom:8px}
+.stash-card .stash-actions{display:flex;gap:6px}
+.stash-card .stash-actions button{background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:.72rem;padding:4px 10px;border-radius:4px;transition:all .12s}
+.stash-card .stash-actions button:hover{border-color:var(--accent);color:var(--text)}
+.stash-card .stash-actions .del-stash:hover{border-color:var(--error);color:var(--error)}
+
+/* Search */
+.search-input{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:6px;font-size:.82rem;outline:none;width:200px}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:#555}
+
+/* Section tabs */
+.section-tabs{display:flex;gap:6px;margin-bottom:16px}
+.section-tab{padding:8px 20px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.85rem;font-weight:600;transition:all .15s}
+.section-tab:hover{border-color:var(--accent);color:var(--text)}
+.section-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* Toast */
+.toast-container{position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:10px 18px;border-radius:8px;font-size:.82rem;box-shadow:0 4px 20px rgba(0,0,0,.5);animation:slideIn .25s ease;max-width:300px}
+.toast.success{border-left:3px solid var(--success)}
+.toast.error{border-left:3px solid var(--error)}
+.toast.info{border-left:3px solid var(--cyan)}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(30px)}}
+
+/* Edit modal overlay */
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:1000;justify-content:center;align-items:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;max-width:460px;width:90%}
+.modal h3{color:var(--accent);font-size:.95rem;margin-bottom:16px}
+.modal .form-group{margin-bottom:10px}
+.modal .modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+
+/* Copy dropdown */
+.copy-dropdown{position:relative;display:inline-block}
+.copy-menu{display:none;position:absolute;top:100%;left:0;background:var(--surface);border:1px solid var(--border);border-radius:6px;min-width:180px;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.4);margin-top:4px}
+.copy-menu.show{display:block}
+.copy-menu-item{padding:8px 14px;font-size:.8rem;color:var(--text);cursor:pointer;transition:background .1s}
+.copy-menu-item:hover{background:rgba(123,104,238,.1)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+.empty-state{text-align:center;padding:30px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Income & Stash Tracker</h1>
+  <p class="subtitle">FiveM Financial Ledger & Stash Inventory</p>
+
+  <!-- File bar -->
+  <div class="file-bar">
+    <div class="left">
+      <button class="btn btn-outline btn-sm" onclick="loadFile()">Load Profiles</button>
+      <button class="btn btn-outline btn-sm" onclick="saveFile()">Save As</button>
+    </div>
+  </div>
+
+  <!-- Soul tabs -->
+  <div class="soul-bar" id="soulBar"></div>
+
+  <!-- Summary stats -->
+  <div class="stats-row" id="statsRow"></div>
+
+  <!-- Balance banner -->
+  <div class="balance-banner" id="balanceBanner">
+    <div class="lbl">Running Balance</div>
+    <div class="amount positive" id="balanceAmount">$0</div>
+  </div>
+
+  <!-- Section tabs -->
+  <div class="section-tabs">
+    <div class="section-tab active" data-section="ledger" onclick="switchSection('ledger')">Transaction Ledger</div>
+    <div class="section-tab" data-section="stashes" onclick="switchSection('stashes')">Stash Locations</div>
+  </div>
+
+  <!-- Ledger section -->
+  <div id="sectionLedger">
+    <div class="card">
+      <div class="card-header">
+        <h2>Add Transaction</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group" style="max-width:130px">
+            <label>Amount ($)</label>
+            <input type="number" id="txAmount" placeholder="5000" min="0" step="1">
+          </div>
+          <div class="form-group" style="max-width:80px">
+            <label>Type</label>
+            <select id="txType">
+              <option value="income">+ Income</option>
+              <option value="expense">- Expense</option>
+            </select>
+          </div>
+          <div class="form-group" style="max-width:130px">
+            <label>Category</label>
+            <select id="txCategory">
+              <option>Job</option>
+              <option>Crime</option>
+              <option>Drugs</option>
+              <option>Business</option>
+              <option>Property</option>
+              <option>Vehicle</option>
+              <option>Clothing</option>
+              <option>Food</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Note (optional)</label>
+            <input type="text" id="txNote" placeholder="Description...">
+          </div>
+          <button class="btn btn-success btn-sm" onclick="addTransaction()" style="align-self:flex-end;margin-bottom:1px">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Transactions</h2>
+        <div class="filter-bar">
+          <select id="txFilter" onchange="renderTransactions()">
+            <option value="all">All Categories</option>
+            <option>Job</option>
+            <option>Crime</option>
+            <option>Drugs</option>
+            <option>Business</option>
+            <option>Property</option>
+            <option>Vehicle</option>
+            <option>Clothing</option>
+            <option>Food</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body" style="padding:0">
+        <div class="tx-list" id="txList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stash section -->
+  <div id="sectionStashes" style="display:none">
+    <div class="card">
+      <div class="card-header">
+        <h2>Add Stash Location</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Location Name</label>
+            <input type="text" id="stashLocation" placeholder="Apartment 42">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Items (one per line or comma separated)</label>
+            <textarea id="stashItems" placeholder="AP Pistol&#10;$2000 cash&#10;Lockpick x3"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Notes (optional)</label>
+            <input type="text" id="stashNotes" placeholder="Main stash spot...">
+          </div>
+          <button class="btn btn-cyan btn-sm" onclick="addStash()" style="align-self:flex-end;margin-bottom:1px">Add Stash</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Stash Locations</h2>
+        <input type="text" class="search-input" id="stashSearch" placeholder="Search stashes..." oninput="renderStashes()">
+      </div>
+      <div class="card-body">
+        <div class="stash-grid" id="stashGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit stash modal -->
+<div class="modal-overlay" id="editStashModal">
+  <div class="modal">
+    <h3>Edit Stash</h3>
+    <div class="form-group">
+      <label>Location Name</label>
+      <input type="text" id="editStashLocation">
+    </div>
+    <div class="form-group">
+      <label>Items (one per line or comma separated)</label>
+      <textarea id="editStashItems" style="min-height:80px"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <input type="text" id="editStashNotes">
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-outline btn-sm" onclick="closeEditStash()">Cancel</button>
+      <button class="btn btn-cyan btn-sm" onclick="saveEditStash()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+var data = { souls: [] };
+var activeSoulId = null;
+var activeSection = 'ledger';
+var addingSoul = false;
+var editingStashId = null;
+
+function uid() {
+  return Math.random().toString(36).substr(2, 9);
+}
+
+function toast(msg, type) {
+  type = type || 'info';
+  var el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(function() {
+    el.style.animation = 'slideOut .25s ease forwards';
+    setTimeout(function() { el.remove(); }, 250);
+  }, 2500);
+}
+
+function getSoul() {
+  if (!activeSoulId) return null;
+  for (var i = 0; i < data.souls.length; i++) {
+    if (data.souls[i].id === activeSoulId) return data.souls[i];
+  }
+  return null;
+}
+
+// --- File I/O ---
+async function saveFile() {
+  try {
+    var handle = await window.showSaveFilePicker({
+      suggestedName: 'fivem-finances.json',
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+    });
+    var writable = await handle.createWritable();
+    await writable.write(JSON.stringify(data, null, 2));
+    await writable.close();
+    toast('Saved successfully', 'success');
+  } catch (e) {
+    if (e.name !== 'AbortError') toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+async function loadFile() {
+  try {
+    var handles = await window.showOpenFilePicker({
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+    });
+    var file = await handles[0].getFile();
+    var text = await file.text();
+    var parsed = JSON.parse(text);
+    if (!parsed.souls || !Array.isArray(parsed.souls)) {
+      toast('Invalid file format', 'error');
+      return;
+    }
+    data = parsed;
+    activeSoulId = data.souls.length > 0 ? data.souls[0].id : null;
+    renderAll();
+    toast('Loaded ' + data.souls.length + ' soul(s)', 'success');
+  } catch (e) {
+    if (e.name !== 'AbortError') toast('Load failed: ' + e.message, 'error');
+  }
+}
+
+// --- Soul Management ---
+function addSoul(name, copyFromId) {
+  var soul = {
+    id: uid(),
+    name: name,
+    transactions: [],
+    stashes: []
+  };
+  if (copyFromId) {
+    var src = null;
+    for (var i = 0; i < data.souls.length; i++) {
+      if (data.souls[i].id === copyFromId) { src = data.souls[i]; break; }
+    }
+    if (src) {
+      soul.transactions = JSON.parse(JSON.stringify(src.transactions));
+      soul.stashes = JSON.parse(JSON.stringify(src.stashes));
+      // Regenerate IDs
+      for (var j = 0; j < soul.transactions.length; j++) soul.transactions[j].id = uid();
+      for (var k = 0; k < soul.stashes.length; k++) soul.stashes[k].id = uid();
+    }
+  }
+  data.souls.push(soul);
+  activeSoulId = soul.id;
+  renderAll();
+  toast('Soul "' + name + '" created', 'success');
+}
+
+function removeSoul(id) {
+  if (data.souls.length <= 1) { toast('Cannot remove last soul', 'error'); return; }
+  if (!confirm('Delete this soul and all its data?')) return;
+  data.souls = data.souls.filter(function(s) { return s.id !== id; });
+  if (activeSoulId === id) activeSoulId = data.souls[0].id;
+  renderAll();
+  toast('Soul removed', 'info');
+}
+
+function renderSoulBar() {
+  var bar = document.getElementById('soulBar');
+  var html = '';
+  for (var i = 0; i < data.souls.length; i++) {
+    var s = data.souls[i];
+    var cls = s.id === activeSoulId ? 'soul-tab active' : 'soul-tab';
+    html += '<div class="' + cls + '" onclick="activeSoulId=\'' + s.id + '\';renderAll()">' +
+      s.name +
+      '<span class="remove-soul" onclick="event.stopPropagation();removeSoul(\'' + s.id + '\')">&times;</span>' +
+      '</div>';
+  }
+  if (addingSoul) {
+    html += '<div class="add-soul-inline">' +
+      '<input class="add-soul-input" id="newSoulInput" placeholder="Soul name..." onkeydown="if(event.key===\'Enter\')confirmAddSoul()">' +
+      '<button class="btn btn-sm" onclick="confirmAddSoul()">OK</button>' +
+      '<button class="btn btn-outline btn-sm" onclick="addingSoul=false;renderSoulBar()">X</button>' +
+      '</div>';
+    // Copy from dropdown
+    if (data.souls.length > 0) {
+      html += '<div class="copy-dropdown">' +
+        '<button class="btn btn-outline btn-sm" onclick="toggleCopyMenu(event)">Copy from...</button>' +
+        '<div class="copy-menu" id="copyMenu">';
+      for (var j = 0; j < data.souls.length; j++) {
+        html += '<div class="copy-menu-item" onclick="confirmAddSoulCopy(\'' + data.souls[j].id + '\')">' + data.souls[j].name + '</div>';
+      }
+      html += '</div></div>';
+    }
+  } else {
+    html += '<button class="add-soul-btn" onclick="addingSoul=true;renderSoulBar();setTimeout(function(){var el=document.getElementById(\'newSoulInput\');if(el)el.focus()},50)">+ Add Soul</button>';
+  }
+  bar.innerHTML = html;
+}
+
+function toggleCopyMenu(e) {
+  e.stopPropagation();
+  var menu = document.getElementById('copyMenu');
+  if (menu) menu.classList.toggle('show');
+}
+
+function confirmAddSoul() {
+  var input = document.getElementById('newSoulInput');
+  if (!input) return;
+  var name = input.value.trim();
+  if (!name) { toast('Enter a soul name', 'error'); return; }
+  addingSoul = false;
+  addSoul(name);
+}
+
+function confirmAddSoulCopy(fromId) {
+  var input = document.getElementById('newSoulInput');
+  var name = input ? input.value.trim() : '';
+  if (!name) { toast('Enter a name first', 'error'); return; }
+  addingSoul = false;
+  addSoul(name, fromId);
+}
+
+// Close copy menu on outside click
+document.addEventListener('click', function() {
+  var menu = document.getElementById('copyMenu');
+  if (menu) menu.classList.remove('show');
+});
+
+// --- Section Toggle ---
+function switchSection(sec) {
+  activeSection = sec;
+  document.getElementById('sectionLedger').style.display = sec === 'ledger' ? '' : 'none';
+  document.getElementById('sectionStashes').style.display = sec === 'stashes' ? '' : 'none';
+  var tabs = document.querySelectorAll('.section-tab');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.toggle('active', tabs[i].getAttribute('data-section') === sec);
+  }
+}
+
+// --- Transactions ---
+function addTransaction() {
+  var soul = getSoul();
+  if (!soul) { toast('Create a soul first', 'error'); return; }
+  var amtInput = document.getElementById('txAmount');
+  var raw = parseFloat(amtInput.value);
+  if (!raw || raw <= 0) { toast('Enter a valid amount', 'error'); return; }
+  var type = document.getElementById('txType').value;
+  var amount = type === 'expense' ? -raw : raw;
+  var tx = {
+    id: uid(),
+    amount: amount,
+    category: document.getElementById('txCategory').value,
+    note: document.getElementById('txNote').value.trim(),
+    date: new Date().toISOString()
+  };
+  soul.transactions.push(tx);
+  amtInput.value = '';
+  document.getElementById('txNote').value = '';
+  renderTransactions();
+  renderStats();
+  renderBalance();
+  toast((type === 'income' ? '+' : '-') + '$' + raw.toLocaleString() + ' recorded', 'success');
+}
+
+function deleteTransaction(id) {
+  var soul = getSoul();
+  if (!soul) return;
+  soul.transactions = soul.transactions.filter(function(t) { return t.id !== id; });
+  renderTransactions();
+  renderStats();
+  renderBalance();
+}
+
+function renderTransactions() {
+  var soul = getSoul();
+  var list = document.getElementById('txList');
+  if (!soul || soul.transactions.length === 0) {
+    list.innerHTML = '<div class="empty-state">No transactions yet. Add one above.</div>';
+    return;
+  }
+  var filter = document.getElementById('txFilter').value;
+  var txs = soul.transactions.slice().reverse();
+  if (filter !== 'all') {
+    txs = txs.filter(function(t) { return t.category === filter; });
+  }
+  if (txs.length === 0) {
+    list.innerHTML = '<div class="empty-state">No transactions in this category.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < txs.length; i++) {
+    var t = txs[i];
+    var d = new Date(t.date);
+    var dateStr = (d.getMonth()+1) + '/' + d.getDate() + '/' + d.getFullYear() + ' ' +
+      d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+    var isIncome = t.amount >= 0;
+    var dispAmt = isIncome ? '+$' + Math.abs(t.amount).toLocaleString() : '-$' + Math.abs(t.amount).toLocaleString();
+    html += '<div class="tx-item">' +
+      '<span class="tx-date">' + dateStr + '</span>' +
+      '<span class="tx-amount ' + (isIncome ? 'inc' : 'exp') + '">' + dispAmt + '</span>' +
+      '<span class="tx-cat">' + t.category + '</span>' +
+      '<span class="tx-note">' + (t.note || '') + '</span>' +
+      '<button class="tx-del" onclick="deleteTransaction(\'' + t.id + '\')" title="Delete">&times;</button>' +
+      '</div>';
+  }
+  list.innerHTML = html;
+}
+
+// --- Balance & Stats ---
+function computeStats() {
+  var soul = getSoul();
+  if (!soul) return { income: 0, expenses: 0, balance: 0, stashCount: 0 };
+  var income = 0, expenses = 0;
+  for (var i = 0; i < soul.transactions.length; i++) {
+    if (soul.transactions[i].amount >= 0) income += soul.transactions[i].amount;
+    else expenses += Math.abs(soul.transactions[i].amount);
+  }
+  return { income: income, expenses: expenses, balance: income - expenses, stashCount: soul.stashes.length };
+}
+
+function renderBalance() {
+  var stats = computeStats();
+  var el = document.getElementById('balanceAmount');
+  var sign = stats.balance >= 0 ? '+' : '-';
+  el.textContent = sign + '$' + Math.abs(stats.balance).toLocaleString();
+  el.className = 'amount ' + (stats.balance >= 0 ? 'positive' : 'negative');
+}
+
+function renderStats() {
+  var stats = computeStats();
+  var html = '<div class="stat-box"><div class="label">Total Income</div><div class="value positive">+$' + stats.income.toLocaleString() + '</div></div>' +
+    '<div class="stat-box"><div class="label">Total Expenses</div><div class="value negative">-$' + stats.expenses.toLocaleString() + '</div></div>' +
+    '<div class="stat-box"><div class="label">Net Balance</div><div class="value ' + (stats.balance >= 0 ? 'positive' : 'negative') + '">' +
+    (stats.balance >= 0 ? '+' : '-') + '$' + Math.abs(stats.balance).toLocaleString() + '</div></div>' +
+    '<div class="stat-box"><div class="label">Stash Locations</div><div class="value neutral">' + stats.stashCount + '</div></div>';
+  document.getElementById('statsRow').innerHTML = html;
+}
+
+// --- Stashes ---
+function parseItems(raw) {
+  // Split by newlines then by commas
+  var parts = raw.split(/\n/);
+  var items = [];
+  for (var i = 0; i < parts.length; i++) {
+    var sub = parts[i].split(',');
+    for (var j = 0; j < sub.length; j++) {
+      var trimmed = sub[j].trim();
+      if (trimmed) items.push(trimmed);
+    }
+  }
+  return items;
+}
+
+function addStash() {
+  var soul = getSoul();
+  if (!soul) { toast('Create a soul first', 'error'); return; }
+  var loc = document.getElementById('stashLocation').value.trim();
+  if (!loc) { toast('Enter a location name', 'error'); return; }
+  var rawItems = document.getElementById('stashItems').value;
+  var items = parseItems(rawItems);
+  var stash = {
+    id: uid(),
+    location: loc,
+    items: items,
+    notes: document.getElementById('stashNotes').value.trim()
+  };
+  soul.stashes.push(stash);
+  document.getElementById('stashLocation').value = '';
+  document.getElementById('stashItems').value = '';
+  document.getElementById('stashNotes').value = '';
+  renderStashes();
+  renderStats();
+  toast('Stash "' + loc + '" added', 'success');
+}
+
+function deleteStash(id) {
+  var soul = getSoul();
+  if (!soul) return;
+  if (!confirm('Delete this stash?')) return;
+  soul.stashes = soul.stashes.filter(function(s) { return s.id !== id; });
+  renderStashes();
+  renderStats();
+  toast('Stash removed', 'info');
+}
+
+function openEditStash(id) {
+  var soul = getSoul();
+  if (!soul) return;
+  var stash = null;
+  for (var i = 0; i < soul.stashes.length; i++) {
+    if (soul.stashes[i].id === id) { stash = soul.stashes[i]; break; }
+  }
+  if (!stash) return;
+  editingStashId = id;
+  document.getElementById('editStashLocation').value = stash.location;
+  document.getElementById('editStashItems').value = stash.items.join('\n');
+  document.getElementById('editStashNotes').value = stash.notes || '';
+  document.getElementById('editStashModal').classList.add('show');
+}
+
+function closeEditStash() {
+  editingStashId = null;
+  document.getElementById('editStashModal').classList.remove('show');
+}
+
+function saveEditStash() {
+  var soul = getSoul();
+  if (!soul || !editingStashId) return;
+  var stash = null;
+  for (var i = 0; i < soul.stashes.length; i++) {
+    if (soul.stashes[i].id === editingStashId) { stash = soul.stashes[i]; break; }
+  }
+  if (!stash) return;
+  var loc = document.getElementById('editStashLocation').value.trim();
+  if (!loc) { toast('Location name required', 'error'); return; }
+  stash.location = loc;
+  stash.items = parseItems(document.getElementById('editStashItems').value);
+  stash.notes = document.getElementById('editStashNotes').value.trim();
+  closeEditStash();
+  renderStashes();
+  toast('Stash updated', 'success');
+}
+
+function escapeHtml(s) {
+  var div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+function renderStashes() {
+  var soul = getSoul();
+  var grid = document.getElementById('stashGrid');
+  if (!soul || soul.stashes.length === 0) {
+    grid.innerHTML = '<div class="empty-state">No stash locations. Add one above.</div>';
+    return;
+  }
+  var search = (document.getElementById('stashSearch').value || '').toLowerCase();
+  var stashes = soul.stashes;
+  if (search) {
+    stashes = stashes.filter(function(s) {
+      if (s.location.toLowerCase().indexOf(search) !== -1) return true;
+      if (s.notes && s.notes.toLowerCase().indexOf(search) !== -1) return true;
+      for (var i = 0; i < s.items.length; i++) {
+        if (s.items[i].toLowerCase().indexOf(search) !== -1) return true;
+      }
+      return false;
+    });
+  }
+  if (stashes.length === 0) {
+    grid.innerHTML = '<div class="empty-state">No stashes match your search.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < stashes.length; i++) {
+    var s = stashes[i];
+    var itemsHtml = '';
+    for (var j = 0; j < s.items.length; j++) {
+      itemsHtml += '<span>' + escapeHtml(s.items[j]) + '</span>';
+    }
+    html += '<div class="stash-card">' +
+      '<div class="stash-top">' +
+      '<span class="stash-loc">' + escapeHtml(s.location) + '</span>' +
+      '<span class="stash-count">' + s.items.length + ' item' + (s.items.length !== 1 ? 's' : '') + '</span>' +
+      '</div>' +
+      (itemsHtml ? '<div class="stash-items">' + itemsHtml + '</div>' : '') +
+      (s.notes ? '<div class="stash-notes">' + escapeHtml(s.notes) + '</div>' : '') +
+      '<div class="stash-actions">' +
+      '<button onclick="openEditStash(\'' + s.id + '\')">Edit</button>' +
+      '<button class="del-stash" onclick="deleteStash(\'' + s.id + '\')">Delete</button>' +
+      '</div>' +
+      '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+// --- Render All ---
+function renderAll() {
+  renderSoulBar();
+  renderBalance();
+  renderStats();
+  renderTransactions();
+  renderStashes();
+}
+
+// --- Init ---
+(function init() {
+  if (data.souls.length === 0) {
+    addSoul('Default Character');
+  }
+})();
+</script>
+</body>
+</html>

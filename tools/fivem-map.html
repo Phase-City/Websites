@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Location Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573;--warn:#ffa502}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* Header */
+.header{display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;min-height:44px}
+.header h1{font-size:1rem;font-weight:700;color:var(--accent);letter-spacing:.5px;white-space:nowrap}
+.file-bar{display:flex;gap:4px;margin-left:auto}
+.btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:.78rem;font-weight:600;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm{padding:4px 10px;font-size:.72rem}
+.btn-danger{background:var(--error)}
+.btn-cyan{background:var(--cyan);color:#000}
+
+/* Soul tabs */
+.soul-bar{display:flex;align-items:center;gap:5px;padding:6px 16px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0;flex-wrap:wrap}
+.soul-tab{padding:5px 12px;border-radius:5px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.78rem;transition:all .15s;display:flex;align-items:center;gap:5px}
+.soul-tab:hover{border-color:var(--accent);color:var(--text)}
+.soul-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.soul-tab .remove-soul{opacity:0;font-size:.65rem;cursor:pointer;margin-left:2px;transition:opacity .15s}
+.soul-tab:hover .remove-soul{opacity:.6}
+.soul-tab .remove-soul:hover{opacity:1;color:var(--error)}
+.add-soul-btn{padding:5px 10px;border-radius:5px;border:1px dashed var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.78rem;transition:all .15s}
+.add-soul-btn:hover{border-color:var(--accent);color:var(--accent)}
+.add-soul-inline{display:flex;gap:4px;align-items:center}
+.add-soul-input{background:var(--bg);border:1px solid var(--accent);color:var(--text);padding:4px 8px;border-radius:5px;font-size:.78rem;outline:none;width:130px}
+.add-soul-input::placeholder{color:#555}
+
+/* Main layout */
+.main{display:flex;flex:1;overflow:hidden}
+
+/* Sidebar */
+.sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:margin-left .2s}
+.sidebar.collapsed{margin-left:-260px}
+.sidebar-toggle{position:absolute;top:50%;left:0;z-index:1000;background:var(--surface);border:1px solid var(--border);border-left:none;color:var(--muted);cursor:pointer;padding:8px 4px;border-radius:0 5px 5px 0;font-size:.7rem;transition:all .15s}
+.sidebar-toggle:hover{color:var(--accent);border-color:var(--accent)}
+.sidebar-header{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.sidebar-search{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:4px;font-size:.76rem;outline:none;width:100%}
+.sidebar-search:focus{border-color:var(--accent)}
+.sidebar-search::placeholder{color:#444}
+.sidebar-list{flex:1;overflow-y:auto;padding:6px 0}
+.sidebar-list::-webkit-scrollbar{width:4px}
+.sidebar-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.cat-group{margin-bottom:2px}
+.cat-header{display:flex;align-items:center;gap:6px;padding:6px 12px;cursor:pointer;font-size:.74rem;font-weight:600;text-transform:uppercase;letter-spacing:.3px;color:var(--muted);transition:color .15s;user-select:none}
+.cat-header:hover{color:var(--text)}
+.cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cat-count{margin-left:auto;font-size:.65rem;background:var(--bg);padding:1px 6px;border-radius:8px;color:var(--muted)}
+.cat-toggle{font-size:.6rem;transition:transform .15s}
+.cat-toggle.hidden{transform:rotate(-90deg)}
+.cat-markers{padding:0 8px}
+.cat-markers.hidden{display:none}
+.marker-item{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;cursor:pointer;font-size:.76rem;color:var(--text);transition:background .12s}
+.marker-item:hover{background:rgba(123,104,238,.08)}
+.marker-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* Map container */
+.map-wrap{flex:1;position:relative}
+#map{width:100%;height:100%;background:var(--bg)}
+.coords-display{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(10,10,15,.85);border:1px solid var(--border);padding:4px 12px;border-radius:4px;font-family:'Courier New',monospace;font-size:.72rem;color:var(--cyan);pointer-events:none}
+.add-marker-fab{position:absolute;bottom:20px;right:20px;z-index:1000;width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.4);transition:transform .15s,opacity .15s}
+.add-marker-fab:hover{transform:scale(1.1);opacity:.9}
+
+/* Leaflet overrides */
+.leaflet-container{background:var(--bg)!important}
+.leaflet-control-zoom a{background:var(--surface)!important;color:var(--text)!important;border-color:var(--border)!important}
+.leaflet-control-zoom a:hover{background:var(--bg)!important}
+.leaflet-popup-content-wrapper{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+.leaflet-popup-tip{background:var(--surface);border:1px solid var(--border)}
+.leaflet-popup-content{margin:10px 14px;font-size:.8rem;min-width:200px}
+.leaflet-popup-close-button{color:var(--muted)!important;font-size:1.1rem!important}
+.leaflet-popup-close-button:hover{color:var(--text)!important}
+
+/* Marker popup form */
+.popup-form label{display:block;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;margin-top:8px}
+.popup-form label:first-child{margin-top:0}
+.popup-form input,.popup-form select,.popup-form textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:4px;font-size:.78rem;outline:none;font-family:inherit}
+.popup-form input:focus,.popup-form select:focus,.popup-form textarea:focus{border-color:var(--accent)}
+.popup-form textarea{resize:vertical;min-height:40px}
+.popup-form select{cursor:pointer}
+.popup-btns{display:flex;gap:4px;margin-top:10px}
+.popup-detail h3{margin:0 0 4px;font-size:.88rem;color:var(--accent)}
+.popup-detail .pd-cat{font-size:.7rem;text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px}
+.popup-detail .pd-notes{font-size:.78rem;color:var(--muted);margin-bottom:6px;white-space:pre-wrap}
+.popup-detail .pd-coords{font-family:'Courier New',monospace;font-size:.7rem;color:var(--cyan)}
+.popup-detail .pd-actions{display:flex;gap:4px;margin-top:8px}
+
+/* Context menu */
+.ctx-menu{position:fixed;z-index:2000;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:4px 0;box-shadow:0 4px 16px rgba(0,0,0,.5);min-width:160px}
+.ctx-item{padding:7px 14px;cursor:pointer;font-size:.78rem;color:var(--text);transition:background .1s}
+.ctx-item:hover{background:rgba(123,104,238,.1)}
+.ctx-menu.hidden{display:none}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>FiveM Location Map</h1>
+  <div class="file-bar">
+    <button class="btn btn-outline btn-sm" onclick="loadFile()">Load Profiles</button>
+    <button class="btn btn-sm" onclick="saveFile()">Save As</button>
+    <button class="btn btn-outline btn-sm" onclick="document.getElementById('mapImgInput').click()">Load Map Image</button>
+    <input type="file" id="mapImgInput" accept="image/*" style="display:none" onchange="loadMapFromFile(this.files[0])">
+  </div>
+</div>
+
+<!-- Soul tabs -->
+<div class="soul-bar" id="soulBar"></div>
+
+<!-- Main -->
+<div class="main">
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <input class="sidebar-search" id="searchInput" type="text" placeholder="Search markers...">
+    </div>
+    <div class="sidebar-list" id="sidebarList"></div>
+  </div>
+
+  <!-- Map -->
+  <div class="map-wrap">
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">&#9776;</button>
+    <div id="map"></div>
+    <div class="coords-display" id="coordsDisplay">X: 0.0 &nbsp; Y: 0.0</div>
+    <button class="add-marker-fab" id="addFab" title="Click, then click on the map to place a marker">+</button>
+  </div>
+</div>
+
+<!-- Context menu -->
+<div class="ctx-menu hidden" id="ctxMenu">
+  <div class="ctx-item" onclick="addMarkerAtCtx()">Add Marker Here</div>
+</div>
+
+<script>
+/* ── State ── */
+var souls = [];
+var activeSoulId = null;
+var map = null;
+var markerLayers = {};  // leafletId -> L.circleMarker
+var addMode = false;
+var ctxLatLng = null;
+var sidebarCollapsed = false;
+var categoryVisibility = {};  // category -> boolean (true = visible)
+
+var CATEGORIES = {
+  'Business':        '#5CE1E6',
+  'Housing':         '#7B68EE',
+  'Gang Territory':  '#ff4757',
+  'Stash':           '#ffa502',
+  'Job Location':    '#2ed573',
+  'Hospital':        '#ff6b81',
+  'Police Station':  '#3498db',
+  'Custom':          '#888'
+};
+
+/* ── ID generator ── */
+function uid() { return Math.random().toString(36).slice(2, 10); }
+
+/* ── Coordinate conversion ── */
+// GTA V coords: X roughly -3000..4500, Y roughly -4000..8000
+// We map game coords to Leaflet CRS.Simple lat/lng
+// lat = y, lng = x (simple 1:1)
+function gameToLatLng(x, y) { return L.latLng(y, x); }
+function latLngToGame(ll) { return { x: Math.round(ll.lng * 10) / 10, y: Math.round(ll.lat * 10) / 10 }; }
+
+/* ── Map init ── */
+function initMap() {
+  map = L.map('map', {
+    crs: L.CRS.Simple,
+    minZoom: -3,
+    maxZoom: 3,
+    zoomSnap: 0.25,
+    zoomDelta: 0.5,
+    attributionControl: false
+  });
+
+  // GTA V map bounds in game coords
+  var sw = gameToLatLng(-3200, -4400);
+  var ne = gameToLatLng(4900, 8400);
+  var bounds = L.latLngBounds(sw, ne);
+
+  // Map image - load from local file or img/ folder
+  var imageOverlay = null;
+  var localMapPath = '../img/gtav-map.jpg';
+
+  function loadMapImage(src) {
+    if (imageOverlay) map.removeLayer(imageOverlay);
+    imageOverlay = L.imageOverlay(src, bounds);
+    imageOverlay.addTo(map);
+  }
+
+  // Try local file first
+  var testImg = new Image();
+  testImg.onload = function() { loadMapImage(localMapPath); };
+  testImg.onerror = function() {
+    // Show drop zone prompt on the map
+    var center = L.latLng((sw.lat + ne.lat) / 2, (sw.lng + ne.lng) / 2);
+    L.marker(center, {
+      interactive: false,
+      icon: L.divIcon({
+        className: '',
+        html: '<div style="color:#888;font-size:13px;text-align:center;line-height:1.6;background:rgba(18,18,26,.9);padding:16px 24px;border-radius:8px;border:2px dashed #1e1e2e">'
+          + 'No map image found.<br>'
+          + 'Save a GTA V satellite map as:<br>'
+          + '<span style="color:#5CE1E6;font-family:monospace">../img/gtav-map.jpg</span><br>'
+          + 'or click <strong style="color:#7B68EE">Load Map Image</strong> above.<br>'
+          + '<span style="color:#555;font-size:11px">Markers still work — right-click to add.</span>'
+          + '</div>',
+        iconSize: [320, 140],
+        iconAnchor: [160, 70]
+      })
+    }).addTo(map);
+  };
+  testImg.src = localMapPath;
+
+  // Load map image from file input
+  window.loadMapFromFile = function(file) {
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      loadMapImage(e.target.result);
+    };
+    reader.readAsDataURL(file);
+    document.getElementById('mapImgInput').value = '';
+  };
+
+  map.setView(gameToLatLng(800, 200), -1);
+  map.setMaxBounds(bounds.pad(0.3));
+
+  // Events
+  map.on('mousemove', function(e) {
+    var g = latLngToGame(e.latlng);
+    document.getElementById('coordsDisplay').textContent = 'X: ' + g.x.toFixed(1) + '   Y: ' + g.y.toFixed(1);
+  });
+
+  map.on('click', function(e) {
+    if (addMode) {
+      addMode = false;
+      document.getElementById('addFab').style.background = '';
+      openAddPopup(e.latlng);
+    }
+  });
+
+  map.on('contextmenu', function(e) {
+    e.originalEvent.preventDefault();
+    ctxLatLng = e.latlng;
+    var cm = document.getElementById('ctxMenu');
+    cm.classList.remove('hidden');
+    cm.style.left = e.originalEvent.clientX + 'px';
+    cm.style.top = e.originalEvent.clientY + 'px';
+  });
+
+  document.addEventListener('click', function() {
+    document.getElementById('ctxMenu').classList.add('hidden');
+  });
+}
+
+/* ── Soul management ── */
+function getActiveSoul() {
+  return souls.find(function(s) { return s.id === activeSoulId; });
+}
+
+function renderSoulBar() {
+  var bar = document.getElementById('soulBar');
+  var html = '';
+  souls.forEach(function(s) {
+    var cls = s.id === activeSoulId ? ' active' : '';
+    html += '<div class="soul-tab' + cls + '" onclick="switchSoul(\'' + s.id + '\')">' +
+      s.name +
+      '<span class="remove-soul" onclick="event.stopPropagation();removeSoul(\'' + s.id + '\')">&times;</span>' +
+      '</div>';
+  });
+  html += '<button class="add-soul-btn" id="addSoulBtn" onclick="showAddSoul()">+ Soul</button>';
+  bar.innerHTML = html;
+}
+
+function showAddSoul() {
+  var btn = document.getElementById('addSoulBtn');
+  btn.outerHTML = '<div class="add-soul-inline"><input class="add-soul-input" id="newSoulInput" placeholder="Soul name..." onkeydown="if(event.key===\'Enter\')commitAddSoul();if(event.key===\'Escape\')renderSoulBar();" autofocus><button class="btn btn-sm" onclick="commitAddSoul()">Add</button></div>';
+  document.getElementById('newSoulInput').focus();
+}
+
+function commitAddSoul() {
+  var inp = document.getElementById('newSoulInput');
+  var name = inp.value.trim();
+  if (!name) { renderSoulBar(); return; }
+  var s = { id: uid(), name: name, markers: [] };
+  souls.push(s);
+  activeSoulId = s.id;
+  renderSoulBar();
+  renderAll();
+}
+
+function switchSoul(id) {
+  activeSoulId = id;
+  renderSoulBar();
+  renderAll();
+}
+
+function removeSoul(id) {
+  if (souls.length <= 1) return;
+  if (!confirm('Remove this soul and all its markers?')) return;
+  souls = souls.filter(function(s) { return s.id !== id; });
+  if (activeSoulId === id) activeSoulId = souls[0].id;
+  renderSoulBar();
+  renderAll();
+}
+
+/* ── Marker CRUD ── */
+function addMarkerData(x, y, name, category, notes) {
+  var soul = getActiveSoul();
+  if (!soul) return null;
+  var m = {
+    id: uid(),
+    name: name,
+    x: x,
+    y: y,
+    category: category,
+    notes: notes || '',
+    color: CATEGORIES[category] || '#888'
+  };
+  soul.markers.push(m);
+  return m;
+}
+
+function updateMarkerData(id, name, category, notes) {
+  var soul = getActiveSoul();
+  if (!soul) return;
+  var m = soul.markers.find(function(mk) { return mk.id === id; });
+  if (!m) return;
+  m.name = name;
+  m.category = category;
+  m.notes = notes || '';
+  m.color = CATEGORIES[category] || '#888';
+}
+
+function deleteMarkerData(id) {
+  var soul = getActiveSoul();
+  if (!soul) return;
+  soul.markers = soul.markers.filter(function(mk) { return mk.id !== id; });
+}
+
+/* ── Render markers on map ── */
+function clearMapMarkers() {
+  Object.keys(markerLayers).forEach(function(k) {
+    map.removeLayer(markerLayers[k]);
+  });
+  markerLayers = {};
+}
+
+function addMarkerToMap(m) {
+  var isVisible = categoryVisibility[m.category] !== false;
+  var ll = gameToLatLng(m.x, m.y);
+  var cm = L.circleMarker(ll, {
+    radius: 7,
+    color: m.color,
+    fillColor: m.color,
+    fillOpacity: 0.7,
+    weight: 2,
+    opacity: 0.9
+  });
+  cm.bindTooltip(m.name, { direction: 'top', offset: [0, -8], className: '' });
+  cm.on('click', function() { openDetailPopup(m); });
+  if (isVisible) cm.addTo(map);
+  markerLayers[m.id] = cm;
+}
+
+function renderMapMarkers() {
+  clearMapMarkers();
+  var soul = getActiveSoul();
+  if (!soul) return;
+  soul.markers.forEach(function(m) {
+    addMarkerToMap(m);
+  });
+}
+
+/* ── Sidebar ── */
+function renderSidebar() {
+  var soul = getActiveSoul();
+  var list = document.getElementById('sidebarList');
+  if (!soul) { list.innerHTML = '<div style="padding:16px;color:var(--muted);font-size:.78rem">No soul selected</div>'; return; }
+
+  var search = (document.getElementById('searchInput').value || '').toLowerCase();
+  var grouped = {};
+  Object.keys(CATEGORIES).forEach(function(c) { grouped[c] = []; });
+
+  soul.markers.forEach(function(m) {
+    if (search && m.name.toLowerCase().indexOf(search) === -1 && m.notes.toLowerCase().indexOf(search) === -1) return;
+    if (!grouped[m.category]) grouped[m.category] = [];
+    grouped[m.category].push(m);
+  });
+
+  var html = '';
+  Object.keys(CATEGORIES).forEach(function(cat) {
+    var markers = grouped[cat];
+    if (!markers) return;
+    var isHidden = categoryVisibility[cat] === false;
+    var toggleCls = isHidden ? ' hidden' : '';
+    html += '<div class="cat-group">';
+    html += '<div class="cat-header" onclick="toggleCategory(\'' + cat + '\')">';
+    html += '<span class="cat-toggle' + toggleCls + '">&#9660;</span>';
+    html += '<span class="cat-dot" style="background:' + CATEGORIES[cat] + '"></span>';
+    html += cat;
+    html += '<span class="cat-count">' + markers.length + '</span>';
+    html += '</div>';
+    html += '<div class="cat-markers' + (isHidden ? ' hidden' : '') + '" id="catMarkers_' + cat.replace(/\s/g, '_') + '">';
+    markers.forEach(function(m) {
+      html += '<div class="marker-item" onclick="flyToMarker(\'' + m.id + '\')">';
+      html += '<span class="marker-dot" style="background:' + m.color + '"></span>';
+      html += m.name;
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
+}
+
+function toggleCategory(cat) {
+  categoryVisibility[cat] = categoryVisibility[cat] === false ? true : false;
+  // Show/hide markers on map
+  var soul = getActiveSoul();
+  if (soul) {
+    soul.markers.forEach(function(m) {
+      if (m.category === cat) {
+        var lyr = markerLayers[m.id];
+        if (!lyr) return;
+        if (categoryVisibility[cat] === false) {
+          map.removeLayer(lyr);
+        } else {
+          lyr.addTo(map);
+        }
+      }
+    });
+  }
+  renderSidebar();
+}
+
+function flyToMarker(id) {
+  var lyr = markerLayers[id];
+  if (lyr) {
+    map.flyTo(lyr.getLatLng(), 1, { duration: 0.5 });
+    var soul = getActiveSoul();
+    var m = soul.markers.find(function(mk) { return mk.id === id; });
+    if (m) {
+      // Ensure visible
+      if (categoryVisibility[m.category] === false) {
+        categoryVisibility[m.category] = true;
+        lyr.addTo(map);
+        renderSidebar();
+      }
+      setTimeout(function() { openDetailPopup(m); }, 600);
+    }
+  }
+}
+
+function toggleSidebar() {
+  sidebarCollapsed = !sidebarCollapsed;
+  document.getElementById('sidebar').classList.toggle('collapsed', sidebarCollapsed);
+  var btn = document.getElementById('sidebarToggle');
+  btn.style.left = sidebarCollapsed ? '0' : '260px';
+  setTimeout(function() { map.invalidateSize(); }, 250);
+}
+
+/* ── Popups ── */
+function openAddPopup(latlng) {
+  var g = latLngToGame(latlng);
+  var opts = '';
+  Object.keys(CATEGORIES).forEach(function(c) {
+    opts += '<option value="' + c + '">' + c + '</option>';
+  });
+  var html = '<div class="popup-form">' +
+    '<label>Name</label><input id="pf_name" placeholder="Location name...">' +
+    '<label>Category</label><select id="pf_cat">' + opts + '</select>' +
+    '<label>Notes</label><textarea id="pf_notes" placeholder="Optional notes..."></textarea>' +
+    '<div style="margin-top:6px;font-family:monospace;font-size:.7rem;color:var(--cyan)">X: ' + g.x.toFixed(1) + ' &nbsp; Y: ' + g.y.toFixed(1) + '</div>' +
+    '<div class="popup-btns">' +
+    '<button class="btn btn-sm btn-cyan" onclick="commitAddMarker(' + g.x + ',' + g.y + ')">Add Marker</button>' +
+    '<button class="btn btn-sm btn-outline" onclick="map.closePopup()">Cancel</button>' +
+    '</div></div>';
+  L.popup({ closeButton: true, maxWidth: 280 })
+    .setLatLng(latlng)
+    .setContent(html)
+    .openOn(map);
+}
+
+function commitAddMarker(x, y) {
+  var name = document.getElementById('pf_name').value.trim();
+  if (!name) { document.getElementById('pf_name').style.borderColor = 'var(--error)'; return; }
+  var cat = document.getElementById('pf_cat').value;
+  var notes = document.getElementById('pf_notes').value.trim();
+  var m = addMarkerData(x, y, name, cat, notes);
+  if (m) {
+    addMarkerToMap(m);
+    renderSidebar();
+  }
+  map.closePopup();
+}
+
+function openDetailPopup(m) {
+  var html = '<div class="popup-detail">' +
+    '<h3>' + escHtml(m.name) + '</h3>' +
+    '<div class="pd-cat" style="color:' + m.color + '">' + m.category + '</div>' +
+    (m.notes ? '<div class="pd-notes">' + escHtml(m.notes) + '</div>' : '') +
+    '<div class="pd-coords">X: ' + m.x.toFixed(1) + ' &nbsp; Y: ' + m.y.toFixed(1) + '</div>' +
+    '<div class="pd-actions">' +
+    '<button class="btn btn-sm btn-outline" onclick="openEditPopup(\'' + m.id + '\')">Edit</button>' +
+    '<button class="btn btn-sm btn-danger" onclick="deleteMarker(\'' + m.id + '\')">Delete</button>' +
+    '</div></div>';
+  var lyr = markerLayers[m.id];
+  if (lyr) {
+    L.popup({ closeButton: true, maxWidth: 280 })
+      .setLatLng(lyr.getLatLng())
+      .setContent(html)
+      .openOn(map);
+  }
+}
+
+function openEditPopup(id) {
+  var soul = getActiveSoul();
+  var m = soul.markers.find(function(mk) { return mk.id === id; });
+  if (!m) return;
+  var opts = '';
+  Object.keys(CATEGORIES).forEach(function(c) {
+    opts += '<option value="' + c + '"' + (c === m.category ? ' selected' : '') + '>' + c + '</option>';
+  });
+  var html = '<div class="popup-form">' +
+    '<label>Name</label><input id="pf_name" value="' + escAttr(m.name) + '">' +
+    '<label>Category</label><select id="pf_cat">' + opts + '</select>' +
+    '<label>Notes</label><textarea id="pf_notes">' + escHtml(m.notes) + '</textarea>' +
+    '<div class="popup-btns">' +
+    '<button class="btn btn-sm" onclick="commitEditMarker(\'' + id + '\')">Save</button>' +
+    '<button class="btn btn-sm btn-outline" onclick="map.closePopup()">Cancel</button>' +
+    '</div></div>';
+  var lyr = markerLayers[id];
+  if (lyr) {
+    L.popup({ closeButton: true, maxWidth: 280 })
+      .setLatLng(lyr.getLatLng())
+      .setContent(html)
+      .openOn(map);
+  }
+}
+
+function commitEditMarker(id) {
+  var name = document.getElementById('pf_name').value.trim();
+  if (!name) { document.getElementById('pf_name').style.borderColor = 'var(--error)'; return; }
+  var cat = document.getElementById('pf_cat').value;
+  var notes = document.getElementById('pf_notes').value.trim();
+  updateMarkerData(id, name, cat, notes);
+  map.closePopup();
+  renderAll();
+}
+
+function deleteMarker(id) {
+  if (!confirm('Delete this marker?')) return;
+  if (markerLayers[id]) { map.removeLayer(markerLayers[id]); delete markerLayers[id]; }
+  deleteMarkerData(id);
+  map.closePopup();
+  renderSidebar();
+}
+
+function addMarkerAtCtx() {
+  if (ctxLatLng) openAddPopup(ctxLatLng);
+}
+
+/* ── Add mode FAB ── */
+document.getElementById('addFab').addEventListener('click', function(e) {
+  e.stopPropagation();
+  addMode = !addMode;
+  this.style.background = addMode ? 'var(--cyan)' : '';
+  this.style.color = addMode ? '#000' : '';
+});
+
+/* ── Render all ── */
+function renderAll() {
+  renderMapMarkers();
+  renderSidebar();
+}
+
+/* ── File I/O (File System Access API) ── */
+async function saveFile() {
+  var data = { souls: souls };
+  var json = JSON.stringify(data, null, 2);
+  try {
+    var handle = await window.showSaveFilePicker({
+      suggestedName: 'fivem-map-markers.json',
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+    });
+    var writable = await handle.createWritable();
+    await writable.write(json);
+    await writable.close();
+  } catch (e) {
+    if (e.name !== 'AbortError') alert('Save failed: ' + e.message);
+  }
+}
+
+async function loadFile() {
+  try {
+    var handles = await window.showOpenFilePicker({
+      types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+    });
+    var file = await handles[0].getFile();
+    var text = await file.text();
+    var data = JSON.parse(text);
+    if (data.souls && Array.isArray(data.souls)) {
+      souls = data.souls;
+      activeSoulId = souls.length > 0 ? souls[0].id : null;
+      renderSoulBar();
+      renderAll();
+    }
+  } catch (e) {
+    if (e.name !== 'AbortError') alert('Load failed: ' + e.message);
+  }
+}
+
+/* ── Helpers ── */
+function escHtml(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function escAttr(s) { return s.replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+/* ── Search ── */
+document.getElementById('searchInput').addEventListener('input', function() { renderSidebar(); });
+
+/* ── Init ── */
+initMap();
+// Default soul
+souls.push({ id: uid(), name: 'Default', markers: [] });
+activeSoulId = souls[0].id;
+renderSoulBar();
+renderSidebar();
+document.getElementById('sidebarToggle').style.left = '260px';
+</script>
+</body>
+</html>

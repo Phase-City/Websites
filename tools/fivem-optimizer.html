@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Optimizer - Phase City</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573;--warn:#ffa502}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:20px}
+.container{max-width:920px;margin:0 auto}
+h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin-bottom:4px;letter-spacing:1px}
+.subtitle{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:24px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;user-select:none;transition:background .15s}
+.card-header:hover{background:rgba(123,104,238,.05)}
+.card-header h2{font-size:.9rem;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:8px}
+.card-header .arrow{color:var(--muted);font-size:.7rem;transition:transform .2s}
+.card.collapsed .card-body{display:none}
+.card.collapsed .arrow{transform:rotate(-90deg)}
+.card-body{padding:0 16px 16px}
+.btn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:600;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-sm{padding:4px 10px;font-size:.75rem;border-radius:4px}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Wizard */
+.wizard{background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:20px;margin-bottom:20px}
+.wizard h2{font-size:1rem;color:var(--accent);margin-bottom:16px;text-align:center}
+.wiz-step{margin-bottom:18px}
+.wiz-step:last-child{margin-bottom:0}
+.wiz-label{font-size:.82rem;font-weight:600;margin-bottom:8px;color:var(--text)}
+.wiz-options{display:flex;flex-wrap:wrap;gap:6px}
+.wiz-opt{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--muted);cursor:pointer;font-size:.8rem;transition:all .12s}
+.wiz-opt:hover{border-color:var(--accent);color:var(--text)}
+.wiz-opt.selected{background:var(--accent);color:#fff;border-color:var(--accent)}
+.wiz-actions{display:flex;gap:8px;justify-content:center;margin-top:20px}
+
+/* Guide */
+#guide{display:none}
+.progress-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px}
+.progress-fill{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill-inner{height:100%;background:var(--accent);border-radius:3px;transition:width .3s}
+.progress-text{font-size:.75rem;color:var(--muted);min-width:80px;text-align:right}
+.badge-rec{background:var(--warn);color:#000;font-size:.65rem;padding:2px 7px;border-radius:4px;font-weight:700;letter-spacing:.3px}
+.badge-impact{font-size:.6rem;padding:2px 6px;border-radius:3px;font-weight:600;letter-spacing:.3px}
+.impact-high{background:var(--error);color:#fff}
+.impact-med{background:var(--warn);color:#000}
+.impact-low{background:var(--border);color:var(--muted)}
+
+/* Settings list */
+.setting{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(30,30,46,.5)}
+.setting:last-child{border-bottom:none}
+.setting-check{margin-top:2px;accent-color:var(--accent);width:16px;height:16px;cursor:pointer;flex-shrink:0}
+.setting-info{flex:1}
+.setting-name{font-size:.85rem;font-weight:600;margin-bottom:2px}
+.setting-value{font-family:'Courier New',monospace;font-size:.8rem;color:var(--cyan);margin-bottom:2px}
+.setting-why{font-size:.72rem;color:var(--muted);line-height:1.4}
+.setting-cmd{display:inline-flex;align-items:center;gap:6px;margin-top:4px}
+.cmd-text{font-family:'Courier New',monospace;font-size:.75rem;background:var(--bg);border:1px solid var(--border);padding:2px 8px;border-radius:3px;color:var(--cyan)}
+.copy-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.68rem;padding:2px 6px;border-radius:2px;transition:color .12s}
+.copy-btn:hover{color:var(--cyan)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--success);color:#000;padding:8px 20px;border-radius:6px;font-size:.82rem;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:200}
+.toast.show{opacity:1}
+
+@media(max-width:600px){
+  .wiz-options{flex-direction:column}
+  .wiz-opt{text-align:center}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FIVEM OPTIMIZER</h1>
+  <p class="subtitle">Phase City - Fix your settings and boost performance</p>
+
+  <!-- Wizard -->
+  <div class="wizard" id="wizard">
+    <h2>Quick Setup</h2>
+
+    <div class="wiz-step">
+      <div class="wiz-label">1. What GPU do you have?</div>
+      <div class="wiz-options" data-q="gpu">
+        <div class="wiz-opt" data-v="nvidia" onclick="wizSelect(this)">NVIDIA</div>
+        <div class="wiz-opt" data-v="amd" onclick="wizSelect(this)">AMD</div>
+        <div class="wiz-opt" data-v="intel" onclick="wizSelect(this)">Intel</div>
+        <div class="wiz-opt" data-v="unsure" onclick="wizSelect(this)">Not Sure</div>
+      </div>
+    </div>
+
+    <div class="wiz-step">
+      <div class="wiz-label">2. What issues are you having? (select all that apply)</div>
+      <div class="wiz-options" data-q="issues" data-multi="true">
+        <div class="wiz-opt" data-v="lowfps" onclick="wizToggle(this)">Low FPS</div>
+        <div class="wiz-opt" data-v="stutter" onclick="wizToggle(this)">Stuttering / Freezing</div>
+        <div class="wiz-opt" data-v="textures" onclick="wizToggle(this)">Texture Pop-in</div>
+        <div class="wiz-opt" data-v="crashes" onclick="wizToggle(this)">Crashes</div>
+        <div class="wiz-opt" data-v="loading" onclick="wizToggle(this)">Long Load Times</div>
+        <div class="wiz-opt" data-v="tearing" onclick="wizToggle(this)">Screen Tearing</div>
+        <div class="wiz-opt" data-v="blurry" onclick="wizToggle(this)">Blurry Textures</div>
+      </div>
+    </div>
+
+    <div class="wiz-step">
+      <div class="wiz-label">3. How much RAM do you have?</div>
+      <div class="wiz-options" data-q="ram">
+        <div class="wiz-opt" data-v="8" onclick="wizSelect(this)">8 GB</div>
+        <div class="wiz-opt" data-v="16" onclick="wizSelect(this)">16 GB</div>
+        <div class="wiz-opt" data-v="32" onclick="wizSelect(this)">32 GB+</div>
+        <div class="wiz-opt" data-v="unsure" onclick="wizSelect(this)">Not Sure</div>
+      </div>
+    </div>
+
+    <div class="wiz-step">
+      <div class="wiz-label">4. Where is FiveM installed?</div>
+      <div class="wiz-options" data-q="install">
+        <div class="wiz-opt" data-v="default" onclick="wizSelect(this)">Default (AppData)</div>
+        <div class="wiz-opt" data-v="custom" onclick="wizSelect(this)">Custom Location</div>
+        <div class="wiz-opt" data-v="unsure" onclick="wizSelect(this)">Not Sure</div>
+      </div>
+    </div>
+
+    <div class="wiz-step">
+      <div class="wiz-label">5. Have you tried optimizing before?</div>
+      <div class="wiz-options" data-q="experience">
+        <div class="wiz-opt" data-v="first" onclick="wizSelect(this)">First Time</div>
+        <div class="wiz-opt" data-v="changed" onclick="wizSelect(this)">Changed Some Settings</div>
+        <div class="wiz-opt" data-v="fresh" onclick="wizSelect(this)">Fresh Install</div>
+      </div>
+    </div>
+
+    <div class="wiz-actions">
+      <button class="btn" onclick="generateGuide()">Generate My Optimization Guide</button>
+    </div>
+  </div>
+
+  <!-- Guide -->
+  <div id="guide">
+    <div class="progress-bar">
+      <span style="font-size:.8rem;font-weight:600;color:var(--accent)">Progress</span>
+      <div class="progress-fill"><div class="progress-fill-inner" id="progressInner" style="width:0%"></div></div>
+      <span class="progress-text" id="progressText">0 / 0</span>
+      <button class="btn-sm btn-outline" onclick="resetWizard()">Retake Quiz</button>
+    </div>
+
+    <div id="guideCards"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// --- Wizard state ---
+const wizAnswers = { gpu: null, issues: [], ram: null, install: null, experience: null };
+
+function wizSelect(el) {
+  const group = el.parentElement;
+  group.querySelectorAll('.wiz-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  const q = group.dataset.q;
+  wizAnswers[q] = el.dataset.v;
+}
+
+function wizToggle(el) {
+  el.classList.toggle('selected');
+  const group = el.parentElement;
+  const q = group.dataset.q;
+  wizAnswers[q] = [...group.querySelectorAll('.wiz-opt.selected')].map(o => o.dataset.v);
+}
+
+// --- Guide data ---
+const SECTIONS = [
+  {
+    id: 'install',
+    title: 'FiveM Install Health',
+    relevance: a => true, // always relevant
+    recWhen: a => a.issues.some(i => ['crashes','loading','stutter'].includes(i)) || a.experience === 'first',
+    settings: [
+      { name: 'Clear FiveM Cache', value: 'Delete contents of cache/ folder (keep the game/ subfolder)', why: 'Corrupted cache is the #1 cause of crashes and texture issues. Safe to delete - it rebuilds automatically.', tags: ['crashes','stutter','textures','loading'] },
+      { name: 'Install Location', value: 'Avoid OneDrive, Google Drive, or cloud-synced folders', why: 'Cloud sync constantly locks files and causes crashes or infinite loading. Use a local drive (C:\\ or D:\\).', tags: ['crashes','loading'] },
+      { name: 'Antivirus Exclusion', value: 'Add FiveM folder to your antivirus exclusions', why: 'Real-time scanning slows file access and can cause stuttering. Windows Defender: Settings > Virus Protection > Exclusions.', tags: ['stutter','loading','lowfps'] },
+      { name: 'Run as Administrator', value: 'Right-click FiveM.exe > Properties > Compatibility > Run as admin', why: 'Prevents permission issues that cause random crashes.', tags: ['crashes'] },
+      { name: 'Disable Game Bar & Game DVR', value: 'Windows Settings > Gaming > Game Bar > Off, Captures > Off', why: 'Game Bar runs in the background and records clips, eating FPS and causing stutters.', tags: ['lowfps','stutter'] },
+      { name: 'Power Plan', value: 'Control Panel > Power Options > High Performance', why: 'Balanced mode throttles your CPU. High Performance keeps it at full speed.', tags: ['lowfps','stutter'] },
+    ]
+  },
+  {
+    id: 'nvidia',
+    title: 'NVIDIA Control Panel Settings',
+    gpu: 'nvidia',
+    relevance: a => a.gpu === 'nvidia' || a.gpu === 'unsure',
+    recWhen: a => a.gpu === 'nvidia',
+    settings: [
+      { name: 'Power Management Mode', value: 'Prefer Maximum Performance', why: 'Prevents GPU from downclocking during gameplay.', impact: 'high', tags: ['lowfps','stutter'] },
+      { name: 'Texture Filtering Quality', value: 'High Performance', why: 'Slightly reduces texture quality for significant FPS gains.', impact: 'high', tags: ['lowfps'] },
+      { name: 'Threaded Optimization', value: 'On', why: 'Allows the driver to use multiple CPU threads. Always leave on.', impact: 'med', tags: ['lowfps'] },
+      { name: 'Low Latency Mode', value: 'On', why: 'Reduces input lag by limiting pre-rendered frames.', impact: 'med', tags: ['stutter'] },
+      { name: 'Shader Cache Size', value: 'Unlimited', why: 'Larger cache means fewer stutters from shader compilation.', impact: 'high', tags: ['stutter'] },
+      { name: 'Triple Buffering', value: 'Off', why: 'Only useful with VSync. Off reduces latency.', impact: 'low', tags: ['tearing'] },
+      { name: 'Vertical Sync', value: 'Off', why: 'Use in-game VSync or leave off. Driver VSync adds latency.', impact: 'med', tags: ['tearing','lowfps'] },
+      { name: 'Image Sharpening', value: 'Off', why: 'Use in-game sharpening if needed. Driver sharpening can cause artifacts.', impact: 'low', tags: ['blurry'] },
+      { name: 'Anisotropic Filtering', value: 'Application Controlled', why: 'Let the game handle it for best compatibility.', impact: 'low', tags: ['blurry','textures'] },
+      { name: 'Max Pre-rendered Frames', value: '1', why: 'Reduces input lag. Higher values add delay between input and display.', impact: 'med', tags: ['stutter'] },
+      { name: 'Add FiveM Profile', value: 'Program Settings > Add > browse to FiveM.exe', why: 'Ensures these settings apply specifically to FiveM.', impact: 'high', tags: [] },
+    ]
+  },
+  {
+    id: 'amd',
+    title: 'AMD Radeon Software Settings',
+    gpu: 'amd',
+    relevance: a => a.gpu === 'amd' || a.gpu === 'unsure',
+    recWhen: a => a.gpu === 'amd',
+    settings: [
+      { name: 'Radeon Anti-Lag', value: 'Enabled', why: 'Reduces input lag by synchronizing CPU and GPU workloads.', impact: 'high', tags: ['stutter'] },
+      { name: 'Radeon Chill', value: 'Disabled', why: 'Chill dynamically lowers FPS to save power. You want max frames.', impact: 'high', tags: ['lowfps'] },
+      { name: 'Radeon Boost', value: 'Disabled', why: 'Lowers resolution during movement. Causes blurry visuals.', impact: 'med', tags: ['blurry','lowfps'] },
+      { name: 'Radeon Image Sharpening', value: 'Disabled', why: 'Can cause visual artifacts in FiveM. Use in-game settings instead.', impact: 'low', tags: ['blurry'] },
+      { name: 'Wait for Vertical Refresh', value: 'Off, unless application specifies', why: 'Reduces input lag. Only enable if you have bad screen tearing.', impact: 'med', tags: ['tearing','lowfps'] },
+      { name: 'Texture Filtering Quality', value: 'Performance', why: 'Reduces texture filtering overhead for higher FPS.', impact: 'high', tags: ['lowfps'] },
+      { name: 'Tessellation Mode', value: 'Override > Off', why: 'FiveM doesn\'t use tessellation much. Turning it off saves GPU resources.', impact: 'med', tags: ['lowfps'] },
+      { name: 'Surface Format Optimization', value: 'Enabled', why: 'Allows the driver to optimize surface formats for better performance.', impact: 'low', tags: ['lowfps'] },
+      { name: 'Shader Cache', value: 'Click Reset, then leave Enabled', why: 'Clears old compiled shaders. Rebuilding fixes stutter from corrupted cache.', impact: 'high', tags: ['stutter'] },
+      { name: 'Add FiveM Game Profile', value: 'Gaming tab > Add Game > browse to FiveM.exe', why: 'Ensures these settings apply to FiveM specifically.', impact: 'high', tags: [] },
+    ]
+  },
+  {
+    id: 'ingame',
+    title: 'FiveM In-Game Settings',
+    relevance: a => true,
+    recWhen: a => a.issues.some(i => ['lowfps','stutter','blurry','tearing','textures'].includes(i)),
+    settings: [
+      { name: 'DirectX Version', value: 'DirectX 11', why: 'DX11 is the most stable and optimized for FiveM. Avoid beta DX12 unless you have a high-end GPU.', impact: 'high', tags: ['lowfps','crashes','stutter'] },
+      { name: 'Shader Quality', value: 'Normal', why: 'High/Very High shader quality halves FPS with minimal visual difference.', impact: 'high', tags: ['lowfps'] },
+      { name: 'Shadow Quality', value: 'Normal', why: 'Shadows are one of the most expensive settings. Normal looks fine.', impact: 'high', tags: ['lowfps'] },
+      { name: 'Grass Quality', value: 'Normal or lower', why: 'High grass quality renders thousands of extra objects. Major FPS killer.', impact: 'high', tags: ['lowfps'] },
+      { name: 'Post FX', value: 'Normal', why: 'Higher Post FX adds motion blur, bloom, and other expensive effects.', impact: 'high', tags: ['lowfps'] },
+      { name: 'Reflection Quality', value: 'Normal', why: 'High reflections render the scene twice. Massive FPS impact.', impact: 'high', tags: ['lowfps'] },
+      { name: 'Particle Quality', value: 'Normal', why: 'Affects explosions, smoke, fire. High is costly in busy scenes.', impact: 'med', tags: ['lowfps','stutter'] },
+      { name: 'Distance Scaling', value: '50-75%', why: 'Huge FPS impact. Controls how far detailed objects render. Lower = more FPS.', impact: 'high', tags: ['lowfps'] },
+      { name: 'Texture Quality', value: a => (a.ram === '8' ? 'Normal' : 'Normal or High'), why: a => a.ram === '8' ? 'With 8GB RAM, keep textures at Normal to avoid memory pressure.' : 'High is fine with 16GB+ RAM. Depends on your VRAM (4GB+ recommended for High).', impact: 'med', tags: ['blurry','textures'] },
+      { name: 'MSAA', value: 'Off', why: 'Very expensive anti-aliasing. Use FXAA instead for nearly free smoothing.', impact: 'high', tags: ['lowfps'] },
+      { name: 'FXAA', value: 'On', why: 'Fast anti-aliasing with almost no performance cost. Slight blur trade-off.', impact: 'low', tags: ['blurry'] },
+      { name: 'VSync', value: 'Off', why: 'Adds input lag. Turn off unless screen tearing is unbearable.', impact: 'med', tags: ['tearing','lowfps'] },
+      { name: 'Anisotropic Filtering', value: 'x8', why: 'Makes textures at angles look sharper. x8 is a great balance - minimal FPS cost.', impact: 'low', tags: ['blurry','textures'] },
+      { name: 'Water Quality', value: 'Normal', why: 'High water quality reflects the environment. Costly near oceans/rivers.', impact: 'med', tags: ['lowfps'] },
+      { name: 'Extended Texture Budget', value: a => (a.ram === '8' ? 'Off' : 'On'), why: a => a.ram === '8' ? 'With 8GB RAM, keep this off to avoid running out of memory.' : 'Allows higher-res textures if you have 6GB+ VRAM.', impact: 'med', tags: ['textures','blurry'] },
+      { name: 'Extended Distance Scaling', value: 'Off or Low', why: 'Extends object draw distance beyond normal. High values crush FPS.', impact: 'med', tags: ['lowfps'] },
+    ]
+  },
+  {
+    id: 'console',
+    title: 'F8 Console Tweaks',
+    relevance: a => true,
+    recWhen: a => a.issues.some(i => ['lowfps','stutter'].includes(i)),
+    settings: [
+      { name: 'Disable Ped Prop Creation', value: 'cl_disablePedPropCreation true', why: 'Stops rendering hats, glasses, and accessories on distant NPCs. Good FPS boost in cities.', impact: 'high', tags: ['lowfps'], cmd: 'cl_disablePedPropCreation true' },
+      { name: 'Streaming Data', value: 'strm_data_enabled 1', why: 'Enables optimized asset streaming. Should always be on.', impact: 'med', tags: ['textures','loading'], cmd: 'strm_data_enabled 1' },
+      { name: 'Windscreen Effect', value: 'game_enableFlyThroughWindscreen false', why: 'Disables the fly-through-windscreen effect on crashes. QOL setting.', impact: 'low', tags: [], cmd: 'game_enableFlyThroughWindscreen false' },
+    ]
+  },
+  {
+    id: 'windows',
+    title: 'Windows Optimizations',
+    relevance: a => true,
+    recWhen: a => a.issues.some(i => ['stutter','lowfps','crashes'].includes(i)),
+    settings: [
+      { name: 'Hardware-Accelerated GPU Scheduling', value: a => a.issues.includes('stutter') ? 'Try disabling it' : 'Leave default', why: 'This Windows feature can cause stuttering on some systems. Settings > Display > Graphics > Change default graphics settings.', impact: 'med', tags: ['stutter'] },
+      { name: 'Fullscreen Optimizations', value: 'Disable for FiveM.exe', why: 'Right-click FiveM.exe > Properties > Compatibility > Disable fullscreen optimizations. Prevents Windows from interfering.', impact: 'med', tags: ['stutter','lowfps'] },
+      { name: 'Game Mode', value: a => a.issues.includes('stutter') ? 'Disable' : 'Enable', why: 'Game Mode helps some PCs but causes stuttering on others. Try toggling it. Settings > Gaming > Game Mode.', impact: 'med', tags: ['stutter','lowfps'] },
+      { name: 'Update GPU Drivers', value: 'Install latest from manufacturer website', why: 'Outdated drivers cause crashes and poor performance. Always use the official site, not Windows Update.', impact: 'high', tags: ['crashes','lowfps'] },
+      { name: 'Virtual Memory (Page File)', value: a => a.ram === '8' ? 'Set to 16384 MB (16 GB)' : 'Set to 8192 MB (8 GB) or System Managed', why: a => a.ram === '8' ? 'With 8GB RAM, a larger page file prevents out-of-memory crashes. System > Advanced > Performance > Virtual Memory.' : 'Ensures Windows has swap space for memory-heavy sessions.', impact: 'med', tags: ['crashes','loading'] },
+      { name: 'Background Apps', value: 'Close Discord overlay, browser tabs, OBS when not recording', why: 'Each app uses GPU and RAM. Discord overlay alone can cost 5-10 FPS.', impact: 'med', tags: ['lowfps'] },
+    ]
+  },
+];
+
+// --- Generate guide ---
+
+function generateGuide() {
+  // Validate at minimum GPU is selected
+  if (!wizAnswers.gpu) {
+    showToast('Please select your GPU type', true);
+    return;
+  }
+  if (!wizAnswers.issues.length) wizAnswers.issues = ['lowfps']; // default
+
+  document.getElementById('wizard').style.display = 'none';
+  document.getElementById('guide').style.display = 'block';
+
+  renderGuide();
+}
+
+function resetWizard() {
+  document.getElementById('wizard').style.display = 'block';
+  document.getElementById('guide').style.display = 'none';
+}
+
+function renderGuide() {
+  const container = document.getElementById('guideCards');
+  container.innerHTML = '';
+
+  const issues = wizAnswers.issues;
+  let totalSettings = 0;
+
+  for (const section of SECTIONS) {
+    if (!section.relevance(wizAnswers)) continue;
+
+    const isRec = section.recWhen(wizAnswers);
+    const collapsed = !isRec;
+
+    // Build card with DOM methods to avoid file:// security issues
+    const card = document.createElement('div');
+    card.className = 'card' + (collapsed ? ' collapsed' : '');
+
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    header.addEventListener('click', function(){ this.parentElement.classList.toggle('collapsed'); });
+
+    const h2 = document.createElement('h2');
+    h2.textContent = section.title + ' ';
+    if (isRec) {
+      const badge = document.createElement('span');
+      badge.className = 'badge-rec';
+      badge.textContent = 'RECOMMENDED FOR YOU';
+      h2.appendChild(badge);
+    }
+    header.appendChild(h2);
+
+    const arrow = document.createElement('span');
+    arrow.className = 'arrow';
+    arrow.innerHTML = '&#9660;';
+    header.appendChild(arrow);
+    card.appendChild(header);
+
+    const body = document.createElement('div');
+    body.className = 'card-body';
+
+    for (let i = 0; i < section.settings.length; i++) {
+      const s = section.settings[i];
+      const value = typeof s.value === 'function' ? s.value(wizAnswers) : s.value;
+      const why = typeof s.why === 'function' ? s.why(wizAnswers) : s.why;
+      totalSettings++;
+
+      const row = document.createElement('div');
+      row.className = 'setting';
+
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.className = 'setting-check';
+      cb.addEventListener('change', updateProgress);
+      row.appendChild(cb);
+
+      const info = document.createElement('div');
+      info.className = 'setting-info';
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'setting-name';
+      nameEl.textContent = s.name + ' ';
+      if (s.impact) {
+        const ib = document.createElement('span');
+        ib.className = 'badge-impact impact-' + s.impact;
+        ib.textContent = s.impact.toUpperCase();
+        nameEl.appendChild(ib);
+      }
+      info.appendChild(nameEl);
+
+      const valEl = document.createElement('div');
+      valEl.className = 'setting-value';
+      valEl.textContent = value;
+      info.appendChild(valEl);
+
+      const whyEl = document.createElement('div');
+      whyEl.className = 'setting-why';
+      whyEl.textContent = why;
+      info.appendChild(whyEl);
+
+      if (s.cmd) {
+        const cmdDiv = document.createElement('div');
+        cmdDiv.className = 'setting-cmd';
+        const cmdSpan = document.createElement('span');
+        cmdSpan.className = 'cmd-text';
+        cmdSpan.textContent = s.cmd;
+        cmdDiv.appendChild(cmdSpan);
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.textContent = 'copy';
+        copyBtn.addEventListener('click', (function(cmd) {
+          return function(){ copyCmd(cmd); };
+        })(s.cmd));
+        cmdDiv.appendChild(copyBtn);
+        info.appendChild(cmdDiv);
+      }
+
+      row.appendChild(info);
+      body.appendChild(row);
+    }
+
+    card.appendChild(body);
+    container.appendChild(card);
+  }
+
+  window._totalSettings = totalSettings;
+  updateProgress();
+}
+
+function updateProgress() {
+  const checked = document.querySelectorAll('.setting-check:checked').length;
+  const total = window._totalSettings || 1;
+  const pct = Math.round((checked / total) * 100);
+  document.getElementById('progressInner').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${checked} / ${total}`;
+}
+
+// --- Util ---
+
+function copyCmd(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Copied: ' + text);
+  } catch(e) {
+    showToast('Copy failed - select and Ctrl+C manually', true);
+  }
+}
+
+function showToast(msg, isError) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = isError ? 'var(--error)' : 'var(--success)';
+  el.style.color = isError ? '#fff' : '#000';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1800);
+}
+
+</script>
+</body>
+</html>
