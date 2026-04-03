@@ -1,0 +1,19 @@
+# Phase City
+
+A community-governed city built from the ground up in GTA. Built different.
+
+## Pages
+
+- **Home** (https://www.phasecity.net/) — Rules and community guidelines. Your city. Your rules.
+- **Store** (https://www.phasecity.net/store.html) — Support Phase City with exclusive VIP packages, 1 of 1 vehicles, custom clothing, and more.
+- **Citizen Portal** (https://www.phasecity.net/citizen-portal.html) — Report bugs, suggest features, or submit crash reports.
+- **Tools** (https://www.phasecity.net/tools/) — FiveM tools including server scanner, radio frequencies, keybinds, optimizer, ped builder, and more.
+
+## Team
+
+Claude Crichlow, Mike, Ray Monday, Zach Isfine
+
+## Contact
+
+- Discord: http://discord.gg/NSZHK6spre
+- Website: https://www.phasecity.net
