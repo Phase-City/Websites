@@ -1,0 +1,21 @@
+{
+  "name": "Phase City",
+  "short_name": "Phase City",
+  "description": "Your city. Your rules. Phase City is a community-governed City built from the ground up.",
+  "start_url": "https://www.phasecity.net/",
+  "display": "standalone",
+  "background_color": "#080c14",
+  "theme_color": "#00d4ff",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.svg",
+      "sizes": "180x180",
+      "type": "image/svg+xml"
+    }
+  ]
+}
