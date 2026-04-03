@@ -1,134 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.svg">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Phase City // Citizen Portal</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--v:#7B68EE;--vlight:#9d8df7;--c:#5CE1E6;--bg:#07070f;--bg2:#0d0d1e;--border:rgba(123,104,238,0.28);--text:#e8e8ff;--muted:#9d8df7;--red:#ff4d6d;--orange:#ff9f43;--green:#10b981}
-body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:16px}
-::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:#0a0a12}::-webkit-scrollbar-thumb{background:var(--v);border-radius:3px}
-::selection{background:rgba(123,104,238,0.35);color:#fff}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(123,104,238,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(123,104,238,0.04) 1px,transparent 1px);background-size:44px 44px}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 15% 0%,rgba(123,104,238,0.09) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(92,225,230,0.06) 0%,transparent 55%)}
-.container{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:40px 24px}
-/* HEADER */
-.header{text-align:center;margin-bottom:50px}
-.logo{width:120px;height:120px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center}
-.logo img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 30px rgba(123,104,238,0.5))}
-.logo-fallback{font-size:36px;font-weight:900;color:#fff}
-.title{font-size:36px;font-weight:900;letter-spacing:5px;text-transform:uppercase;background:linear-gradient(90deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px;text-shadow:0 0 40px rgba(123,104,238,0.5)}
-.subtitle{font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--c);letter-spacing:5px;text-shadow:0 0 20px rgba(92,225,230,0.4)}
-.tagline{margin-top:20px;font-size:16px;color:var(--vlight);line-height:1.7}
-/* TABS */
-.tabs{display:flex;gap:10px;margin-bottom:30px;justify-content:center;flex-wrap:wrap}
-.tab{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:2px;padding:14px 26px;border-radius:10px;border:1px solid var(--border);cursor:pointer;background:transparent;color:var(--vlight);transition:all .2s;text-transform:uppercase;font-weight:600}
-.tab:hover{border-color:var(--v);color:#fff;background:rgba(123,104,238,0.1)}
-.tab.on{border-color:var(--c);color:var(--c);background:rgba(92,225,230,0.12);box-shadow:0 0 25px rgba(92,225,230,0.2)}
-.tab-icon{margin-right:8px;font-size:16px}
-/* FORM CARD */
-.form-card{background:rgba(12,12,26,0.95);border:1px solid var(--border);border-radius:16px;padding:36px;box-shadow:0 0 60px rgba(0,0,0,0.5),inset 0 0 60px rgba(123,104,238,0.02)}
-.form-title{font-size:22px;font-weight:800;letter-spacing:3px;margin-bottom:10px;display:flex;align-items:center;gap:12px;color:#fff}
-.form-title .icon{font-size:26px}
-.form-desc{font-size:15px;color:var(--vlight);margin-bottom:30px;line-height:1.7}
-/* FIELDS */
-.field{margin-bottom:22px}
-.label{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--c);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:10px;font-weight:600}
-.label .req{color:var(--red);margin-left:2px}
-.inp,.ta,.sel{width:100%;font-family:'Exo 2',sans-serif;font-size:16px;background:rgba(123,104,238,0.06);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:16px 20px;outline:none;transition:all .2s;color-scheme:dark}
-.inp:focus,.ta:focus,.sel:focus{border-color:var(--v);box-shadow:0 0 0 4px rgba(123,104,238,0.15)}
-.inp::placeholder,.ta::placeholder{color:var(--vlight);opacity:0.5}
-.ta{resize:vertical;min-height:130px;line-height:1.7}
-.sel{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M0 0l6 7 6-7z' fill='%237B68EE'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;padding-right:44px}
-.sel option{background:#0d0d1e;color:var(--text)}
-.hint{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--vlight);margin-top:8px;letter-spacing:1px;opacity:0.7}
-/* BUTTONS */
-.btn{font-family:'Exo 2',sans-serif;font-size:15px;font-weight:800;letter-spacing:3px;text-transform:uppercase;padding:18px 32px;border-radius:12px;border:none;cursor:pointer;transition:all .2s;width:100%}
-.btn-primary{background:linear-gradient(135deg,var(--v),#5a4fd4);color:#fff;box-shadow:0 0 30px rgba(123,104,238,0.5)}
-.btn-primary:hover{box-shadow:0 0 50px rgba(123,104,238,0.7);transform:translateY(-3px)}
-.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
-/* SUCCESS */
-.success-card{text-align:center;padding:60px 36px}
-.success-icon{font-size:72px;margin-bottom:24px}
-.success-title{font-size:26px;font-weight:800;color:var(--c);margin-bottom:14px;text-shadow:0 0 30px rgba(92,225,230,0.4)}
-.success-msg{font-size:16px;color:var(--vlight);line-height:1.8;margin-bottom:30px}
-.btn-ghost{background:transparent;color:var(--vlight);border:1px solid var(--border);font-size:13px;padding:12px 24px;font-weight:600}
-.btn-ghost:hover{border-color:var(--v);color:#fff;background:rgba(123,104,238,0.1)}
-/* FOOTER */
-.footer{text-align:center;margin-top:50px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--vlight);letter-spacing:2px;opacity:0.6}
-.footer a{color:var(--c);text-decoration:none}
-.footer a:hover{color:#fff}
-/* BUG TYPE BADGES */
-.type-badges{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
-.type-badge{font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px 16px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s;color:var(--vlight);background:transparent;font-weight:600}
-.type-badge:hover{border-color:var(--v);color:#fff;background:rgba(123,104,238,0.1)}
-.type-badge.on{border-color:var(--c);color:var(--c);background:rgba(92,225,230,0.12);box-shadow:0 0 15px rgba(92,225,230,0.2)}
-/* SEVERITY */
-.severity-row{display:flex;gap:10px}
-.severity-btn{flex:1;font-family:'Share Tech Mono',monospace;font-size:13px;padding:14px;border-radius:8px;border:1px solid var(--border);cursor:pointer;transition:all .15s;text-align:center;color:var(--vlight);background:transparent;font-weight:700}
-.severity-btn:hover{border-color:var(--v);color:#fff}
-.severity-btn.on.low{border-color:var(--v);color:var(--v);background:rgba(123,104,238,0.15);box-shadow:0 0 15px rgba(123,104,238,0.3)}
-.severity-btn.on.medium{border-color:var(--orange);color:var(--orange);background:rgba(255,159,67,0.15);box-shadow:0 0 15px rgba(255,159,67,0.3)}
-.severity-btn.on.high{border-color:var(--red);color:var(--red);background:rgba(255,77,109,0.15);box-shadow:0 0 15px rgba(255,77,109,0.3)}
-/* LOADING */
-.loading{display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-right:10px;vertical-align:middle}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* FILE DROP */
-.file-drop{border:2px dashed var(--vlight);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(123,104,238,0.03)}
-.file-drop:hover,.file-drop.dragover{border-color:var(--c);background:rgba(123,104,238,0.08);box-shadow:0 0 20px rgba(123,104,238,0.2)}
-.file-drop-icon{font-size:40px;margin-bottom:12px}
-.file-drop-text{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--vlight);letter-spacing:1.5px}
-.file-drop-text span{color:var(--c);font-weight:600}
-.file-drop-hint{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--vlight);margin-top:10px;letter-spacing:0.5px;opacity:0.7}
-.file-attached{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(92,225,230,0.1);border:1px solid rgba(92,225,230,0.3);border-radius:10px;margin-top:10px}
-.file-name{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--c);letter-spacing:1px}
-.file-remove{color:var(--red);cursor:pointer;font-size:20px;font-weight:bold;padding:0 6px}
-.file-remove:hover{color:#ff6b8a}
-.file-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-.file-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(92,225,230,0.1);border:1px solid rgba(92,225,230,0.25);border-radius:8px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--c)}
-.file-item img{width:44px;height:44px;object-fit:cover;border-radius:6px;border:1px solid rgba(92,225,230,0.4)}
-.file-item .file-info{display:flex;flex-direction:column;gap:3px}
-.file-item .file-info span:last-child{font-size:10px;color:var(--vlight);opacity:0.7}
-.file-item .file-del{color:var(--red);cursor:pointer;font-size:16px;margin-left:6px;opacity:0.7}
-.file-item .file-del:hover{opacity:1}
-/* ANIMS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.form-card,.success-card{animation:fadeUp .4s ease both}
-/* MOBILE */
-@media(max-width:600px){
-  .title{font-size:28px;letter-spacing:3px}
-  .subtitle{font-size:12px}
-  .tabs{gap:8px}
-  .tab{font-size:11px;padding:12px 18px}
-  .form-title{font-size:18px}
-  .form-card{padding:24px}
+<meta name="description" content="Help us build a better Phase City. Report bugs, suggest features, or submit crash reports.">
+<meta property="og:title" content="Phase City // Citizen Portal">
+<meta property="og:description" content="Report bugs, suggest features, or submit crash reports for Phase City.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phase City">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Phase City // Citizen Portal">
+<meta name="theme-color" content="#00d4ff">
+<link rel="canonical" href="https://www.phasecity.net/citizen-portal.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Phase City",
+  "url": "https://www.phasecity.net",
+  "logo": "https://www.phasecity.net/img/logo.png"
 }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>:root{--bg:#080c14;--card:rgba(0,212,255,0.03);--card-hover:rgba(0,212,255,0.06);--bdr:rgba(0,212,255,0.1);--bdr-h:rgba(0,212,255,0.25);--t1:#e8f4f8;--t2:#94a3b0;--tm:#5c6b7a;--td:#2d3741;--primary:#00d4ff;--primary-dim:rgba(0,212,255,0.15);--primary-glow:rgba(0,212,255,0.4);--accent:#ff6b6b;--accent-warn:#f59e0b;--accent-green:#10b981;--accent-purple:#a78bfa;--accent-pink:#f472b6}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--v:#00d4ff;--vlight:#67e8f9;--c:#a78bfa;--bg:#080c14;--bg2:#0d1320;--border:rgba(0,212,255,0.1);--text:#e8f4f8;--muted:#67e8f9;--red:#ff6b6b;--orange:#f59e0b;--green:#10b981}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:16px;line-height:1.6}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:rgba(0,212,255,0.25);border-radius:3px}::selection{background:rgba(0,212,255,.35);color:#fff}body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:44px 44px}body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse at 15% 0%,rgba(0,212,255,0.06) 0%,transparent 55%),radial-gradient(ellipse at 85% 100%,rgba(167,139,250,0.04) 0%,transparent 55%)}.container{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:40px 24px}.header{text-align:center;margin-bottom:50px}.logo{width:120px;height:120px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center}.logo img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 30px var(--primary-glow))}.logo-fallback{font-size:36px;font-weight:900;color:#fff}.title{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,var(--text) 0%,var(--primary) 50%,var(--accent-purple) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}.subtitle{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--primary);letter-spacing:5px;text-shadow:0 0 20px var(--primary-glow)}.tagline{margin-top:20px;font-size:16px;color:var(--t2);line-height:1.7}.tabs{display:flex;gap:10px;margin-bottom:30px;justify-content:center;flex-wrap:wrap}.tab{font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:1px;padding:14px 24px;border-radius:10px;border:1px solid var(--bdr);cursor:pointer;background:transparent;color:var(--tm);transition:all .2s;text-transform:uppercase;font-weight:600}.tab:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-dim)}.tab.on{border-color:var(--primary);color:var(--primary);background:var(--primary-dim);box-shadow:0 0 20px rgba(0,212,255,0.15)}.tab-icon{margin-right:8px;font-size:16px}.form-card{background:rgba(0,212,255,0.02);border:1px solid var(--bdr);border-radius:16px;padding:36px;box-shadow:0 0 60px rgba(0,0,0,0.3)}.form-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:2px;margin-bottom:10px;display:flex;align-items:center;gap:12px;color:var(--t1)}.form-title .icon{font-size:26px}.form-desc{font-size:15px;color:var(--t2);margin-bottom:30px;line-height:1.7}.field{margin-bottom:22px}.label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--primary);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:10px;font-weight:600}.label .req{color:var(--accent);margin-left:2px}.inp,.ta,.sel{width:100%;font-family:'DM Sans',sans-serif;font-size:16px;background:rgba(0,212,255,0.04);color:var(--t1);border:1px solid var(--bdr);border-radius:12px;padding:16px 20px;outline:none;transition:all .2s;color-scheme:dark}.inp:focus,.ta:focus,.sel:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(0,212,255,0.1)}.inp::placeholder,.ta::placeholder{color:var(--tm)}.ta{resize:vertical;min-height:130px;line-height:1.7}.sel{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M0 0l6 7 6-7z' fill='%2300d4ff'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;padding-right:44px}.sel option{background:#0d1320;color:var(--t1)}.hint{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tm);margin-top:8px;letter-spacing:1px;opacity:0.7}.btn{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:18px 32px;border-radius:12px;border:none;cursor:pointer;transition:all .2s;width:100%}.btn-primary{background:linear-gradient(135deg,var(--primary),#0891b2);color:var(--bg);box-shadow:0 4px 20px rgba(0,212,255,0.25)}.btn-primary:hover{box-shadow:0 8px 30px rgba(0,212,255,0.4);transform:translateY(-2px)}.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}.success-card{text-align:center;padding:60px 36px}.success-icon{font-size:72px;margin-bottom:24px}.success-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--primary);margin-bottom:14px;text-shadow:0 0 30px var(--primary-glow)}.success-msg{font-size:16px;color:var(--t2);line-height:1.8;margin-bottom:30px}.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--bdr);font-size:13px;padding:12px 24px;font-weight:600}.btn-ghost:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-dim)}.footer{text-align:center;margin-top:50px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--tm);letter-spacing:2px}.footer a{color:var(--primary);text-decoration:none}.footer a:hover{color:var(--t1)}.type-badges{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}.type-badge{font-family:'JetBrains Mono',monospace;font-size:12px;padding:10px 16px;border-radius:8px;border:1px solid var(--bdr);cursor:pointer;transition:all .15s;color:var(--tm);background:transparent;font-weight:600}.type-badge:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-dim)}.type-badge.on{border-color:var(--primary);color:var(--primary);background:var(--primary-dim);box-shadow:0 0 15px rgba(0,212,255,0.15)}.severity-row{display:flex;gap:10px}.severity-btn{flex:1;font-family:'JetBrains Mono',monospace;font-size:13px;padding:14px;border-radius:8px;border:1px solid var(--bdr);cursor:pointer;transition:all .15s;text-align:center;color:var(--tm);background:transparent;font-weight:700}.severity-btn:hover{border-color:var(--primary);color:var(--primary)}.severity-btn.on.low{border-color:var(--primary);color:var(--primary);background:var(--primary-dim);box-shadow:0 0 15px rgba(0,212,255,0.2)}.severity-btn.on.medium{border-color:var(--accent-warn);color:var(--accent-warn);background:rgba(245,158,11,0.12);box-shadow:0 0 15px rgba(245,158,11,0.2)}.severity-btn.on.high{border-color:var(--accent);color:var(--accent);background:rgba(255,107,107,0.12);box-shadow:0 0 15px rgba(255,107,107,0.2)}.loading{display:inline-block;width:20px;height:20px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-right:10px;vertical-align:middle}@keyframes spin{to{transform:rotate(360deg)}}.file-drop{border:2px dashed var(--tm);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(0,212,255,0.02)}.file-drop:hover,.file-drop.dragover{border-color:var(--primary);background:var(--primary-dim);box-shadow:0 0 20px rgba(0,212,255,0.1)}.file-drop-icon{font-size:40px;margin-bottom:12px}.file-drop-text{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--tm);letter-spacing:1px}.file-drop-text span{color:var(--primary);font-weight:600}.file-drop-hint{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tm);margin-top:10px;letter-spacing:0.5px;opacity:0.7}.file-attached{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--primary-dim);border:1px solid var(--bdr);border-radius:10px;margin-top:10px}.file-name{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--primary);letter-spacing:1px}.file-remove{color:var(--accent);cursor:pointer;font-size:20px;font-weight:bold;padding:0 6px}.file-remove:hover{color:#ff8a8a}.file-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}.file-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--primary-dim);border:1px solid var(--bdr);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--primary)}.file-item img{width:44px;height:44px;object-fit:cover;border-radius:6px;border:1px solid var(--bdr)}.file-item .file-info{display:flex;flex-direction:column;gap:3px}.file-item .file-info span:last-child{font-size:10px;color:var(--tm);opacity:0.7}.file-item .file-del{color:var(--accent);cursor:pointer;font-size:16px;margin-left:6px;opacity:0.7}.file-item .file-del:hover{opacity:1}@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.form-card,.success-card{animation:fadeUp .4s ease both}@media(max-width:600px){.title{font-size:28px;letter-spacing:2px}.subtitle{font-size:12px}.tabs{gap:8px}.tab{font-size:11px;padding:12px 16px}.form-title{font-size:18px}.form-card{padding:24px}}
 </style>
 </head>
 <body>
-
 <div class="container">
   <div class="header">
-    <div class="logo"><img src="img/logo.png" alt="PC" onerror="this.outerHTML='<span class=logo-fallback>PC</span>'"></div>
+    <div class="logo"><img src="img/logo.webp" alt="Phase City" onerror="this.outerHTML='<span class=logo-fallback>PC</span>'"></div>
     <div class="title">Phase City</div>
     <div class="subtitle">// CITIZEN PORTAL //</div>
     <div class="tagline">Help us build a better city.<br>Report bugs, suggest features, or submit crash reports.</div>
   </div>
-
   <div class="tabs">
     <button class="tab on" data-tab="bug" onclick="switchTab('bug')"><span class="tab-icon">🐛</span>BUG REPORT</button>
     <button class="tab" data-tab="suggestion" onclick="switchTab('suggestion')"><span class="tab-icon">💡</span>SUGGESTION</button>
     <button class="tab" data-tab="crash" onclick="switchTab('crash')"><span class="tab-icon">💥</span>CRASH REPORT</button>
   </div>
-
-  <!-- BUG REPORT FORM -->
   <div class="form-card" id="form-bug">
     <div class="form-title"><span class="icon">🐛</span> Bug Report</div>
     <div class="form-desc">Found something broken? Let us know exactly what happened so we can fix it fast.</div>
-    
     <div class="field">
       <label class="label">Discord Username <span class="req">*</span></label>
       <input class="inp" id="bug-discord" placeholder="YourName#1234 or @username">
@@ -179,14 +96,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       </div>
       <div class="file-list" id="bug-file-list"></div>
     </div>
-    <button class="btn btn-primary" id="bug-submit-btn" onclick="submitBug()">&#128640; SUBMIT BUG REPORT</button>
+    <button class="btn btn-primary" id="bug-submit-btn" onclick="submitBug()">🚀 SUBMIT BUG REPORT</button>
   </div>
-
-  <!-- SUGGESTION FORM -->
   <div class="form-card" id="form-suggestion" style="display:none">
     <div class="form-title"><span class="icon">💡</span> Suggestion</div>
     <div class="form-desc">Got an idea to make Phase City better? We're always looking for ways to improve.</div>
-    
     <div class="field">
       <label class="label">Discord Username <span class="req">*</span></label>
       <input class="inp" id="sug-discord" placeholder="YourName#1234 or @username">
@@ -220,14 +134,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       </div>
       <div class="file-list" id="sug-file-list"></div>
     </div>
-    <button class="btn btn-primary" id="sug-submit-btn" onclick="submitSuggestion()">&#128161; SUBMIT SUGGESTION</button>
+    <button class="btn btn-primary" id="sug-submit-btn" onclick="submitSuggestion()">💡 SUBMIT SUGGESTION</button>
   </div>
-
-  <!-- CRASH REPORT FORM -->
   <div class="form-card" id="form-crash" style="display:none">
     <div class="form-title"><span class="icon">💥</span> Crash Report</div>
     <div class="form-desc">Game crashed or got kicked? Help us track down the cause.</div>
-    
     <div class="field">
       <label class="label">Discord Username <span class="req">*</span></label>
       <input class="inp" id="crash-discord" placeholder="YourName#1234 or @username">
@@ -255,12 +166,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
       </div>
       <div class="file-attached" id="crash-file-attached" style="display:none">
         <span class="file-name" id="crash-file-name"></span>
-        <span class="file-remove" onclick="removeCrashFile()">&times;</span>
+        <span class="file-remove" onclick="removeCrashFile()">×</span>
       </div>
     </div>
     <div class="field">
       <label class="label">Error Message (if any)</label>
-      <textarea class="ta" id="crash-error" placeholder="Copy any error text that appeared" style="min-height:80px;font-family:'Share Tech Mono',monospace;font-size:11px"></textarea>
+      <textarea class="ta" id="crash-error" placeholder="Copy any error text that appeared" style="min-height:80px;font-family:'JetBrains Mono',monospace;font-size:11px"></textarea>
     </div>
     <div class="field">
       <label class="label">How Often Does This Happen?</label>
@@ -271,603 +182,19 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;back
         <option value="Every time">Every time I do this action</option>
       </select>
     </div>
-    <button class="btn btn-primary" id="crash-submit-btn" onclick="submitCrash()">&#128165; SUBMIT CRASH REPORT</button>
+    <button class="btn btn-primary" id="crash-submit-btn" onclick="submitCrash()">🔥 SUBMIT CRASH REPORT</button>
   </div>
-
-  <!-- SUCCESS STATE -->
   <div class="form-card success-card" id="form-success" style="display:none">
     <div class="success-icon">✅</div>
     <div class="success-title">SUBMISSION RECEIVED!</div>
     <div class="success-msg">Thank you for helping make Phase City better.<br>Our dev team will review your submission.<br><br>Your Discord username may be featured in our changelog credits! 🎉</div>
     <button class="btn btn-ghost" onclick="resetForm()">SUBMIT ANOTHER</button>
   </div>
-
   <div class="footer">
-    <p>PHASE CITY // <a href="#">DISCORD</a> // POWERED BY OGZ SERVERS</p>
+    <p>PHASE CITY // <a href="http://discord.gg/NSZHK6spre" target="_blank" rel="noopener">DISCORD</a> // POWERED BY OGZ SERVERS</p>
   </div>
 </div>
-
-<script>
-// CONFIG - Discord webhook URLs
-// Staff channels (private - internal tracking)
-const WEBHOOKS = {
-  bug: 'https://discord.com/api/webhooks/1480044840879263918/ifTTUl-fOemHzJydenutZ413bMaTgcBbl_yy3quy9WW_xnGk8B7_qQNI4A5vW_gXzJCj',
-  suggestion: 'https://discord.com/api/webhooks/1480044539069726771/Nox47E54fjaZh4yXongOnM8SwQC6lBL4xzyO-IpASJukS-zuwdXtTEFnIvJ8hA0wfF_y',
-  crash: 'https://discord.com/api/webhooks/1480044951470342257/S6MD0_mUbyw8z6jkZPVVwP7jJCM_AK7LsARv4ZMPG2Dkl5Wf-wHgGk_Atay1hUCPVsae'
-};
-
-// Forum channels (public - community discussion & voting)
-const FORUM_WEBHOOKS = {
-  bug: 'https://discord.com/api/webhooks/1480285544163577866/-fPcaGOITtQrI2po3JiXcevLdoBPZAODqewvYxiSniBNRwiztNNJ-6ixzRC2xm3IV5QN',
-  suggestion: 'https://discord.com/api/webhooks/1480279904703483995/NgWBzPOYafQ9g2sA7yaJx_cfG7Q3fyN6xbN3ET8kCyxXJmPf0VffiMOPPyZQCRZcRuED',
-  crash: 'https://discord.com/api/webhooks/1480285139643924733/ax_W7NeLdu2hnQHqtza0Ts1Hdm6NqJG6tJOJAL8hJofnnDPFV3tbLEUjQYIwh1F78xc4'
-};
-
-let currentTab = 'bug';
-
-// Discord member mapping for pings
-let discordMembers = {};
-async function loadDiscordMembers() {
-  try {
-    const res = await fetch('discord-members.json');
-    if (res.ok) {
-      const data = await res.json();
-      discordMembers = data.members || {};
-      console.log(`✅ Loaded ${Object.keys(discordMembers).length} Discord members for pings`);
-    }
-  } catch (e) { console.log('ℹ️ No discord-members.json - pings disabled'); }
-}
-loadDiscordMembers();
-
-function getDiscordPing(username) {
-  const clean = username.replace(/^@/, '').replace(/#\d+$/, '').toLowerCase().trim();
-  const id = discordMembers[clean];
-  return id ? `<@${id}>` : null;
-}
-
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.querySelector(`[data-tab="${tab}"]`).classList.add('on');
-  document.querySelectorAll('.form-card').forEach(f => f.style.display = 'none');
-  document.getElementById(`form-${tab}`).style.display = 'block';
-}
-
-// Badge selection
-document.querySelectorAll('.type-badges').forEach(container => {
-  container.addEventListener('click', e => {
-    if (e.target.classList.contains('type-badge')) {
-      container.querySelectorAll('.type-badge').forEach(b => b.classList.remove('on'));
-      e.target.classList.add('on');
-    }
-  });
-});
-
-// Severity selection
-document.querySelectorAll('.severity-row').forEach(container => {
-  container.addEventListener('click', e => {
-    if (e.target.classList.contains('severity-btn')) {
-      container.querySelectorAll('.severity-btn').forEach(b => b.classList.remove('on'));
-      e.target.classList.add('on');
-    }
-  });
-});
-
-function getSelectedBadge(containerId) {
-  const el = document.querySelector(`#${containerId} .type-badge.on, #${containerId} .severity-btn.on`);
-  return el ? el.dataset.val : '';
-}
-
-let crashFile = null;
-let bugFiles = [];
-let sugFiles = [];
-
-function handleCrashFile(file) {
-  if (!file) return;
-  if (file.size > 10 * 1024 * 1024) {
-    alert('File too large (max 10MB)');
-    return;
-  }
-  crashFile = file;
-  document.getElementById('crash-file-drop').style.display = 'none';
-  document.getElementById('crash-file-attached').style.display = 'flex';
-  document.getElementById('crash-file-name').textContent = '📎 ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
-}
-
-function removeCrashFile() {
-  crashFile = null;
-  document.getElementById('crash-file-input').value = '';
-  document.getElementById('crash-file-drop').style.display = 'block';
-  document.getElementById('crash-file-attached').style.display = 'none';
-}
-
-// Bug files handling
-function addBugFiles(files) {
-  Array.from(files).forEach(file => {
-    if (file.size > 8 * 1024 * 1024) {
-      alert(`${file.name} is too large (max 8MB)`);
-      return;
-    }
-    if (bugFiles.length >= 5) {
-      alert('Maximum 5 files allowed');
-      return;
-    }
-    if (!bugFiles.find(f => f.name === file.name)) {
-      bugFiles.push(file);
-    }
-  });
-  renderBugFiles();
-}
-
-function removeBugFile(index) {
-  bugFiles.splice(index, 1);
-  renderBugFiles();
-}
-
-function renderBugFiles() {
-  const container = document.getElementById('bug-file-list');
-  if (!bugFiles.length) {
-    container.innerHTML = '';
-    return;
-  }
-  container.innerHTML = bugFiles.map((file, i) => {
-    const isImg = file.type.startsWith('image/');
-    const thumb = isImg ? URL.createObjectURL(file) : '';
-    return `<div class="file-item">
-      ${isImg ? `<img src="${thumb}" alt="">` : '<span style="font-size:20px">🎬</span>'}
-      <div class="file-info">
-        <span>${file.name.slice(0,20)}${file.name.length>20?'...':''}</span>
-        <span>${(file.size/1024).toFixed(0)} KB</span>
-      </div>
-      <span class="file-del" onclick="removeBugFile(${i})">&times;</span>
-    </div>`;
-  }).join('');
-}
-
-// Suggestion files handling
-function addSugFiles(files) {
-  Array.from(files).forEach(file => {
-    if (file.size > 8 * 1024 * 1024) {
-      alert(`${file.name} is too large (max 8MB)`);
-      return;
-    }
-    if (sugFiles.length >= 5) {
-      alert('Maximum 5 files allowed');
-      return;
-    }
-    if (!sugFiles.find(f => f.name === file.name)) {
-      sugFiles.push(file);
-    }
-  });
-  renderSugFiles();
-}
-
-function removeSugFile(index) {
-  sugFiles.splice(index, 1);
-  renderSugFiles();
-}
-
-function renderSugFiles() {
-  const container = document.getElementById('sug-file-list');
-  if (!sugFiles.length) {
-    container.innerHTML = '';
-    return;
-  }
-  container.innerHTML = sugFiles.map((file, i) => {
-    const isImg = file.type.startsWith('image/');
-    const thumb = isImg ? URL.createObjectURL(file) : '';
-    return `<div class="file-item">
-      ${isImg ? `<img src="${thumb}" alt="">` : '<span style="font-size:20px">🎬</span>'}
-      <div class="file-info">
-        <span>${file.name.slice(0,20)}${file.name.length>20?'...':''}</span>
-        <span>${(file.size/1024).toFixed(0)} KB</span>
-      </div>
-      <span class="file-del" onclick="removeSugFile(${i})">&times;</span>
-    </div>`;
-  }).join('');
-}
-
-// Drag and drop setup
-document.addEventListener('DOMContentLoaded', () => {
-  // Crash file drop
-  const crashDrop = document.getElementById('crash-file-drop');
-  if (crashDrop) {
-    crashDrop.addEventListener('dragover', e => { e.preventDefault(); crashDrop.classList.add('dragover'); });
-    crashDrop.addEventListener('dragleave', () => crashDrop.classList.remove('dragover'));
-    crashDrop.addEventListener('drop', e => {
-      e.preventDefault();
-      crashDrop.classList.remove('dragover');
-      if (e.dataTransfer.files.length) handleCrashFile(e.dataTransfer.files[0]);
-    });
-  }
-  
-  // Bug file drop
-  const bugDrop = document.getElementById('bug-file-drop');
-  const bugInput = document.getElementById('bug-file-input');
-  if (bugDrop && bugInput) {
-    bugDrop.addEventListener('click', () => bugInput.click());
-    bugDrop.addEventListener('dragover', e => { e.preventDefault(); bugDrop.classList.add('dragover'); });
-    bugDrop.addEventListener('dragleave', () => bugDrop.classList.remove('dragover'));
-    bugDrop.addEventListener('drop', e => {
-      e.preventDefault();
-      bugDrop.classList.remove('dragover');
-      addBugFiles(e.dataTransfer.files);
-    });
-    bugInput.addEventListener('change', () => addBugFiles(bugInput.files));
-  }
-  
-  // Suggestion file drop
-  const sugDrop = document.getElementById('sug-file-drop');
-  const sugInput = document.getElementById('sug-file-input');
-  if (sugDrop && sugInput) {
-    sugDrop.addEventListener('click', () => sugInput.click());
-    sugDrop.addEventListener('dragover', e => { e.preventDefault(); sugDrop.classList.add('dragover'); });
-    sugDrop.addEventListener('dragleave', () => sugDrop.classList.remove('dragover'));
-    sugDrop.addEventListener('drop', e => {
-      e.preventDefault();
-      sugDrop.classList.remove('dragover');
-      addSugFiles(e.dataTransfer.files);
-    });
-    sugInput.addEventListener('change', () => addSugFiles(sugInput.files));
-  }
-});
-
-// Send to staff webhook only (no thread)
-async function sendToStaff(webhook, embed) {
-  if (!webhook) return;
-  try {
-    await fetch(webhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ embeds: [embed] })
-    });
-  } catch (e) { console.warn('Staff webhook failed', e); }
-}
-
-async function sendToStaffWithFile(webhook, embed, file) {
-  if (!webhook) return;
-  try {
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
-    if (file) formData.append('file', file, file.name);
-    await fetch(webhook, { method: 'POST', body: formData });
-  } catch (e) { console.warn('Staff webhook failed', e); }
-}
-
-async function sendToStaffWithMultipleFiles(webhook, embed, files) {
-  if (!webhook) return;
-  try {
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify({ embeds: [embed] }));
-    files.forEach((file, i) => formData.append(`file${i}`, file, file.name));
-    await fetch(webhook, { method: 'POST', body: formData });
-  } catch (e) { console.warn('Staff webhook failed', e); }
-}
-
-// Send to forum channel (creates thread)
-async function sendToForum(webhook, threadName, embed, discordUsername) {
-  if (!webhook) return false;
-  try {
-    const ping = discordUsername ? getDiscordPing(discordUsername) : null;
-    const payload = { thread_name: threadName, embeds: [embed] };
-    if (ping) payload.content = `${ping} Submission received.! <:Phase_City:1471628635063586914>`;
-    const res = await fetch(webhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    return res.ok;
-  } catch (e) { console.warn('Forum webhook failed', e); return false; }
-}
-
-async function sendToForumWithFile(webhook, threadName, embed, file, discordUsername) {
-  if (!webhook) return false;
-  try {
-    const ping = discordUsername ? getDiscordPing(discordUsername) : null;
-    const payload = { thread_name: threadName, embeds: [embed] };
-    if (ping) payload.content = `${ping} Your crash report has been received! We'll investigate and the community can help troubleshoot below. 💜`;
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify(payload));
-    if (file) formData.append('file', file, file.name);
-    const res = await fetch(webhook, { method: 'POST', body: formData });
-    return res.ok;
-  } catch (e) { console.warn('Forum webhook failed', e); return false; }
-}
-
-async function sendToForumWithMultipleFiles(webhook, threadName, embed, files, discordUsername) {
-  if (!webhook) return false;
-  try {
-    const ping = discordUsername ? getDiscordPing(discordUsername) : null;
-    const payload = { thread_name: threadName, embeds: [embed] };
-    if (ping) payload.content = `${ping} Submission received.! <:Phase_City:1471628635063586914>`;
-    const formData = new FormData();
-    formData.append('payload_json', JSON.stringify(payload));
-    files.forEach((file, i) => formData.append(`file${i}`, file, file.name));
-    const res = await fetch(webhook, { method: 'POST', body: formData });
-    return res.ok;
-  } catch (e) { console.warn('Forum webhook failed', e); return false; }
-}
-
-// Main submit handlers - send to BOTH staff and forum
-async function submitToDiscord(type, threadName, embed, files, btnId, discordUsername) {
-  const btn = btnId ? document.getElementById(btnId) : null;
-  const resetBtn = () => {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '&#10148; SUBMIT';
-    }
-  };
-  
-  let success = false;
-  
-  try {
-    // Send to forum (public - community can discuss/vote)
-    if (files && files.length > 0) {
-      success = await sendToForumWithMultipleFiles(FORUM_WEBHOOKS[type], threadName, embed, files, discordUsername);
-    } else {
-      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed, discordUsername);
-    }
-    
-    // Also send to staff channel (private - internal tracking)
-    if (files && files.length > 0) {
-      await sendToStaffWithMultipleFiles(WEBHOOKS[type], embed, files);
-    } else {
-      await sendToStaff(WEBHOOKS[type], embed);
-    }
-    
-    resetBtn();
-    if (success) showSuccess();
-    else alert('Submission failed. Please try again or contact staff on Discord.');
-  } catch (e) {
-    resetBtn();
-    alert('Network error. Please try again.');
-  }
-}
-
-async function submitToDiscordWithSingleFile(type, threadName, embed, file, btnId, discordUsername) {
-  const btn = btnId ? document.getElementById(btnId) : null;
-  const resetBtn = () => {
-    if (btn) {
-      btn.disabled = false;
-      btn.innerHTML = '&#10148; SUBMIT';
-    }
-  };
-  
-  let success = false;
-  
-  try {
-    // Send to forum (public)
-    if (file) {
-      success = await sendToForumWithFile(FORUM_WEBHOOKS[type], threadName, embed, file, discordUsername);
-    } else {
-      success = await sendToForum(FORUM_WEBHOOKS[type], threadName, embed, discordUsername);
-    }
-    
-    // Also send to staff channel (private)
-    if (file) {
-      await sendToStaffWithFile(WEBHOOKS[type], embed, file);
-    } else {
-      await sendToStaff(WEBHOOKS[type], embed);
-    }
-    
-    resetBtn();
-    if (success) showSuccess();
-    else alert('Submission failed. Please try again or contact staff on Discord.');
-  } catch (e) {
-    resetBtn();
-    alert('Network error. Please try again.');
-  }
-}
-
-function showSuccess() {
-  document.querySelectorAll('.form-card').forEach(f => f.style.display = 'none');
-  document.getElementById('form-success').style.display = 'block';
-  // Clear all form data after a short delay
-  setTimeout(() => resetAllForms(), 500);
-}
-
-// JSONbin integration - creates task in taskboard
-const JSONBIN_CONFIG = {
-  apikey: '$2a$10$vnuI42JSDbgHxD5.1GzMS.kqNW5x.ZFjdkuIK8TQ4ff7YjMNaUnA6',
-  binid: '69acc6f1ae596e708f6b1f98'
-};
-
-function genTaskId(){return 'cp-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)}
-
-async function createTaskInTaskboard(taskData) {
-  try {
-    const cfg = JSONBIN_CONFIG;
-    
-    // Fetch current tasks
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}/latest`, {
-      headers: { 'X-Master-Key': cfg.apikey }
-    });
-    if (!res.ok) {
-      console.error('Failed to fetch tasks from JSONbin');
-      return;
-    }
-    const data = await res.json();
-    let tasks = data.record?.tasks || [];
-    
-    // Create new task
-    const now = new Date().toISOString();
-    const newTask = {
-      id: genTaskId(),
-      title: taskData.title,
-      description: taskData.description,
-      category: taskData.category || 'Citizen Portal',
-      resource: taskData.resource || '',
-      priority: taskData.priority || 'Medium',
-      assignee: 'Unassigned',
-      status: 'Backlog',
-      attachments: [],
-      createdAt: now,
-      updatedAt: now,
-      source: 'citizen-portal',
-      submitter: taskData.submitter || ''
-    };
-    tasks.push(newTask);
-    
-    // Save back to JSONbin
-    const saveRes = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binid}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': cfg.apikey
-      },
-      body: JSON.stringify({ ...data.record, tasks })
-    });
-    if (saveRes.ok) {
-      console.log('Task created in taskboard:', newTask.id);
-    }
-  } catch (e) {
-    console.error('Failed to create task:', e);
-  }
-}
-
-function resetForm() {
-  document.querySelectorAll('input, textarea').forEach(el => el.value = '');
-  removeCrashFile();
-  bugFiles = [];
-  sugFiles = [];
-  renderBugFiles();
-  renderSugFiles();
-  switchTab('bug');
-}
-
-function submitBug() {
-  const discord = document.getElementById('bug-discord').value.trim();
-  const what = document.getElementById('bug-what').value.trim();
-  if (!discord || !what) { alert('Please fill in required fields'); return; }
-  
-  const btn = document.getElementById('bug-submit-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="loading"></span>SUBMITTING...';
-  
-  const category = getSelectedBadge('bug-category');
-  const severity = getSelectedBadge('bug-severity');
-  const steps = document.getElementById('bug-steps').value.trim();
-  
-  const embed = {
-    title: '🐛 Bug Report',
-    color: 0xFF4D6D,
-    fields: [
-      { name: '👤 Discord', value: discord, inline: true },
-      { name: '📁 Category', value: category, inline: true },
-      { name: '⚠️ Severity', value: severity, inline: true },
-      { name: '📝 Description', value: what.slice(0, 1000) },
-    ],
-    footer: { text: 'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!' },
-    timestamp: new Date().toISOString()
-  };
-  const media = document.getElementById('bug-media').value.trim();
-  if (steps) embed.fields.push({ name: '🔄 Steps to Reproduce', value: steps.slice(0, 500) });
-  if (media) embed.fields.push({ name: '🔗 Media URL', value: media });
-  if (bugFiles.length) embed.fields.push({ name: '📎 Attachments', value: `${bugFiles.length} file(s) attached` });
-  
-  // Create task in taskboard
-  const priority = severity === 'High' ? 'Critical' : severity === 'Medium' ? 'High' : 'Medium';
-  createTaskInTaskboard({
-    title: `🐛 [${category}] ${what.slice(0, 60)}${what.length > 60 ? '...' : ''}`,
-    description: `**Reporter:** ${discord}\n**Severity:** ${severity}\n\n${what}${steps ? '\n\n**Steps:**\n' + steps : ''}`,
-    category: 'Bug Reports',
-    priority: priority,
-    submitter: discord
-  });
-  
-  // Thread name for forum post (truncate for Discord's 100 char limit)
-  const threadName = `🐛 [${category}] ${what.slice(0, 70)}${what.length > 70 ? '...' : ''}`;
-  
-  // Submit to both forum (public) and staff (private)
-  submitToDiscord('bug', threadName, embed, bugFiles, 'bug-submit-btn', discord);
-}
-
-function submitSuggestion() {
-  const discord = document.getElementById('sug-discord').value.trim();
-  const idea = document.getElementById('sug-idea').value.trim();
-  if (!discord || !idea) { alert('Please fill in required fields'); return; }
-  
-  const btn = document.getElementById('sug-submit-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="loading"></span>SUBMITTING...';
-  
-  const category = getSelectedBadge('sug-category');
-  
-  const embed = {
-    title: '💡 Suggestion',
-    color: 0x5CE1E6,
-    fields: [
-      { name: '👤 Discord', value: discord, inline: true },
-      { name: '📁 Category', value: category, inline: true },
-      { name: '📝 Suggestion', value: idea.slice(0, 1000) },
-    ],
-    footer: { text: 'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!' },
-    timestamp: new Date().toISOString()
-  };
-  const ref = document.getElementById('sug-ref').value.trim();
-  if (ref) embed.fields.push({ name: '🔗 Reference', value: ref });
-  if (sugFiles.length) embed.fields.push({ name: '📎 Attachments', value: `${sugFiles.length} file(s) attached` });
-  
-  // Create task in taskboard
-  createTaskInTaskboard({
-    title: `💡 [${category}] ${idea.slice(0, 60)}${idea.length > 60 ? '...' : ''}`,
-    description: `**Suggested by:** ${discord}\n**Category:** ${category}\n\n${idea}${ref ? '\n\n**Reference:** ' + ref : ''}`,
-    category: 'Suggestions',
-    priority: 'Low',
-    submitter: discord
-  });
-  
-  // Thread name for forum post (truncate for Discord's 100 char limit)
-  const threadName = `💡 [${category}] ${idea.slice(0, 70)}${idea.length > 70 ? '...' : ''}`;
-  
-  // Submit to both forum (public) and staff (private)
-  submitToDiscord('suggestion', threadName, embed, sugFiles, 'sug-submit-btn', discord);
-}
-
-function submitCrash() {
-  const discord = document.getElementById('crash-discord').value.trim();
-  const what = document.getElementById('crash-what').value.trim();
-  if (!discord || !what) { alert('Please fill in required fields'); return; }
-  
-  const btn = document.getElementById('crash-submit-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="loading"></span>SUBMITTING...';
-  
-  const crashType = getSelectedBadge('crash-type');
-  const freq = document.getElementById('crash-freq').value;
-  const error = document.getElementById('crash-error').value.trim();
-  
-  const embed = {
-    title: '💥 Crash Report',
-    color: 0xFF9F43,
-    fields: [
-      { name: '👤 Discord', value: discord, inline: true },
-      { name: '💢 Type', value: crashType, inline: true },
-      { name: '🔄 Frequency', value: freq, inline: true },
-      { name: '📝 What Happened', value: what.slice(0, 1000) },
-    ],
-    footer: { text: 'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!' },
-    timestamp: new Date().toISOString()
-  };
-  if (error) embed.fields.push({ name: '⚠️ Error Message', value: '```' + error.slice(0, 500) + '```' });
-  if (crashFile) embed.fields.push({ name: '📎 Crash File', value: crashFile.name });
-  
-  // Create task in taskboard - crashes are high priority
-  const priority = freq === 'Every time I do this action' ? 'Critical' : 'High';
-  createTaskInTaskboard({
-    title: `💥 [${crashType}] ${what.slice(0, 60)}${what.length > 60 ? '...' : ''}`,
-    description: `**Reporter:** ${discord}\n**Crash Type:** ${crashType}\n**Frequency:** ${freq}\n\n${what}${error ? '\n\n**Error:**\n```\n' + error + '\n```' : ''}`,
-    category: 'Crash Reports',
-    priority: priority,
-    submitter: discord
-  });
-  
-  // Thread name for forum post (truncate for Discord's 100 char limit)
-  const threadName = `💥 [${crashType}] ${what.slice(0, 70)}${what.length > 70 ? '...' : ''}`;
-  
-  // Submit to both forum (public) and staff (private)
-  submitToDiscordWithSingleFile('crash', threadName, embed, crashFile, 'crash-submit-btn', discord);
-}
+<script>const WEBHOOKS={bug:'https://discord.com/api/webhooks/1480044840879263918/ifTTUl-fOemHzJydenutZ413bMaTgcBbl_yy3quy9WW_xnGk8B7_qQNI4A5vW_gXzJCj',suggestion:'https://discord.com/api/webhooks/1480044539069726771/Nox47E54fjaZh4yXongOnM8SwQC6lBL4xzyO-IpASJukS-zuwdXtTEFnIvJ8hA0wfF_y',crash:'https://discord.com/api/webhooks/1480044951470342257/S6MD0_mUbyw8z6jkZPVVwP7jJCM_AK7LsARv4ZMPG2Dkl5Wf-wHgGk_Atay1hUCPVsae'};const FORUM_WEBHOOKS={bug:'https://discord.com/api/webhooks/1480285544163577866/fPcaGOITtQrI2po3JiXcevLdoBPZAODqewvYxiSniBNRwiztNNJ-6ixzRC2xm3IV5QN',suggestion:'https://discord.com/api/webhooks/1480279904703483995/NgWBzPOYafQ9g2sA7yaJx_cfG7Q3fyN6xbN3ET8kCyxXJmPf0VffiMOPPyZQCRZcRuED',crash:'https://discord.com/api/webhooks/1480285139643924733/ax_W7NeLdu2hnQHqtza0Ts1Hdm6NqJG6tJOJAL8hJofnnDPFV3tbLEUjQYIwh1F78xc4'};let currentTab='bug',discordMembers={};async function loadDiscordMembers(){try{const r=await fetch('discord-members.json');if(r.ok){const d=await r.json();discordMembers=d.members||{}}}catch(e){}}loadDiscordMembers();function getDiscordPing(e){const t=e.replace(/^@/,'').replace(/#\d+$/,'').toLowerCase().trim(),n=discordMembers[t];return n?`<@${n}>`:null}function switchTab(t){currentTab=t;document.querySelectorAll('.tab').forEach(e=>e.classList.remove('on'));document.querySelector(`[data-tab="${t}"]`).classList.add('on');document.querySelectorAll('.form-card').forEach(e=>e.style.display='none');document.getElementById(`form-${t}`).style.display='block'}document.querySelectorAll('.type-badges').forEach(n=>{n.addEventListener('click',e=>{if(e.target.classList.contains('type-badge')){n.querySelectorAll('.type-badge').forEach(t=>t.classList.remove('on'));e.target.classList.add('on')}})});document.querySelectorAll('.severity-row').forEach(n=>{n.addEventListener('click',e=>{if(e.target.classList.contains('severity-btn')){n.querySelectorAll('.severity-btn').forEach(t=>t.classList.remove('on'));e.target.classList.add('on')}})});function getSelectedBadge(e){const t=document.querySelector(`#${e} .type-badge.on, #${e} .severity-btn.on`);return t?t.dataset.val:''}let crashFile=null,bugFiles=[],sugFiles=[];function handleCrashFile(e){if(!e)return;if(e.size>10*1024*1024){alert('File too large (max 10MB)');return}crashFile=e;document.getElementById('crash-file-drop').style.display='none';document.getElementById('crash-file-attached').style.display='flex';document.getElementById('crash-file-name').textContent='📎 '+e.name+' ('+(e.size/1024).toFixed(1)+' KB)'}function removeCrashFile(){crashFile=null;document.getElementById('crash-file-input').value='';document.getElementById('crash-file-drop').style.display='block';document.getElementById('crash-file-attached').style.display='none'}function addBugFiles(e){Array.from(e).forEach(e=>{if(e.size>8*1024*1024){alert(e.name+' is too large (max 8MB)');return}if(bugFiles.length>=5){alert('Maximum 5 files allowed');return}if(!bugFiles.find(t=>t.name===e.name)){bugFiles.push(e)}});renderBugFiles()}function removeBugFile(e){bugFiles.splice(e,1);renderBugFiles()}function renderBugFiles(){const e=document.getElementById('bug-file-list');if(!bugFiles.length){e.innerHTML='';return}e.innerHTML=bugFiles.map((t,n)=>{const a=t.type.startsWith('image/'),r=a?URL.createObjectURL(t):'';return`<div class="file-item">${a?`<img src="${r}" alt="">`:'<span style="font-size:20px">🎬</span>'}<div class="file-info"><span>${t.name.slice(0,20)}${t.name.length>20?'...':''}</span><span>${(t.size/1024).toFixed(0)} KB</span></div><span class="file-del" onclick="removeBugFile(${n})">×</span></div>`}).join('')}function addSugFiles(e){Array.from(e).forEach(e=>{if(e.size>8*1024*1024){alert(e.name+' is too large (max 8MB)');return}if(sugFiles.length>=5){alert('Maximum 5 files allowed');return}if(!sugFiles.find(t=>t.name===e.name)){sugFiles.push(e)}});renderSugFiles()}function removeSugFile(e){sugFiles.splice(e,1);renderSugFiles()}function renderSugFiles(){const e=document.getElementById('sug-file-list');if(!sugFiles.length){e.innerHTML='';return}e.innerHTML=sugFiles.map((t,n)=>{const a=t.type.startsWith('image/'),r=a?URL.createObjectURL(t):'';return`<div class="file-item">${a?`<img src="${r}" alt="">`:'<span style="font-size:20px">🎬</span>'}<div class="file-info"><span>${t.name.slice(0,20)}${t.name.length>20?'...':''}</span><span>${(t.size/1024).toFixed(0)} KB</span></div><span class="file-del" onclick="removeSugFile(${n})">×</span></div>`}).join('')}document.addEventListener('DOMContentLoaded',()=>{const e=document.getElementById('crash-file-drop');if(e){e.addEventListener('dragover',t=>{t.preventDefault();e.classList.add('dragover')});e.addEventListener('dragleave',()=>e.classList.remove('dragover'));e.addEventListener('drop',t=>{t.preventDefault();e.classList.remove('dragover');if(t.dataTransfer.files.length)handleCrashFile(t.dataTransfer.files[0])})}const t=document.getElementById('bug-file-drop'),n=document.getElementById('bug-file-input');if(t&&n){t.addEventListener('click',()=>n.click());t.addEventListener('dragover',a=>{a.preventDefault();t.classList.add('dragover')});t.addEventListener('dragleave',()=>t.classList.remove('dragover'));t.addEventListener('drop',a=>{a.preventDefault();t.classList.remove('dragover');addBugFiles(a.dataTransfer.files)});n.addEventListener('change',()=>addBugFiles(n.files))}const a=document.getElementById('sug-file-drop'),r=document.getElementById('sug-file-input');if(a&&r){a.addEventListener('click',()=>r.click());a.addEventListener('dragover',s=>{s.preventDefault();a.classList.add('dragover')});a.addEventListener('dragleave',()=>a.classList.remove('dragover'));a.addEventListener('drop',s=>{s.preventDefault();a.classList.remove('dragover');addSugFiles(s.dataTransfer.files)});r.addEventListener('change',()=>addSugFiles(r.files))}});async function sendToStaff(e,t){if(!e)return;try{await fetch(e,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({embeds:[t]})})}catch(n){console.warn('Staff webhook failed',n)}}async function sendToStaffWithFile(e,t,n){if(!e)return;try{const a=new FormData();a.append('payload_json',JSON.stringify({embeds:[n]}));n&&a.append('file',n,n.name);await fetch(e,{method:'POST',body:a})}catch(a){console.warn('Staff webhook failed',a)}}async function sendToStaffWithMultipleFiles(e,t,n){if(!e)return;try{const a=new FormData();a.append('payload_json',JSON.stringify({embeds:[n]}));n.forEach((e,t)=>a.append(`file${t}`,e,e.name));await fetch(e,{method:'POST',body:a})}catch(t){console.warn('Staff webhook failed',t)}}async function sendToForum(e,t,n,a){if(!e)return false;try{const r=getDiscordPing(a),s={thread_name:t,embeds:[n]};r&&(s.content=`${r} Submission received.! <a:Phase_City:1471628635063586914>`);const o=await fetch(e,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(s)});return o.ok}catch(r){console.warn('Forum webhook failed',r);return false}}async function sendToForumWithFile(e,t,n,a,r){if(!e)return false;try{const s=getDiscordPing(r),o={thread_name:t,embeds:[n]};s&&(o.content=`${s} Your crash report has been received! We'll investigate and the community can help troubleshoot below. 💜`);const i=new FormData();i.append('payload_json',JSON.stringify(o));a&&i.append('file',a,a.name);const c=await fetch(e,{method:'POST',body:i});return c.ok}catch(s){console.warn('Forum webhook failed',s);return false}}async function sendToForumWithMultipleFiles(e,t,n,a,r){if(!e)return false;try{const s=getDiscordPing(r),o={thread_name:t,embeds:[n]};s&&(o.content=`${s} Submission received.! <a:Phase_City:1471628635063586914>`);const i=new FormData();i.append('payload_json',JSON.stringify(o));a.forEach((e,t)=>i.append(`file${t}`,e,e.name));const c=await fetch(e,{method:'POST',body:i});return c.ok}catch(s){console.warn('Forum webhook failed',s);return false}}async function submitToDiscord(e,t,n,a,r,s){const o=r?document.getElementById(r):null,i=()=>{o&&(o.disabled=false,o.innerHTML='→ SUBMIT')};let c=false;try{if(a&&a.length>0){c=await sendToForumWithMultipleFiles(FORUM_WEBHOOKS[e],t,n,a,s)}else{c=await sendToForum(FORUM_WEBHOOKS[e],t,n,s)}if(a&&a.length>0){await sendToStaffWithMultipleFiles(WEBHOOKS[e],n,a)}else{await sendToStaff(WEBHOOKS[e],n)}i();if(c)showSuccess();else alert('Submission failed. Please try again or contact staff on Discord.')}catch(f){i();alert('Network error. Please try again.')}}async function submitToDiscordWithSingleFile(e,t,n,a,r,s){const o=r?document.getElementById(r):null,i=()=>{o&&(o.disabled=false,o.innerHTML='→ SUBMIT')};let c=false;try{if(a){c=await sendToForumWithFile(FORUM_WEBHOOKS[e],t,n,a,s)}else{c=await sendToForum(FORUM_WEBHOOKS[e],t,n,s)}if(a){await sendToStaffWithFile(WEBHOOKS[e],n,a)}else{await sendToStaff(WEBHOOKS[e],n)}i();if(c)showSuccess();else alert('Submission failed. Please try again or contact staff on Discord.')}catch(f){i();alert('Network error. Please try again.')}}function showSuccess(){document.querySelectorAll('.form-card').forEach(e=>e.style.display='none');document.getElementById('form-success').style.display='block';setTimeout(()=>resetAllForms(),500)}const JSONBIN_CONFIG={apikey:'$2a$10$vnuI42JSDbgHxD5.1GzMS.kqNW5x.ZFjdkuIK8TQ4ff7YjMNaUnA6',binid:'69acc6f1ae596e708f6b1f98'};function genTaskId(){return'cp-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)}async function createTaskInTaskboard(e){try{const t=await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binid}/latest`,{headers:{'X-Master-Key':JSONBIN_CONFIG.apikey}});if(!t.ok)return;const n=await t.json(),a=n.record?.tasks||[],r={id:genTaskId(),title:e.title,description:e.description,category:e.category||'Citizen Portal',resource:e.resource||'',priority:e.priority||'Medium',assignee:'Unassigned',status:'Backlog',attachments:[],createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),source:'citizen-portal',submitter:e.submitter||''};a.push(r);const s=await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binid}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_CONFIG.apikey},body:JSON.stringify({...n.record,tasks:a})});if(s.ok){console.log('Task created in taskboard:',r.id)}}catch(e){console.error('Failed to create task:',e)}}function resetForm(){document.querySelectorAll('input, textarea').forEach(e=>e.value='');removeCrashFile();bugFiles=[];sugFiles=[];renderBugFiles();renderSugFiles();switchTab('bug')}function submitBug(){const e=document.getElementById('bug-discord').value.trim(),t=document.getElementById('bug-what').value.trim();if(!e||!t){alert('Please fill in required fields');return}const n=document.getElementById('bug-submit-btn');n.disabled=true;n.innerHTML='<span class="loading"></span>SUBMITTING...';const a=getSelectedBadge('bug-category'),r=getSelectedBadge('bug-severity'),s=document.getElementById('bug-steps').value.trim(),o={title:'🐛 Bug Report',color:65280,fields:[{name:'👤 Discord',value:e,inline:true},{name:'📁 Category',value:a,inline:true},{name:'⚠️ Severity',value:r,inline:true},{name:'📝 Description',value:t.slice(0,1000)}],footer:{text:'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!'},timestamp:new Date().toISOString()};s&&o.fields.push({name:'🔄 Steps to Reproduce',value:s.slice(0,500)});const i=document.getElementById('bug-media').value.trim();i&&o.fields.push({name:'🔗 Media URL',value:i});bugFiles.length&&o.fields.push({name:'📎 Attachments',value:`${bugFiles.length} file(s) attached`});const c=r==='High'?'Critical':r==='Medium'?'High':'Medium';createTaskInTaskboard({title:`🐛 [${a}] ${t.slice(0,60)}${t.length>60?'...':''}`,description:`**Reporter:** ${e}\n**Severity:** ${r}\n\n${t}${s?'\n\n**Steps:**\n'+s:''}`,category:'Bug Reports',priority:c,submitter:e});const d=`🐛 [${a}] ${t.slice(0,70)}${t.length>70?'...':''}`;submitToDiscord('bug',d,o,bugFiles,'bug-submit-btn',e)}function submitSuggestion(){const e=document.getElementById('sug-discord').value.trim(),t=document.getElementById('sug-idea').value.trim();if(!e||!t){alert('Please fill in required fields');return}const n=document.getElementById('sug-submit-btn');n.disabled=true;n.innerHTML='<span class="loading"></span>SUBMITTING...';const a=getSelectedBadge('sug-category'),r={title:'💡 Suggestion',color:65535,fields:[{name:'👤 Discord',value:e,inline:true},{name:'📁 Category',value:a,inline:true},{name:'📝 Suggestion',value:t.slice(0,1000)}],footer:{text:'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!'},timestamp:new Date().toISOString()};const s=document.getElementById('sug-ref').value.trim();s&&r.fields.push({name:'🔗 Reference',value:s});sugFiles.length&&r.fields.push({name:'📎 Attachments',value:`${sugFiles.length} file(s) attached`});createTaskInTaskboard({title:`💡 [${a}] ${t.slice(0,60)}${t.length>60?'...':''}`,description:`**Suggested by:** ${e}\n**Category:** ${a}\n\n${t}${s?'\n\n**Reference:** '+s:''}`,category:'Suggestions',priority:'Low',submitter:e});const o=`💡 [${a}] ${t.slice(0,70)}${t.length>70?'...':''}`;submitToDiscord('suggestion',o,r,sugFiles,'sug-submit-btn',e)}function submitCrash(){const e=document.getElementById('crash-discord').value.trim(),t=document.getElementById('crash-what').value.trim();if(!e||!t){alert('Please fill in required fields');return}const n=document.getElementById('crash-submit-btn');n.disabled=true;n.innerHTML='<span class="loading"></span>SUBMITTING...';const a=getSelectedBadge('crash-type'),r=document.getElementById('crash-freq').value,s=document.getElementById('crash-error').value.trim(),o={title:'💥 Crash Report',color:16744448,fields:[{name:'👤 Discord',value:e,inline:true},{name:'💢 Type',value:a,inline:true},{name:'🔄 Frequency',value:r,inline:true},{name:'📝 What Happened',value:t.slice(0,1000)}],footer:{text:'Phase City Citizen Portal • 👍👎 Vote • 💬 Discuss below!'},timestamp:new Date().toISOString()};s&&o.fields.push({name:'⚠️ Error Message',value:'```'+s.slice(0,500)+'```'});crashFile&&o.fields.push({name:'📎 Crash File',value:crashFile.name});const i=r==='Every time I do this action'?'Critical':'High';createTaskInTaskboard({title:`💥 [${a}] ${t.slice(0,60)}${t.length>60?'...':''}`,description:`**Reporter:** ${e}\n**Crash Type:** ${a}\n**Frequency:** ${r}\n\n${t}${s?'\n\n**Error:**\n```\n'+s+'\n```':''}`,category:'Crash Reports',priority:i,submitter:e});const c=`💥 [${a}] ${t.slice(0,70)}${t.length>70?'...':''}`;submitToDiscordWithSingleFile('crash',c,o,crashFile,'crash-submit-btn',e)}
 </script>
 </body>
 </html>
