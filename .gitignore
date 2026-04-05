@@ -1,0 +1,8 @@
+# Tests live in-repo for convenience but should not be committed
+# (per Zach's preference: design docs / tests stay out of the main repo).
+tests/
+.claude/
+node_modules/
+test-results/
+playwright-report/
+playwright/.cache/

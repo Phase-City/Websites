@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discord — faster responses for most questions
+    url: https://discord.gg/NSZHK6spre
+    about: Quick questions, general support, or community chat — post in #support or open a ticket.
+  - name: 🐛 Citizen Portal — tracked bug / suggestion / crash reports
+    url: https://www.phasecity.net/citizen-portal.html
+    about: Reports submitted here auto-post to Discord and get a ticket on the dev task board.
