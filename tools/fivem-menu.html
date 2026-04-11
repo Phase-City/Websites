@@ -54,6 +54,16 @@ h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin
 .biz-settings input:focus,.biz-settings select:focus{border-color:var(--accent)}
 @media(max-width:640px){.biz-settings{grid-template-columns:1fr 1fr}}
 
+.bg-picker{display:flex;align-items:center;gap:8px;margin-bottom:16px;padding:10px 12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;flex-wrap:wrap}
+.bg-picker .bg-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.3px;color:var(--muted);margin-right:4px}
+.bg-swatch{width:38px;height:28px;border-radius:5px;cursor:pointer;border:2px solid var(--border);transition:transform .1s,border-color .15s;flex-shrink:0;position:relative}
+.bg-swatch:hover{transform:scale(1.08);border-color:var(--muted)}
+.bg-swatch.on{border-color:var(--accent);box-shadow:0 0 0 2px rgba(123,104,238,.35)}
+.bg-swatch.none{background:repeating-linear-gradient(45deg,var(--bg),var(--bg) 4px,var(--surface2) 4px,var(--surface2) 8px);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.7rem}
+.bg-picker input[type="color"]{width:38px;height:28px;border:2px solid var(--border);border-radius:5px;cursor:pointer;background:none;padding:0}
+.bg-picker input[type="color"]:hover{border-color:var(--muted)}
+.bg-picker .bg-custom-label{font-size:.7rem;color:var(--muted)}
+
 .cat{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
 .cat-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;background:var(--surface2);border-bottom:1px solid var(--border)}
 .cat-head:hover{background:#1f1f30}
@@ -108,6 +118,7 @@ h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;z-index:1000}
 .overlay.on{display:flex}
 .preview{background:#0f0f1a;border:2px solid var(--accent);border-radius:12px;padding:32px 40px;max-width:720px;width:100%;position:relative;margin:auto}
+.preview.has-image{box-shadow:inset 0 0 0 9999px rgba(10,10,15,0.55)}
 .preview-close{position:absolute;top:12px;right:12px;background:var(--surface);border:1px solid var(--border);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center}
 .preview-close:hover{background:var(--error);border-color:var(--error)}
 .preview-print{position:absolute;top:12px;right:56px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.78rem}
@@ -170,6 +181,7 @@ h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin
     <div class="action-bar" id="action-bar" style="display:none">
       <button class="btn btn-cyan" id="preview-btn">&#128065; Preview</button>
       <button class="btn btn-gold" id="share-btn">&#128279; Share URL</button>
+      <button class="btn" id="download-btn">&#128190; Download .json</button>
       <button class="btn btn-success" id="png-btn">&#128444; PNG</button>
     </div>
   </div>
@@ -219,6 +231,62 @@ function clear(el){ while (el.firstChild) el.removeChild(el.firstChild); }
 var data = { businesses: [], active: 0 };
 var fileHandle = null;
 
+// Background presets. Each has from/to colors so both CSS (gradient string)
+// and canvas (createLinearGradient) can render the same look.
+var BG_PRESETS = {
+  bar:        { label: 'Bar',        from: '#1a0d2e', to: '#0a1a2e', accent: '#a855f7' },
+  restaurant: { label: 'Restaurant', from: '#2b1a0e', to: '#4a2816', accent: '#f59e0b' },
+  neon:       { label: 'Neon',       from: '#0a1a2e', to: '#1e0a2e', accent: '#06b6d4' },
+  industrial: { label: 'Industrial', from: '#1a1a1a', to: '#2d2d3a', accent: '#94a3b8' },
+  forest:     { label: 'Forest',     from: '#0a1a0e', to: '#1a2a1e', accent: '#10b981' },
+  royal:      { label: 'Royal',      from: '#1a0a2e', to: '#2e0a1a', accent: '#c084fc' }
+};
+
+function bgCss(bg){
+  if (!bg) return '';
+  if (bg.image) return "url('" + bg.image + "') center/cover no-repeat, #0f0f1a";
+  if (bg.preset && BG_PRESETS[bg.preset]){
+    var p = BG_PRESETS[bg.preset];
+    return 'linear-gradient(135deg, ' + p.from + ' 0%, ' + p.to + ' 100%)';
+  }
+  if (bg.color) return bg.color;
+  return '';
+}
+
+// Synchronous canvas fill for solid / gradient backgrounds. Image backgrounds
+// are handled in exportPng directly (require async Image loading). Returns
+// the accent color to use for titles and prices on top of the background.
+function bgCanvasFill(ctx, bg, W, H){
+  if (!bg) { ctx.fillStyle = '#0f0f1a'; ctx.fillRect(0,0,W,H); return '#7B68EE'; }
+  if (bg.preset && BG_PRESETS[bg.preset]){
+    var p = BG_PRESETS[bg.preset];
+    var grad = ctx.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, p.from);
+    grad.addColorStop(1, p.to);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+    return p.accent;
+  }
+  if (bg.color){
+    ctx.fillStyle = bg.color;
+    ctx.fillRect(0, 0, W, H);
+    return '#7B68EE';
+  }
+  ctx.fillStyle = '#0f0f1a';
+  ctx.fillRect(0, 0, W, H);
+  return '#7B68EE';
+}
+
+function loadImage(src){
+  return new Promise(function(resolve, reject){
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function(){ resolve(img); };
+    img.onerror = function(){ reject(new Error('Image failed to load')); };
+    img.src = src;
+  });
+}
+
 function genId(prefix){ return prefix + '-' + Math.random().toString(36).slice(2,9); }
 
 function newBusiness(name){
@@ -228,6 +296,7 @@ function newBusiness(name){
     currency: '$',
     taxRate: 0,
     tipRates: [15,18,20],
+    background: { preset: '', color: '', image: '' },
     categories: []
   };
 }
@@ -321,6 +390,7 @@ function renderContent(){
   actionBar.style.display = 'flex';
 
   root.appendChild(renderSettings(biz));
+  root.appendChild(renderBgPicker(biz));
 
   if (biz.categories.length === 0){
     root.appendChild(h('div', { class: 'empty' }, [
@@ -337,6 +407,148 @@ function renderContent(){
     text: '+ Add Category',
     onclick: addCategory
   }));
+}
+
+function renderBgPicker(biz){
+  if (!biz.background) biz.background = { preset: '', color: '', image: '' };
+  var bg = biz.background;
+  var picker = h('div', { class: 'bg-picker' });
+  picker.appendChild(h('span', { class: 'bg-label', text: 'Background' }));
+
+  var noneActive = !bg.preset && !bg.color && !bg.image;
+  picker.appendChild(h('div', {
+    class: 'bg-swatch none' + (noneActive ? ' on' : ''),
+    title: 'No background',
+    text: '\u00d7',
+    onclick: function(){ setBackground('none'); }
+  }));
+
+  Object.keys(BG_PRESETS).forEach(function(key){
+    var p = BG_PRESETS[key];
+    var sw = h('div', {
+      class: 'bg-swatch' + (bg.preset === key && !bg.image ? ' on' : ''),
+      title: p.label,
+      style: 'background: linear-gradient(135deg,' + p.from + ' 0%,' + p.to + ' 100%)',
+      onclick: function(){ setBackground('preset', key); }
+    });
+    picker.appendChild(sw);
+  });
+
+  picker.appendChild(h('span', { class: 'bg-custom-label', text: 'Color:' }));
+  picker.appendChild(h('input', {
+    type: 'color',
+    value: bg.color || '#0f0f1a',
+    title: 'Custom color',
+    oninput: function(){ setBackground('color', this.value); }
+  }));
+
+  picker.appendChild(h('span', { class: 'bg-custom-label', text: 'Image:' }));
+
+  var fileInput = h('input', {
+    type: 'file',
+    accept: 'image/*',
+    style: 'display:none',
+    onchange: function(){
+      var f = this.files && this.files[0];
+      if (f) readImageFile(f);
+      this.value = '';
+    }
+  });
+  picker.appendChild(fileInput);
+
+  picker.appendChild(h('button', {
+    class: 'btn btn-sm btn-outline',
+    text: bg.image ? '\u{1F5BC} Replace' : '\u{1F4C1} Upload',
+    onclick: function(){ fileInput.click(); }
+  }));
+
+  picker.appendChild(h('button', {
+    class: 'btn btn-sm btn-outline',
+    text: '\u{1F517} URL',
+    onclick: function(){
+      var url = prompt('Paste image URL:', (bg.image && bg.image.indexOf('data:') !== 0) ? bg.image : '');
+      if (url == null) return;
+      url = url.trim();
+      if (!url){ setBackground('image', ''); return; }
+      setBackground('image', url);
+    }
+  }));
+
+  if (bg.image){
+    picker.appendChild(h('span', {
+      class: 'bg-custom-label',
+      style: 'color:var(--success);font-weight:700',
+      text: '\u2714 image set'
+    }));
+    picker.appendChild(h('button', {
+      class: 'btn btn-sm btn-outline',
+      text: 'Clear',
+      onclick: function(){ setBackground('image', ''); }
+    }));
+  }
+
+  return picker;
+}
+
+function readImageFile(file){
+  var reader = new FileReader();
+  reader.onload = function(){
+    downscaleImage(reader.result, 1280, 0.78).then(function(result){
+      setBackground('image', result.dataUrl);
+      var savedPct = Math.max(0, Math.round((1 - result.finalBytes / result.origBytes) * 100));
+      var msg = 'Image loaded (' + Math.round(result.finalBytes / 1024) + ' KB';
+      if (savedPct > 0) msg += ', -' + savedPct + '%';
+      msg += ')';
+      toast(msg, 'success');
+    }).catch(function(){
+      // Fallback: use the raw data URL if downscale fails
+      setBackground('image', reader.result);
+      toast('Image loaded (original size)', 'success');
+    });
+  };
+  reader.onerror = function(){ toast('Failed to read image', 'error'); };
+  reader.readAsDataURL(file);
+}
+
+// Scales an image down so its longest edge is <= maxDim and re-encodes as JPEG
+// for much smaller file sizes. A 3MB phone photo typically lands at 80-150 KB.
+function downscaleImage(srcDataUrl, maxDim, quality){
+  return new Promise(function(resolve, reject){
+    var img = new Image();
+    img.onload = function(){
+      var w = img.width, hgt = img.height;
+      var scale = Math.min(1, maxDim / Math.max(w, hgt));
+      var tw = Math.round(w * scale);
+      var th = Math.round(hgt * scale);
+      var cv = document.createElement('canvas');
+      cv.width = tw; cv.height = th;
+      var cx = cv.getContext('2d');
+      if (!cx){ reject(new Error('No 2D context')); return; }
+      cx.drawImage(img, 0, 0, tw, th);
+      var out = cv.toDataURL('image/jpeg', quality || 0.78);
+      resolve({
+        dataUrl: out,
+        origBytes: srcDataUrl.length,
+        finalBytes: out.length,
+        width: tw,
+        height: th
+      });
+    };
+    img.onerror = function(){ reject(new Error('Image load failed')); };
+    img.src = srcDataUrl;
+  });
+}
+
+function setBackground(kind, value){
+  var biz = getActive();
+  if (!biz) return;
+  var bg = { preset: '', color: '', image: '' };
+  if (kind === 'preset') bg.preset = value || '';
+  else if (kind === 'color') bg.color = value || '';
+  else if (kind === 'image') bg.image = value || '';
+  // 'none' or anything else falls through to the empty default
+  biz.background = bg;
+  render();
 }
 
 function renderSettings(biz){
@@ -633,6 +845,26 @@ function downloadJson(){
   toast('Downloaded', 'success');
 }
 
+// Share-via-file path: downloads ONLY the active business (not the owner's
+// whole workspace with other businesses in it), including the full-resolution
+// background image. Drop the file into Discord and the recipient can load it
+// in the same tool. This is the "unlimited size" share path.
+function downloadShareFile(){
+  var biz = getActive();
+  if (!biz) return;
+  var payload = { businesses: [biz], active: 0 };
+  var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  var safeName = (biz.name || 'menu').replace(/[^a-z0-9]+/gi, '-').toLowerCase().replace(/^-|-$/g, '') || 'menu';
+  a.download = safeName + '.menu.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  var sizeKb = Math.round(blob.size / 1024);
+  toast('Downloaded ' + a.download + ' (' + sizeKb + ' KB) \u2014 drop into Discord to share', 'success');
+}
+
 async function loadFile(){
   try {
     if (window.showOpenFilePicker){
@@ -672,13 +904,15 @@ function applyLoadedData(text){
 
 // Backfill cat.type on legacy saves that had biz.type. The tool originally
 // stored type per-business before it moved to per-category; migrate so older
-// files keep working.
+// files keep working. Also default the background field on older saves.
 function migrateBusiness(b){
   var legacyType = b.type || 'food_drinks';
   (b.categories || []).forEach(function(c){
     if (!c.type) c.type = legacyType;
   });
   if (b.type) delete b.type;
+  if (!b.background) b.background = { preset: '', color: '', image: '' };
+  if (b.background.image == null) b.background.image = '';
 }
 
 // ─────────────────────────── Preview ───────────────────────────
@@ -688,6 +922,10 @@ function showPreview(){
   var host = document.getElementById('preview-content');
   clear(host);
   host.appendChild(buildPreviewDom(biz));
+  var previewEl = document.getElementById('preview');
+  var bgStyle = bgCss(biz.background);
+  previewEl.style.background = bgStyle || '';
+  previewEl.classList.toggle('has-image', !!(biz.background && biz.background.image));
   document.getElementById('overlay').classList.add('on');
 }
 
@@ -777,19 +1015,32 @@ function buildPreviewDom(biz){
 }
 
 // ─────────────────────────── Share URL ───────────────────────────
+var URL_SHARE_CAP = 16384; // ~16KB — Discord, browsers, and most pasters handle this fine
+
 function shareMenu(){
   var biz = getActive();
   if (!biz) return;
   try {
-    var encoded = encodeShareUrl(biz);
+    // Uploaded data-URL images are too large for any URL share even after
+    // downscaling. Strip them from the shared copy; preset/color backgrounds
+    // and remote image URLs pass through as-is.
+    var shared = JSON.parse(JSON.stringify(biz));
+    var stripped = false;
+    if (shared.background && shared.background.image && shared.background.image.indexOf('data:') === 0){
+      shared.background.image = '';
+      stripped = true;
+    }
+    var encoded = encodeShareUrl(shared);
     var url = location.origin + location.pathname + '?m=' + encoded;
-    if (url.length > 4096){
-      toast('Menu too large for URL share (' + url.length + ' chars). Use JSON export.', 'error');
+    if (url.length > URL_SHARE_CAP){
+      toast('Menu too large for URL (' + Math.round(url.length / 1024) + ' KB). Use \u{1F4BE} Download and drop the file in Discord instead.', 'error');
       return;
     }
+    var msg = 'Share URL copied (' + url.length + ' chars)';
+    if (stripped) msg += ' \u2014 uploaded image stripped; use Download to keep it';
     if (navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(url).then(function(){
-        toast('Share URL copied (' + url.length + ' chars)', 'success');
+        toast(msg, 'success');
       }, function(){
         prompt('Copy this URL:', url);
       });
@@ -847,13 +1098,35 @@ function exportPng(){
   var ctx = canvas.getContext('2d');
   if (!ctx){ toast('Canvas not supported', 'error'); return; }
 
-  ctx.fillStyle = '#0f0f1a';
-  ctx.fillRect(0, 0, W, canvas.height);
-  ctx.strokeStyle = '#7B68EE';
+  var accent = '#7B68EE';
+  var bg = biz.background;
+
+  var paintBg = bg && bg.image
+    ? loadImage(bg.image).then(function(img){
+        // Cover-fit: draw image scaled to fill the canvas, cropping excess.
+        var ir = img.width / img.height;
+        var cr = W / canvas.height;
+        var sx = 0, sy = 0, sw = img.width, sh = img.height;
+        if (ir > cr){ sw = img.height * cr; sx = (img.width - sw) / 2; }
+        else        { sh = img.width / cr; sy = (img.height - sh) / 2; }
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, canvas.height);
+        // Overlay a dark scrim so text stays readable
+        ctx.fillStyle = 'rgba(10,10,15,0.55)';
+        ctx.fillRect(0, 0, W, canvas.height);
+      }).catch(function(){
+        toast('Background image failed, using fallback', 'error');
+        accent = bgCanvasFill(ctx, null, W, canvas.height);
+      })
+    : Promise.resolve().then(function(){
+        accent = bgCanvasFill(ctx, bg, W, canvas.height);
+      });
+
+  paintBg.then(function(){
+    ctx.strokeStyle = accent;
   ctx.lineWidth = 4;
   ctx.strokeRect(2, 2, W - 4, canvas.height - 4);
 
-  ctx.fillStyle = '#7B68EE';
+  ctx.fillStyle = accent;
   ctx.font = 'bold 32px -apple-system, Segoe UI, sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(String(biz.name).toUpperCase(), W / 2, padding + 30);
@@ -870,10 +1143,10 @@ function exportPng(){
     var visible = cat.items.filter(function(i){ return i.name; });
     if (!visible.length) return;
 
-    ctx.fillStyle = '#5CE1E6';
+    ctx.fillStyle = accent;
     ctx.font = 'bold 18px -apple-system, Segoe UI, sans-serif';
     ctx.fillText(String(cat.name).toUpperCase(), padding, y);
-    ctx.strokeStyle = '#1e1e2e';
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(padding, y + 6);
@@ -887,7 +1160,7 @@ function exportPng(){
       var name = it.name + (it.isSpecial ? ' \u2605' : '');
       ctx.fillText(name, padding, y);
 
-      ctx.fillStyle = '#7B68EE';
+      ctx.fillStyle = accent;
       ctx.textAlign = 'right';
       ctx.font = 'bold 14px Courier New, monospace';
       ctx.fillText(biz.currency + Number(it.price || 0).toFixed(2), W - padding, y);
@@ -906,16 +1179,21 @@ function exportPng(){
     y += catSpacing;
   });
 
-  canvas.toBlob(function(blob){
-    if (!blob){ toast('PNG export failed', 'error'); return; }
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = (biz.name || 'menu').replace(/\s+/g, '-').toLowerCase() + '.png';
-    a.click();
-    URL.revokeObjectURL(url);
-    toast('PNG downloaded', 'success');
-  }, 'image/png');
+  try {
+    canvas.toBlob(function(blob){
+      if (!blob){ toast('PNG export failed (canvas may be CORS-tainted by image URL)', 'error'); return; }
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = (biz.name || 'menu').replace(/\s+/g, '-').toLowerCase() + '.png';
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('PNG downloaded', 'success');
+    }, 'image/png');
+  } catch(e){
+    toast('PNG export failed: ' + e.message + ' (try uploading the image instead of a URL)', 'error');
+  }
+  }); // end paintBg.then
 }
 
 // ─────────────────────────── Toast ───────────────────────────
@@ -934,6 +1212,7 @@ document.getElementById('load-btn').onclick = loadFile;
 document.getElementById('new-btn').onclick = newMenu;
 document.getElementById('preview-btn').onclick = showPreview;
 document.getElementById('share-btn').onclick = shareMenu;
+document.getElementById('download-btn').onclick = downloadShareFile;
 document.getElementById('png-btn').onclick = exportPng;
 document.getElementById('close-btn').onclick = closePreview;
 document.getElementById('print-btn').onclick = function(){ window.print(); };
