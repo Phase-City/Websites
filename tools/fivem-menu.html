@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Menu Builder — Phase City</title>
+<meta name="description" content="Build, price, and share menus for FiveM businesses in Phase City. Food, retail, and services with margin, tax, and tip calculators.">
+<meta property="og:title" content="FiveM Menu Builder — Phase City">
+<meta property="og:description" content="Build, price, and share menus for FiveM businesses in Phase City.">
+<meta property="og:image" content="https://www.phasecity.net/og-image.jpg">
+<meta property="og:url" content="https://www.phasecity.net/tools/fivem-menu.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FiveM Menu Builder — Phase City">
+<meta name="twitter:description" content="Build, price, and share menus for FiveM businesses in Phase City.">
+<meta name="twitter:image" content="https://www.phasecity.net/og-image.jpg">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--surface:#12121a;--surface2:#181826;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573;--gold:#ffa502}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:20px}
+.container{max-width:960px;margin:0 auto}
+h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
+.subtitle{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:24px}
+.subtitle a{color:inherit;text-decoration:none}
+.subtitle a:hover{color:var(--accent)}
+
+.btn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:.82rem;font-weight:600;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-sm{padding:5px 12px;font-size:.75rem;border-radius:4px}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--error)}
+.btn-success{background:var(--success);color:#000}
+.btn-cyan{background:var(--cyan);color:#000}
+.btn-gold{background:var(--gold);color:#000}
+
+.file-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.file-bar .left{display:flex;gap:6px;flex-wrap:wrap}
+
+.biz-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.biz-tab{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:.82rem;transition:all .15s;display:flex;align-items:center;gap:6px}
+.biz-tab:hover{border-color:var(--accent);color:var(--text)}
+.biz-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.biz-tab .rm{opacity:0;font-size:.7rem;cursor:pointer;margin-left:2px;transition:opacity .15s}
+.biz-tab:hover .rm{opacity:.6}
+.biz-tab .rm:hover{opacity:1;color:var(--error)}
+.add-biz-btn{padding:6px 12px;border-radius:6px;border:1px dashed var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:.82rem;transition:all .15s}
+.add-biz-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+.biz-settings{display:grid;grid-template-columns:3fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.biz-settings .form-group{display:flex;flex-direction:column;gap:4px}
+.biz-settings label{font-size:.72rem;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
+.biz-settings input,.biz-settings select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:6px;font-size:.82rem;outline:none;font-family:inherit}
+.biz-settings input:focus,.biz-settings select:focus{border-color:var(--accent)}
+@media(max-width:640px){.biz-settings{grid-template-columns:1fr 1fr}}
+
+.cat{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.cat-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;background:var(--surface2);border-bottom:1px solid var(--border)}
+.cat-head:hover{background:#1f1f30}
+.cat-head .left{display:flex;align-items:center;gap:8px;flex:1}
+.cat-head .chev{color:var(--muted);transition:transform .15s;font-size:.7rem}
+.cat.collapsed .chev{transform:rotate(-90deg)}
+.cat.collapsed .cat-body{display:none}
+.cat-name{font-size:.88rem;font-weight:600;color:var(--text);background:transparent;border:none;outline:none;flex:1;padding:2px 4px;border-radius:3px}
+.cat-name:focus{background:var(--bg);color:var(--accent)}
+.cat-count{font-size:.7rem;color:var(--muted);margin-left:4px}
+.cat-head .right{display:flex;gap:6px;align-items:center}
+.cat-type{background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:4px 8px;border-radius:4px;font-size:.72rem;outline:none;font-family:inherit;cursor:pointer}
+.cat-type:hover{border-color:var(--accent);color:var(--text)}
+.cat-type:focus{border-color:var(--accent);color:var(--text)}
+.cat-body{padding:0}
+
+.item-wrap{border-bottom:1px solid rgba(30,30,46,.5);transition:background .1s}
+.item-wrap:last-child{border-bottom:none}
+.item-wrap:hover{background:rgba(123,104,238,.04)}
+.item{display:grid;grid-template-columns:1fr 1fr 90px 90px 60px 28px 28px;gap:8px;align-items:center;padding:8px 14px}
+.item input{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:4px;font-size:.78rem;outline:none;font-family:inherit;width:100%}
+.item input:focus{border-color:var(--accent)}
+.item .margin{font-size:.72rem;color:var(--cyan);text-align:right;font-family:'Courier New',monospace}
+.item .margin.neg{color:var(--error)}
+.item .star{background:none;border:none;cursor:pointer;font-size:1rem;opacity:.3;transition:opacity .15s;color:var(--gold)}
+.item .star.on{opacity:1}
+.item .star:hover{opacity:.8}
+.item .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;padding:2px;border-radius:3px;transition:all .12s}
+.item .del:hover{color:var(--error)}
+.item-extras{display:flex;align-items:center;gap:8px;padding:0 14px 8px 22px}
+.item-extras .tag{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);min-width:70px;padding:2px 6px;background:var(--bg);border-radius:3px;text-align:center}
+.item-extras.food .tag{color:var(--success)}
+.item-extras.retail .tag{color:var(--gold)}
+.item-extras input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:5px 8px;border-radius:4px;font-size:.72rem;outline:none;font-family:inherit}
+.item-extras input:focus{border-color:var(--cyan);color:var(--text)}
+@media(max-width:720px){.item{grid-template-columns:1fr 80px 50px 28px 28px;grid-template-rows:auto auto}.item .desc{grid-column:1/-1}.item .margin-wrap{display:none}.item-extras{padding:0 10px 8px 14px}}
+
+.empty-cat{padding:16px;text-align:center;color:var(--muted);font-size:.78rem}
+.add-item-btn{width:100%;padding:8px;background:transparent;border:1px dashed var(--border);color:var(--muted);cursor:pointer;font-size:.78rem;border-radius:0 0 8px 8px;transition:all .12s}
+.add-item-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(123,104,238,.04)}
+
+.add-cat-btn{width:100%;padding:12px;background:transparent;border:1px dashed var(--border);color:var(--muted);cursor:pointer;font-size:.85rem;border-radius:8px;transition:all .12s;margin-bottom:16px}
+.add-cat-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+.action-bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:20px 0;border-top:1px solid var(--border);margin-top:20px}
+.action-bar .btn{padding:10px 20px;font-size:.88rem}
+
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty h3{font-size:1.1rem;margin-bottom:8px;color:var(--text)}
+.empty p{font-size:.85rem;margin-bottom:16px}
+
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;z-index:1000}
+.overlay.on{display:flex}
+.preview{background:#0f0f1a;border:2px solid var(--accent);border-radius:12px;padding:32px 40px;max-width:720px;width:100%;position:relative;margin:auto}
+.preview-close{position:absolute;top:12px;right:12px;background:var(--surface);border:1px solid var(--border);color:var(--text);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center}
+.preview-close:hover{background:var(--error);border-color:var(--error)}
+.preview-print{position:absolute;top:12px;right:56px;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:.78rem}
+.preview-print:hover{border-color:var(--accent);color:var(--accent)}
+.preview .p-title{font-size:2rem;margin-bottom:4px;color:var(--accent);letter-spacing:2px;text-align:center;font-weight:700}
+.preview .biz-subtitle{text-align:center;color:var(--muted);font-size:.78rem;margin-bottom:28px;text-transform:uppercase;letter-spacing:2px}
+.preview .cat-section{margin-bottom:24px}
+.preview .cat-title{font-size:1.1rem;font-weight:700;color:var(--cyan);border-bottom:1px solid var(--border);padding-bottom:6px;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.preview .p-item{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;gap:12px}
+.preview .p-item .p-info{flex:1}
+.preview .p-item .p-name{font-size:.95rem;font-weight:600;color:var(--text)}
+.preview .p-item .p-desc{font-size:.78rem;color:var(--muted);margin-top:2px}
+.preview .p-item .p-price{font-size:.95rem;font-weight:700;color:var(--accent);font-family:'Courier New',monospace;white-space:nowrap}
+.preview .p-item .p-meta{font-size:.7rem;color:var(--muted);margin-top:2px}
+.preview .special-badge{display:inline-block;background:var(--gold);color:#000;font-size:.6rem;font-weight:700;padding:1px 6px;border-radius:3px;margin-left:6px;text-transform:uppercase;letter-spacing:.5px}
+.preview .totals{margin-top:24px;padding-top:16px;border-top:2px solid var(--accent);font-size:.85rem}
+.preview .totals-row{display:flex;justify-content:space-between;padding:3px 0}
+.preview .totals-row.final{font-weight:700;color:var(--accent);font-size:1rem;padding-top:6px;border-top:1px dashed var(--border);margin-top:6px}
+.preview .tip-row{margin-top:12px;padding-top:10px;border-top:1px dashed var(--border);font-size:.75rem;color:var(--muted);text-align:center}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--accent);color:var(--text);padding:10px 18px;border-radius:8px;font-size:.82rem;z-index:2000;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+.toast.error{border-color:var(--error)}
+.toast.success{border-color:var(--success)}
+
+@media print{
+  body{background:#fff;color:#000;padding:0}
+  .file-bar,.biz-bar,.biz-settings,.cat .cat-head .right,.cat .add-item-btn,.add-cat-btn,.action-bar,.subtitle,.toast{display:none !important}
+  .overlay{position:static;background:#fff;padding:0;display:block !important}
+  .preview{background:#fff;border:none;color:#000;max-width:none;padding:20px}
+  .preview .p-title{color:#000}
+  .preview .cat-title{color:#333;border-color:#999}
+  .preview .p-item .p-name{color:#000}
+  .preview .p-item .p-desc{color:#555}
+  .preview .p-item .p-price{color:#000}
+  .preview-close,.preview-print{display:none}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FIVEM MENU BUILDER</h1>
+  <p class="subtitle"><a href="index.html">Phase City Tools</a></p>
+
+  <div id="main">
+    <div class="file-bar">
+      <div class="left">
+        <button class="btn btn-sm" id="save-btn">&#128190; Save</button>
+        <button class="btn btn-sm btn-outline" id="load-btn">&#128194; Load</button>
+      </div>
+      <div class="left">
+        <button class="btn btn-sm btn-outline" id="new-btn">+ New</button>
+      </div>
+    </div>
+
+    <div class="biz-bar" id="biz-bar"></div>
+
+    <div id="biz-content"></div>
+
+    <div class="action-bar" id="action-bar" style="display:none">
+      <button class="btn btn-cyan" id="preview-btn">&#128065; Preview</button>
+      <button class="btn btn-gold" id="share-btn">&#128279; Share URL</button>
+      <button class="btn btn-success" id="png-btn">&#128444; PNG</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="preview" id="preview">
+    <button class="preview-print" id="print-btn">&#128424; Print</button>
+    <button class="preview-close" id="close-btn">&times;</button>
+    <div id="preview-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────── DOM helper (safe, uses createElement + textContent) ───────────
+function h(tag, props, children){
+  var el = document.createElement(tag);
+  if (props){
+    for (var k in props){
+      var v = props[k];
+      if (v == null || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'style') el.setAttribute('style', v);
+      else if (k === 'text') el.textContent = v;
+      else if (k === 'value') el.value = v;
+      else if (k.indexOf('on') === 0 && typeof v === 'function') el[k] = v;
+      else el.setAttribute(k, v);
+    }
+  }
+  if (children != null){
+    var list = Array.isArray(children) ? children : [children];
+    for (var i = 0; i < list.length; i++){
+      var c = list[i];
+      if (c == null || c === false) continue;
+      if (typeof c === 'string' || typeof c === 'number') el.appendChild(document.createTextNode(String(c)));
+      else el.appendChild(c);
+    }
+  }
+  return el;
+}
+
+function clear(el){ while (el.firstChild) el.removeChild(el.firstChild); }
+
+// ─────────────────────────── Data Model ───────────────────────────
+var data = { businesses: [], active: 0 };
+var fileHandle = null;
+
+function genId(prefix){ return prefix + '-' + Math.random().toString(36).slice(2,9); }
+
+function newBusiness(name){
+  return {
+    id: genId('biz'),
+    name: name || 'New Business',
+    currency: '$',
+    taxRate: 0,
+    tipRates: [15,18,20],
+    categories: []
+  };
+}
+
+function newCategory(name, type){
+  return {
+    id: genId('cat'),
+    name: name || 'New Category',
+    type: type || 'food_drinks',
+    items: []
+  };
+}
+
+function getActive(){ return data.businesses[data.active] || null; }
+
+// ─────────────── Pure functions (exposed on window for tests) ───────────────
+function calcMargin(price, cost){
+  var p = Number(price) || 0;
+  var c = Number(cost) || 0;
+  if (p <= 0) return 0;
+  return ((p - c) / p) * 100;
+}
+
+function calcTotal(items, taxRate){
+  var subtotal = 0;
+  var list = items || [];
+  for (var i = 0; i < list.length; i++){
+    subtotal += Number(list[i].price) || 0;
+  }
+  var rate = Number(taxRate) || 0;
+  var tax = subtotal * (rate / 100);
+  return { subtotal: subtotal, tax: tax, total: subtotal + tax };
+}
+
+function encodeShareUrl(businessData){
+  var json = JSON.stringify(businessData);
+  var b64 = btoa(unescape(encodeURIComponent(json)));
+  return b64.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+
+function decodeShareUrl(str){
+  var b64 = str.replace(/-/g,'+').replace(/_/g,'/');
+  while (b64.length % 4) b64 += '=';
+  var json = decodeURIComponent(escape(atob(b64)));
+  return JSON.parse(json);
+}
+
+// ─────────────────────────── Rendering ───────────────────────────
+function render(){
+  renderBizBar();
+  renderContent();
+}
+
+function renderBizBar(){
+  var bar = document.getElementById('biz-bar');
+  clear(bar);
+  data.businesses.forEach(function(b, i){
+    var tab = h('div', {
+      class: 'biz-tab' + (i === data.active ? ' active' : ''),
+      onclick: function(){ data.active = i; render(); }
+    }, [
+      h('span', { text: b.name }),
+      h('span', {
+        class: 'rm',
+        text: '\u00d7',
+        onclick: function(e){ e.stopPropagation(); removeBusiness(i); }
+      })
+    ]);
+    bar.appendChild(tab);
+  });
+  bar.appendChild(h('button', {
+    class: 'add-biz-btn',
+    text: '+ Add Business',
+    onclick: addBusinessPrompt
+  }));
+}
+
+function renderContent(){
+  var root = document.getElementById('biz-content');
+  var actionBar = document.getElementById('action-bar');
+  clear(root);
+  var biz = getActive();
+  if (!biz){
+    root.appendChild(h('div', { class: 'empty' }, [
+      h('h3', { text: 'No businesses yet' }),
+      h('p', { text: 'Click + Add Business above to get started.' })
+    ]));
+    actionBar.style.display = 'none';
+    return;
+  }
+  actionBar.style.display = 'flex';
+
+  root.appendChild(renderSettings(biz));
+
+  if (biz.categories.length === 0){
+    root.appendChild(h('div', { class: 'empty' }, [
+      h('p', { text: 'No categories yet. Add one below to start building your menu.' })
+    ]));
+  } else {
+    biz.categories.forEach(function(cat, ci){
+      root.appendChild(renderCategory(cat, ci, biz));
+    });
+  }
+
+  root.appendChild(h('button', {
+    class: 'add-cat-btn',
+    text: '+ Add Category',
+    onclick: addCategory
+  }));
+}
+
+function renderSettings(biz){
+  var nameInput = h('input', {
+    type: 'text',
+    value: biz.name,
+    oninput: function(){ updateBiz('name', this.value); }
+  });
+  var taxInput = h('input', {
+    type: 'number', step: '0.1', min: '0', value: biz.taxRate,
+    oninput: function(){ updateBiz('taxRate', parseFloat(this.value) || 0); }
+  });
+  var currencyInput = h('input', {
+    type: 'text', maxlength: '3', value: biz.currency,
+    oninput: function(){ updateBiz('currency', this.value); }
+  });
+
+  return h('div', { class: 'biz-settings' }, [
+    h('div', { class: 'form-group' }, [ h('label', { text: 'Business Name' }), nameInput ]),
+    h('div', { class: 'form-group' }, [ h('label', { text: 'Tax %' }), taxInput ]),
+    h('div', { class: 'form-group' }, [ h('label', { text: 'Currency' }), currencyInput ])
+  ]);
+}
+
+function renderCategory(cat, ci, biz){
+  var nameInput = h('input', {
+    class: 'cat-name',
+    type: 'text',
+    value: cat.name,
+    onclick: function(e){ e.stopPropagation(); },
+    oninput: function(){ updateCat(ci, 'name', this.value); }
+  });
+
+  var typeSelect = h('select', {
+    class: 'cat-type',
+    onclick: function(e){ e.stopPropagation(); },
+    onchange: function(){ updateCat(ci, 'type', this.value); render(); }
+  });
+  [['food_drinks','Food & Drinks'],['retail','Retail'],['services','Services']].forEach(function(pair){
+    var opt = h('option', { value: pair[0], text: pair[1] });
+    if ((cat.type || 'food_drinks') === pair[0]) opt.selected = true;
+    typeSelect.appendChild(opt);
+  });
+
+  var removeBtn = h('button', {
+    class: 'btn btn-sm btn-outline',
+    text: '\u00d7',
+    onclick: function(e){ e.stopPropagation(); removeCategory(ci); }
+  });
+
+  var head = h('div', {
+    class: 'cat-head',
+    onclick: function(){ toggleCat(ci); }
+  }, [
+    h('div', { class: 'left' }, [
+      h('span', { class: 'chev', text: '\u25bc' }),
+      nameInput,
+      h('span', { class: 'cat-count', text: '(' + cat.items.length + ')' })
+    ]),
+    h('div', { class: 'right' }, [ typeSelect, removeBtn ])
+  ]);
+
+  var body = h('div', { class: 'cat-body' });
+  if (cat.items.length === 0){
+    body.appendChild(h('div', { class: 'empty-cat', text: 'No items yet' }));
+  } else {
+    cat.items.forEach(function(it, ii){
+      body.appendChild(renderItem(it, ci, ii, cat));
+    });
+  }
+  body.appendChild(h('button', {
+    class: 'add-item-btn',
+    text: '+ Add Item',
+    onclick: function(){ addItem(ci); }
+  }));
+
+  return h('div', { class: 'cat', 'data-ci': ci }, [ head, body ]);
+}
+
+function renderItem(it, ci, ii, cat){
+  var margin = calcMargin(it.price, it.cost);
+  var marginCls = 'margin margin-wrap' + (margin < 0 ? ' neg' : '');
+  var catType = cat.type || 'food_drinks';
+
+  var descPlaceholder = catType === 'services' ? 'What the service includes' : 'Description (optional)';
+
+  var nameInput = h('input', {
+    type: 'text',
+    placeholder: 'Item name',
+    value: it.name,
+    oninput: function(){ updateItem(ci, ii, 'name', this.value); }
+  });
+  var descInput = h('input', {
+    class: 'desc',
+    type: 'text',
+    placeholder: descPlaceholder,
+    value: it.description || '',
+    oninput: function(){ updateItem(ci, ii, 'description', this.value); }
+  });
+  var priceInput = h('input', {
+    type: 'number', step: '0.01', min: '0',
+    placeholder: 'Price',
+    value: it.price || '',
+    oninput: function(){
+      updateItem(ci, ii, 'price', parseFloat(this.value) || 0);
+      updateMarginDisplay(ci, ii);
+    }
+  });
+  var costInput = h('input', {
+    type: 'number', step: '0.01', min: '0',
+    placeholder: 'Cost',
+    value: it.cost || '',
+    oninput: function(){
+      updateItem(ci, ii, 'cost', parseFloat(this.value) || 0);
+      updateMarginDisplay(ci, ii);
+    }
+  });
+  var marginSpan = h('span', {
+    class: marginCls,
+    'data-margin': ci + '-' + ii,
+    text: margin.toFixed(0) + '%'
+  });
+  var starBtn = h('button', {
+    class: 'star' + (it.isSpecial ? ' on' : ''),
+    title: "Mark as today's special",
+    text: '\u2605',
+    onclick: function(){ toggleSpecial(ci, ii); }
+  });
+  var delBtn = h('button', {
+    class: 'del',
+    title: 'Remove',
+    text: '\u00d7',
+    onclick: function(){ removeItem(ci, ii); }
+  });
+
+  var mainRow = h('div', { class: 'item' }, [
+    nameInput, descInput, priceInput, costInput, marginSpan, starBtn, delBtn
+  ]);
+
+  var children = [mainRow];
+
+  if (catType === 'food_drinks'){
+    children.push(buildExtrasRow(ci, ii, 'food', 'Ingredients',
+      'e.g. lettuce, tomato, beef patty',
+      it.ingredients || '', 'ingredients'));
+  } else if (catType === 'retail'){
+    children.push(buildExtrasRow(ci, ii, 'retail', 'Bench Parts',
+      'Optional — e.g. 2x metal, 1x wire (blank = sold as-is)',
+      it.benchParts || '', 'benchParts'));
+  }
+
+  return h('div', { class: 'item-wrap' }, children);
+}
+
+function buildExtrasRow(ci, ii, kind, tagText, placeholder, value, field){
+  return h('div', { class: 'item-extras ' + kind }, [
+    h('span', { class: 'tag', text: tagText }),
+    h('input', {
+      type: 'text',
+      placeholder: placeholder,
+      value: value,
+      oninput: function(){ updateItem(ci, ii, field, this.value); }
+    })
+  ]);
+}
+
+function updateMarginDisplay(ci, ii){
+  var biz = getActive();
+  var it = biz.categories[ci].items[ii];
+  var m = calcMargin(it.price, it.cost);
+  var el = document.querySelector('[data-margin="' + ci + '-' + ii + '"]');
+  if (el){
+    el.textContent = m.toFixed(0) + '%';
+    el.classList.toggle('neg', m < 0);
+  }
+}
+
+// ─────────────────────────── Mutations ───────────────────────────
+function addBusinessPrompt(){
+  var name = prompt('Business name?');
+  if (!name) return;
+  data.businesses.push(newBusiness(name.trim()));
+  data.active = data.businesses.length - 1;
+  render();
+  toast('Business added', 'success');
+}
+
+function removeBusiness(i){
+  if (!confirm('Remove "' + data.businesses[i].name + '" and all its menu items?')) return;
+  data.businesses.splice(i, 1);
+  if (data.active >= data.businesses.length) data.active = Math.max(0, data.businesses.length - 1);
+  render();
+}
+
+function updateBiz(field, value){
+  var biz = getActive();
+  if (!biz) return;
+  biz[field] = value;
+  if (field === 'name') renderBizBar();
+}
+
+function addCategory(){
+  var biz = getActive();
+  if (!biz) return;
+  biz.categories.push(newCategory('New Category', 'food_drinks'));
+  render();
+}
+
+function removeCategory(ci){
+  var biz = getActive();
+  if (!confirm('Remove category and all its items?')) return;
+  biz.categories.splice(ci, 1);
+  render();
+}
+
+function updateCat(ci, field, value){
+  var biz = getActive();
+  biz.categories[ci][field] = value;
+}
+
+function toggleCat(ci){
+  var el = document.querySelector('[data-ci="' + ci + '"]');
+  if (el) el.classList.toggle('collapsed');
+}
+
+function addItem(ci){
+  var biz = getActive();
+  biz.categories[ci].items.push({
+    id: genId('itm'),
+    name: '',
+    description: '',
+    price: 0,
+    cost: 0,
+    isSpecial: false
+  });
+  render();
+}
+
+function removeItem(ci, ii){
+  var biz = getActive();
+  biz.categories[ci].items.splice(ii, 1);
+  render();
+}
+
+function updateItem(ci, ii, field, value){
+  var biz = getActive();
+  biz.categories[ci].items[ii][field] = value;
+}
+
+function toggleSpecial(ci, ii){
+  var biz = getActive();
+  var it = biz.categories[ci].items[ii];
+  it.isSpecial = !it.isSpecial;
+  render();
+}
+
+function newMenu(){
+  if (data.businesses.length && !confirm('Clear current menu? Unsaved changes will be lost.')) return;
+  data = { businesses: [], active: 0 };
+  fileHandle = null;
+  render();
+}
+
+// ─────────────────────────── File save/load ───────────────────────────
+async function saveFile(){
+  try {
+    if (window.showSaveFilePicker){
+      if (!fileHandle){
+        fileHandle = await window.showSaveFilePicker({
+          suggestedName: 'phase-menu.json',
+          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+        });
+      }
+      var w = await fileHandle.createWritable();
+      await w.write(JSON.stringify(data, null, 2));
+      await w.close();
+      toast('Saved', 'success');
+    } else {
+      downloadJson();
+    }
+  } catch(e){
+    if (e.name !== 'AbortError') toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+function downloadJson(){
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'phase-menu.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Downloaded', 'success');
+}
+
+async function loadFile(){
+  try {
+    if (window.showOpenFilePicker){
+      var picked = await window.showOpenFilePicker({
+        types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }]
+      });
+      fileHandle = picked[0];
+      var f = await fileHandle.getFile();
+      var text = await f.text();
+      applyLoadedData(text);
+    } else {
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json';
+      input.onchange = async function(){
+        var f = input.files[0];
+        if (!f) return;
+        var text = await f.text();
+        applyLoadedData(text);
+      };
+      input.click();
+    }
+  } catch(e){
+    if (e.name !== 'AbortError') toast('Load failed: ' + e.message, 'error');
+  }
+}
+
+function applyLoadedData(text){
+  var parsed = JSON.parse(text);
+  if (!parsed.businesses) parsed = { businesses: [], active: 0 };
+  parsed.businesses.forEach(migrateBusiness);
+  data = parsed;
+  data.active = Math.min(data.active || 0, Math.max(0, data.businesses.length - 1));
+  render();
+  toast('Loaded', 'success');
+}
+
+// Backfill cat.type on legacy saves that had biz.type. The tool originally
+// stored type per-business before it moved to per-category; migrate so older
+// files keep working.
+function migrateBusiness(b){
+  var legacyType = b.type || 'food_drinks';
+  (b.categories || []).forEach(function(c){
+    if (!c.type) c.type = legacyType;
+  });
+  if (b.type) delete b.type;
+}
+
+// ─────────────────────────── Preview ───────────────────────────
+function showPreview(){
+  var biz = getActive();
+  if (!biz) return;
+  var host = document.getElementById('preview-content');
+  clear(host);
+  host.appendChild(buildPreviewDom(biz));
+  document.getElementById('overlay').classList.add('on');
+}
+
+function closePreview(){
+  document.getElementById('overlay').classList.remove('on');
+}
+
+function buildPreviewDom(biz){
+  var frag = document.createDocumentFragment();
+
+  frag.appendChild(h('div', { class: 'p-title', text: biz.name }));
+  frag.appendChild(h('div', { class: 'biz-subtitle', text: 'Menu' }));
+
+  var allItems = [];
+  var hasFoodCategory = false;
+  var foodSubtotal = 0;
+
+  biz.categories.forEach(function(cat){
+    var visible = cat.items.filter(function(i){ return i.name; });
+    if (!visible.length) return;
+    var catType = cat.type || 'food_drinks';
+    if (catType === 'food_drinks') hasFoodCategory = true;
+
+    var section = h('div', { class: 'cat-section' }, [
+      h('div', { class: 'cat-title', text: cat.name })
+    ]);
+
+    visible.forEach(function(it){
+      allItems.push(it);
+      if (catType === 'food_drinks') foodSubtotal += Number(it.price) || 0;
+
+      var nameNode = h('div', { class: 'p-name' });
+      nameNode.appendChild(document.createTextNode(it.name));
+      if (it.isSpecial){
+        nameNode.appendChild(h('span', { class: 'special-badge', text: "Today's Special" }));
+      }
+
+      var info = h('div', { class: 'p-info' }, [ nameNode ]);
+      if (it.description) info.appendChild(h('div', { class: 'p-desc', text: it.description }));
+      if (catType === 'food_drinks' && it.ingredients){
+        info.appendChild(h('div', { class: 'p-meta', text: 'Contains: ' + it.ingredients }));
+      }
+      if (catType === 'services' && it.duration){
+        info.appendChild(h('div', { class: 'p-meta', text: '~' + it.duration + ' min' }));
+      }
+      if (catType === 'retail' && it.stock != null){
+        info.appendChild(h('div', { class: 'p-meta', text: 'In stock: ' + it.stock }));
+      }
+
+      var price = h('div', {
+        class: 'p-price',
+        text: biz.currency + Number(it.price || 0).toFixed(2)
+      });
+
+      section.appendChild(h('div', { class: 'p-item' }, [ info, price ]));
+    });
+
+    frag.appendChild(section);
+  });
+
+  if (biz.taxRate > 0 && allItems.length){
+    var totals = calcTotal(allItems, biz.taxRate);
+    frag.appendChild(h('div', { class: 'totals' }, [
+      h('div', { class: 'totals-row' }, [
+        h('span', { text: 'Subtotal' }),
+        h('span', { text: biz.currency + totals.subtotal.toFixed(2) })
+      ]),
+      h('div', { class: 'totals-row' }, [
+        h('span', { text: 'Tax (' + biz.taxRate + '%)' }),
+        h('span', { text: biz.currency + totals.tax.toFixed(2) })
+      ]),
+      h('div', { class: 'totals-row final' }, [
+        h('span', { text: 'Total (all items)' }),
+        h('span', { text: biz.currency + totals.total.toFixed(2) })
+      ])
+    ]));
+  }
+
+  if (hasFoodCategory && foodSubtotal > 0){
+    var tips = biz.tipRates.map(function(r){
+      return r + '% = ' + biz.currency + (foodSubtotal * r / 100).toFixed(2);
+    }).join('   |   ');
+    frag.appendChild(h('div', { class: 'tip-row', text: 'Suggested tips on food & drink subtotal: ' + tips }));
+  }
+
+  return frag;
+}
+
+// ─────────────────────────── Share URL ───────────────────────────
+function shareMenu(){
+  var biz = getActive();
+  if (!biz) return;
+  try {
+    var encoded = encodeShareUrl(biz);
+    var url = location.origin + location.pathname + '?m=' + encoded;
+    if (url.length > 4096){
+      toast('Menu too large for URL share (' + url.length + ' chars). Use JSON export.', 'error');
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){
+        toast('Share URL copied (' + url.length + ' chars)', 'success');
+      }, function(){
+        prompt('Copy this URL:', url);
+      });
+    } else {
+      prompt('Copy this URL:', url);
+    }
+  } catch(e){
+    toast('Share failed: ' + e.message, 'error');
+  }
+}
+
+function checkSharedUrl(){
+  var params = new URLSearchParams(location.search);
+  var m = params.get('m');
+  if (!m) return false;
+  try {
+    var biz = decodeShareUrl(m);
+    migrateBusiness(biz);
+    data = { businesses: [biz], active: 0 };
+    render();
+    showPreview();
+    return true;
+  } catch(e){
+    toast('Invalid share URL', 'error');
+    return false;
+  }
+}
+
+// ─────────────────────────── PNG export ───────────────────────────
+function exportPng(){
+  var biz = getActive();
+  if (!biz) return;
+
+  var canvas = document.createElement('canvas');
+  var W = 800;
+  var padding = 40;
+  var lineH = 28;
+  var catSpacing = 20;
+
+  var estH = padding * 2 + 100;
+  biz.categories.forEach(function(cat){
+    var visible = cat.items.filter(function(i){ return i.name; });
+    if (!visible.length) return;
+    estH += 40;
+    visible.forEach(function(it){
+      estH += lineH;
+      if (it.description) estH += 20;
+    });
+    estH += catSpacing;
+  });
+  if (biz.taxRate > 0) estH += 80;
+
+  canvas.width = W;
+  canvas.height = Math.max(estH, 300);
+  var ctx = canvas.getContext('2d');
+  if (!ctx){ toast('Canvas not supported', 'error'); return; }
+
+  ctx.fillStyle = '#0f0f1a';
+  ctx.fillRect(0, 0, W, canvas.height);
+  ctx.strokeStyle = '#7B68EE';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(2, 2, W - 4, canvas.height - 4);
+
+  ctx.fillStyle = '#7B68EE';
+  ctx.font = 'bold 32px -apple-system, Segoe UI, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(String(biz.name).toUpperCase(), W / 2, padding + 30);
+
+  ctx.fillStyle = '#888';
+  ctx.font = '12px -apple-system, Segoe UI, sans-serif';
+  var sub = 'MENU';
+  ctx.fillText(sub, W / 2, padding + 52);
+
+  var y = padding + 90;
+  ctx.textAlign = 'left';
+
+  biz.categories.forEach(function(cat){
+    var visible = cat.items.filter(function(i){ return i.name; });
+    if (!visible.length) return;
+
+    ctx.fillStyle = '#5CE1E6';
+    ctx.font = 'bold 18px -apple-system, Segoe UI, sans-serif';
+    ctx.fillText(String(cat.name).toUpperCase(), padding, y);
+    ctx.strokeStyle = '#1e1e2e';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padding, y + 6);
+    ctx.lineTo(W - padding, y + 6);
+    ctx.stroke();
+    y += 24;
+
+    visible.forEach(function(it){
+      ctx.fillStyle = '#e0e0e0';
+      ctx.font = 'bold 14px -apple-system, Segoe UI, sans-serif';
+      var name = it.name + (it.isSpecial ? ' \u2605' : '');
+      ctx.fillText(name, padding, y);
+
+      ctx.fillStyle = '#7B68EE';
+      ctx.textAlign = 'right';
+      ctx.font = 'bold 14px Courier New, monospace';
+      ctx.fillText(biz.currency + Number(it.price || 0).toFixed(2), W - padding, y);
+      ctx.textAlign = 'left';
+      y += lineH - 8;
+
+      if (it.description){
+        ctx.fillStyle = '#888';
+        ctx.font = '11px -apple-system, Segoe UI, sans-serif';
+        ctx.fillText(String(it.description).slice(0, 80), padding + 12, y + 4);
+        y += 20;
+      } else {
+        y += 8;
+      }
+    });
+    y += catSpacing;
+  });
+
+  canvas.toBlob(function(blob){
+    if (!blob){ toast('PNG export failed', 'error'); return; }
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = (biz.name || 'menu').replace(/\s+/g, '-').toLowerCase() + '.png';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('PNG downloaded', 'success');
+  }, 'image/png');
+}
+
+// ─────────────────────────── Toast ───────────────────────────
+var toastTimer = null;
+function toast(msg, kind){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast on ' + (kind || '');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.className = 'toast ' + (kind || ''); }, 2500);
+}
+
+// ─────────────────────────── Wire up buttons + init ───────────────────────────
+document.getElementById('save-btn').onclick = saveFile;
+document.getElementById('load-btn').onclick = loadFile;
+document.getElementById('new-btn').onclick = newMenu;
+document.getElementById('preview-btn').onclick = showPreview;
+document.getElementById('share-btn').onclick = shareMenu;
+document.getElementById('png-btn').onclick = exportPng;
+document.getElementById('close-btn').onclick = closePreview;
+document.getElementById('print-btn').onclick = function(){ window.print(); };
+document.getElementById('overlay').onclick = function(e){
+  if (e.target.id === 'overlay') closePreview();
+};
+
+if (!checkSharedUrl()){
+  render();
+}
+
+// Expose pure functions for tests
+if (typeof window !== 'undefined'){
+  window.calcMargin = calcMargin;
+  window.calcTotal = calcTotal;
+  window.encodeShareUrl = encodeShareUrl;
+  window.decodeShareUrl = decodeShareUrl;
+  window.newBusiness = newBusiness;
+}
+</script>
+</body>
+</html>
