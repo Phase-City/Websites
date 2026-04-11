@@ -478,17 +478,9 @@ function renderBgPicker(biz){
     var isLocal = bg.image.indexOf('data:') === 0;
     picker.appendChild(h('span', {
       class: 'bg-custom-label',
-      style: 'color:' + (isLocal ? 'var(--gold)' : 'var(--success)') + ';font-weight:700',
-      text: isLocal ? '\u26A0 local only' : '\u2714 hosted'
+      style: 'color:var(--success);font-weight:700',
+      text: isLocal ? '\u2714 local image' : '\u2714 hosted'
     }));
-    if (isLocal){
-      picker.appendChild(h('button', {
-        class: 'btn btn-sm btn-cyan',
-        text: '\u2191 Host',
-        title: 'Upload the stored image to catbox.moe so it\u2019s shareable via URL',
-        onclick: function(){ rehostCurrentImage(); }
-      }));
-    }
     picker.appendChild(h('button', {
       class: 'btn btn-sm btn-outline',
       text: 'Clear',
@@ -502,22 +494,13 @@ function renderBgPicker(biz){
 function readImageFile(file){
   var reader = new FileReader();
   reader.onload = function(){
-    toast('Preparing image\u2026', 'success');
     downscaleImage(reader.result, 1280, 0.78).then(function(result){
-      var kb = Math.round(result.finalBytes / 1024);
-      // Try to host the image externally so the share URL stays small.
-      // On any failure (network, CORS, service down) fall back to storing
-      // the data URL locally \u2014 menu still works, just not in URL shares.
-      var blob = dataUrlToBlob(result.dataUrl);
-      toast('Hosting ' + kb + ' KB image\u2026', 'success');
-      uploadToCatbox(blob).then(function(hostedUrl){
-        setBackground('image', hostedUrl);
-        toast('Image hosted on catbox.moe \u2014 menu is shareable via URL', 'success');
-      }).catch(function(err){
-        setBackground('image', result.dataUrl);
-        toast('Auto-host failed (' + (err && err.message ? err.message : 'network') +
-              ') \u2014 image saved locally; use Download to share full menu', 'error');
-      });
+      setBackground('image', result.dataUrl);
+      var savedPct = Math.max(0, Math.round((1 - result.finalBytes / result.origBytes) * 100));
+      var msg = 'Image loaded (' + Math.round(result.finalBytes / 1024) + ' KB';
+      if (savedPct > 0) msg += ', -' + savedPct + '%';
+      msg += ')';
+      toast(msg, 'success');
     }).catch(function(){
       setBackground('image', reader.result);
       toast('Image loaded (original size)', 'success');
@@ -525,40 +508,6 @@ function readImageFile(file){
   };
   reader.onerror = function(){ toast('Failed to read image', 'error'); };
   reader.readAsDataURL(file);
-}
-
-// Upload a Blob to catbox.moe's anonymous file hosting. Returns a permanent
-// https URL on success. No API key required; 200MB file size limit.
-// The upload will fail (and we'll fall back) if: catbox is down, the network
-// blocks the request, or CORS headers are stripped by a proxy.
-function uploadToCatbox(blob){
-  var form = new FormData();
-  form.append('reqtype', 'fileupload');
-  form.append('fileToUpload', blob, 'menu-bg.jpg');
-  return fetch('https://catbox.moe/user/api.php', {
-    method: 'POST',
-    body: form
-  }).then(function(resp){
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    return resp.text();
-  }).then(function(text){
-    var url = (text || '').trim();
-    if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(url)){
-      throw new Error('unexpected response');
-    }
-    return url;
-  });
-}
-
-// Convert a data URL into a Blob so it can be posted as a file attachment.
-function dataUrlToBlob(dataUrl){
-  var parts = dataUrl.split(',');
-  var mimeMatch = parts[0].match(/:([^;]+);/);
-  var mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
-  var binary = atob(parts[1]);
-  var array = new Uint8Array(binary.length);
-  for (var i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
-  return new Blob([array], { type: mime });
 }
 
 // Scales an image down so its longest edge is <= maxDim and re-encodes as JPEG
@@ -602,27 +551,6 @@ function setBackground(kind, value){
   render();
 }
 
-// Takes a locally-stored data URL image and uploads it to catbox.moe so it
-// becomes a small hosted URL that fits in share links. Useful for saves from
-// before auto-hosting was added, or if auto-hosting failed on the first try.
-function rehostCurrentImage(){
-  var biz = getActive();
-  if (!biz || !biz.background || !biz.background.image) return;
-  var img = biz.background.image;
-  if (img.indexOf('data:') !== 0){
-    toast('Image is already hosted', 'success');
-    return;
-  }
-  toast('Uploading to catbox.moe\u2026', 'success');
-  var blob = dataUrlToBlob(img);
-  uploadToCatbox(blob).then(function(hostedUrl){
-    setBackground('image', hostedUrl);
-    toast('Image hosted \u2014 menu now fits in share URL', 'success');
-  }).catch(function(err){
-    toast('Hosting failed: ' + (err && err.message ? err.message : 'network') +
-          ' \u2014 use Download instead', 'error');
-  });
-}
 
 function renderSettings(biz){
   var nameInput = h('input', {
