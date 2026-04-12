@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FiveM Stream Overlay - Phase City</title>
+<meta name="description" content="Generate a lightweight stream overlay file for OBS and Meld Studio. Server branding, character info, and connect IP.">
+<meta property="og:title" content="FiveM Stream Overlay — Phase City">
+<meta property="og:description" content="Generate a lightweight stream overlay file for OBS and Meld Studio. Server branding, character info, and connect IP.">
+<meta property="og:image" content="https://www.phasecity.net/og-image.jpg">
+<meta property="og:url" content="https://www.phasecity.net/tools/fivem-overlay.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FiveM Stream Overlay — Phase City">
+<meta name="twitter:description" content="Generate a lightweight stream overlay file for OBS and Meld Studio. Server branding, character info, and connect IP.">
+<meta name="twitter:image" content="https://www.phasecity.net/og-image.jpg">
+<style>
+:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--success:#2ed573}
+*,*:before,*:after{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto;padding:20px}
+h1{text-align:center;font-size:1.4rem;font-weight:700;color:var(--accent);margin-bottom:2px;letter-spacing:1px}
+.sub{text-align:center;color:var(--muted);font-size:.78rem;margin-bottom:16px}
+.sub a{color:inherit;text-decoration:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.f{margin-bottom:8px}
+.f label{display:block;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+.f input,.f select{width:100%;padding:5px 8px;border-radius:4px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:.8rem;font-family:inherit}
+.f input:focus,.f select:focus{outline:none;border-color:var(--accent)}
+.f input[type=color]{width:36px;height:26px;padding:1px;cursor:pointer}
+.row{display:flex;gap:8px;align-items:flex-end}
+.row .f{flex:1}
+.chk{display:flex;align-items:center;gap:6px;font-size:.78rem;cursor:pointer;padding:4px 0}
+.chk input{accent-color:var(--accent)}
+.colors{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:10px 12px;margin-bottom:14px}
+.pv{width:100%;aspect-ratio:16/9;border-radius:6px;border:1px solid var(--border);overflow:hidden;background:#222;margin-bottom:14px}
+.pv iframe{width:100%;height:100%;border:none;display:block}
+.bar{display:flex;gap:6px;flex-wrap:wrap}
+.btn{padding:6px 12px;border-radius:5px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:.75rem;font-family:inherit;transition:all .12s}
+.btn:hover{border-color:var(--accent);color:#fff}
+.btn-g{border-color:var(--success);color:var(--success);font-weight:700}
+.btn-g:hover{background:var(--success);color:#000}
+.how{font-size:.72rem;color:var(--muted);line-height:1.6;margin-top:14px;padding:10px;background:var(--surface);border-radius:6px;border:1px solid var(--border)}
+.how b{color:var(--text)}
+.how code{background:var(--bg);padding:1px 4px;border-radius:2px;color:var(--cyan);font-size:.68rem}
+#toast{position:fixed;top:12px;right:12px;z-index:99;padding:8px 14px;border-radius:5px;font-size:.75rem;color:#fff;background:var(--success);opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+@media(prefers-reduced-motion:reduce){*{animation-duration:0s!important;transition-duration:0s!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>STREAM OVERLAY</h1>
+  <p class="sub"><a href="/tools/">Phase City Tools</a></p>
+
+  <div class="grid">
+    <div>
+      <div class="f"><label>Server Name</label><input id="i-server" value="Phase City"></div>
+      <div class="f"><label>Tagline</label><input id="i-tag" value="Serious Roleplay"></div>
+      <div class="f"><label>Connect IP</label><input id="i-ip" value="join.phasecity.net:30120"></div>
+      <div class="f"><label>Layout</label>
+        <select id="i-layout">
+          <option value="bottom">Bottom Bar</option>
+          <option value="top">Top Bar</option>
+          <option value="minimal">Minimal Strip</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <div class="f"><label>Character Name</label><input id="i-char" placeholder="e.g. Marcus Bell"></div>
+      <div class="f"><label>Title / Role</label><input id="i-role" placeholder="e.g. LSPD Officer"></div>
+      <div class="f"><label>Socials</label><input id="i-social" placeholder="twitch.tv/you, @twitter"></div>
+      <label class="chk"><input type="checkbox" id="i-connect" checked> Show connect info</label>
+      <label class="chk"><input type="checkbox" id="i-live"> LIVE indicator</label>
+    </div>
+  </div>
+
+  <div class="colors">
+    <div class="row">
+      <div class="f"><label>Accent</label><input type="color" id="i-color" value="#8b5cf6"></div>
+      <div class="f"><label>Text</label><input type="color" id="i-text" value="#ffffff"></div>
+      <div class="f"><label>Background</label>
+        <select id="i-bgtype">
+          <option value="none">Transparent</option>
+          <option value="color">Solid Color</option>
+          <option value="image">Image</option>
+        </select>
+      </div>
+      <div class="f" id="bg-color-wrap" style="display:none"><label>BG Color</label><input type="color" id="i-bgcolor" value="#000000"></div>
+      <div class="f" id="bg-img-wrap" style="display:none"><label>BG Image</label><input type="file" accept="image/*" id="i-bgimg" style="font-size:.68rem"></div>
+    </div>
+  </div>
+
+  <div class="pv" id="pv"></div>
+
+  <div class="bar">
+    <button class="btn btn-g" id="dl-btn">Download overlay.html</button>
+    <button class="btn" id="cp-btn">Copy URL</button>
+  </div>
+
+  <div class="how">
+    <b>OBS:</b> Sources &rarr; + &rarr; Browser &rarr; <b>Local File</b> &rarr; pick the downloaded <code>overlay.html</code> &rarr; set <code>1920x1080</code><br>
+    <b>Meld Studio:</b> Add Layer &rarr; Web &rarr; Local File &rarr; pick <code>overlay.html</code><br>
+    <b>Or</b> use the Copy URL button and paste as a web Browser Source. Background is transparent — layers over your game capture. File is under 2 KB.
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ── pure functions (exposed on window for tests) ─────────────── */
+
+function encodeOverlayConfig(cfg){
+  var json = JSON.stringify(cfg);
+  var b64 = btoa(unescape(encodeURIComponent(json)));
+  return b64.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+
+function decodeOverlayConfig(str){
+  var b64 = str.replace(/-/g,'+').replace(/_/g,'/');
+  while(b64.length%4) b64+='=';
+  return JSON.parse(decodeURIComponent(escape(atob(b64))));
+}
+
+function buildOverlayFile(cfg){
+  var a = cfg.accent||'#8b5cf6';
+  var tc = cfg.textColor||'#ffffff';
+  var tca = tc+'a6'; /* 65% opacity for subtitles */
+  var bgBody = 'transparent';
+  var bgExtra = '';
+  if(cfg.bgType==='color' && cfg.bgColor) bgBody = cfg.bgColor;
+  if(cfg.bgType==='image' && cfg.bgImage) bgExtra = 'background-image:url('+cfg.bgImage+');background-size:cover;background-position:center;';
+  var s = [];
+  s.push('<!DOCTYPE html><html><head><meta charset=UTF-8><style>');
+  s.push('*{margin:0;padding:0;box-sizing:border-box}body{background:'+bgBody+';overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,sans-serif;'+bgExtra+'}');
+  s.push('.w{position:fixed;inset:0;pointer-events:none}');
+  s.push('.b{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:flex-end;justify-content:space-between;padding:16px 24px}');
+  s.push('.br{display:flex;align-items:center;gap:10px}');
+  s.push('.lo{font-size:24px;color:'+a+';filter:drop-shadow(0 2px 8px rgba(0,0,0,.6))}');
+  s.push('.sn{font-weight:700;font-size:16px;color:'+tc+';text-shadow:0 2px 8px rgba(0,0,0,.8);letter-spacing:.5px}');
+  s.push('.st{font-size:10px;color:'+tca+';text-transform:uppercase;letter-spacing:1.5px;text-shadow:0 1px 4px rgba(0,0,0,.8)}');
+  s.push('.cl{font-size:9px;color:'+tca+';text-transform:uppercase;letter-spacing:1px;text-shadow:0 1px 4px rgba(0,0,0,.8)}');
+  s.push('.ci{font-size:13px;color:'+tc+';font-family:monospace;text-shadow:0 2px 8px rgba(0,0,0,.8)}');
+  s.push('.t{position:absolute;top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;padding:16px 24px}');
+  s.push('.cn{font-weight:700;font-size:18px;color:'+tc+';text-shadow:0 2px 10px rgba(0,0,0,.8)}');
+  s.push('.ct{font-size:11px;color:'+tca+';text-shadow:0 1px 4px rgba(0,0,0,.8)}');
+  s.push('.so{font-size:12px;color:'+tca+';text-shadow:0 1px 4px rgba(0,0,0,.8);margin-left:12px}');
+  s.push('.sr{position:absolute;bottom:0;left:0;right:0;height:3px;background:'+a+'}');
+  s.push('.ld{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;margin-right:6px;animation:p 2s ease-in-out infinite}');
+  s.push('.lt{font-size:11px;color:#ef4444;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.8)}');
+  s.push('@keyframes p{0%,100%{opacity:.8}50%{opacity:1}}');
+  s.push('</style></head><body><div class=w>');
+
+  var socials = (cfg.socials||'').split(',').map(function(x){return x.trim()}).filter(Boolean);
+  var e = function(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')};
+
+  /* Top: character + socials + live */
+  if(cfg.charName || socials.length || cfg.live){
+    s.push('<div class=t><div>');
+    if(cfg.live) s.push('<div style="margin-bottom:4px"><span class=ld></span><span class=lt>LIVE</span></div>');
+    if(cfg.charName) s.push('<div class=cn>'+e(cfg.charName)+'</div>');
+    if(cfg.charTitle) s.push('<div class=ct>'+e(cfg.charTitle)+'</div>');
+    s.push('</div><div>');
+    socials.forEach(function(x){ s.push('<span class=so>'+e(x)+'</span>'); });
+    s.push('</div></div>');
+  }
+
+  /* Bottom bar */
+  if(cfg.layout!=='minimal'){
+    var pos = cfg.layout==='top'?'top:0;bottom:auto':'';
+    s.push('<div class=b'+(pos?' style="'+pos+'"':'')+'><div class=br>');
+    s.push('<span class=lo>\u269C</span><div><div class=sn>'+e(cfg.server)+'</div>');
+    if(cfg.tagline) s.push('<div class=st>'+e(cfg.tagline)+'</div>');
+    s.push('</div></div>');
+    if(cfg.connect && cfg.ip){
+      s.push('<div style="text-align:right"><div class=cl>Connect</div><div class=ci>'+e(cfg.ip)+'</div></div>');
+    }
+    s.push('</div>');
+  }
+
+  s.push('<div class=sr></div></div></body></html>');
+  return s.join('');
+}
+
+/* ── editor logic ─────────────────────────────────────────────── */
+
+function getCfg(){
+  return {
+    server: document.getElementById('i-server').value,
+    tagline: document.getElementById('i-tag').value,
+    ip: document.getElementById('i-ip').value,
+    accent: document.getElementById('i-color').value,
+    textColor: document.getElementById('i-text').value,
+    bgType: document.getElementById('i-bgtype').value,
+    bgColor: document.getElementById('i-bgcolor').value,
+    bgImage: getCfg._bgImage || '',
+    layout: document.getElementById('i-layout').value,
+    charName: document.getElementById('i-char').value,
+    charTitle: document.getElementById('i-role').value,
+    socials: document.getElementById('i-social').value,
+    connect: document.getElementById('i-connect').checked,
+    live: document.getElementById('i-live').checked
+  };
+}
+getCfg._bgImage = '';
+
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  clearTimeout(toast._t);
+  toast._t=setTimeout(function(){t.classList.remove('on')},2000);
+}
+
+var pvFrame=null;
+function refresh(){
+  var cfg=getCfg();
+  var html=buildOverlayFile(cfg);
+  if(!pvFrame){
+    pvFrame=document.createElement('iframe');
+    pvFrame.style.cssText='width:100%;height:100%;border:none;display:block';
+    document.getElementById('pv').appendChild(pvFrame);
+  }
+  pvFrame.srcdoc=html;
+  /* update share URL */
+  var enc=encodeOverlayConfig(cfg);
+  refresh._url=location.origin+location.pathname+'?o='+enc;
+}
+
+function download(){
+  var html=buildOverlayFile(getCfg());
+  var blob=new Blob([html],{type:'text/html'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='overlay.html';a.click();
+  URL.revokeObjectURL(url);
+  toast('Downloaded — '+Math.round(html.length/1024)+' KB');
+}
+
+/* ── init ─────────────────────────────────────────────────────── */
+
+(function(){
+  /* If ?o= param, render overlay directly (OBS web source mode) */
+  var p=new URLSearchParams(location.search).get('o');
+  if(p){
+    try{
+      var cfg=decodeOverlayConfig(p);
+      document.documentElement.innerHTML=buildOverlayFile(cfg).replace(/<!DOCTYPE html><html>/,'').replace(/<\/html>/,'');
+      document.body.style.background='transparent';
+      return;
+    }catch(e){}
+  }
+
+  /* Editor mode */
+  var inputs=document.querySelectorAll('input,select');
+  for(var i=0;i<inputs.length;i++){
+    inputs[i].addEventListener('input',refresh);
+    inputs[i].addEventListener('change',refresh);
+  }
+
+  /* Background type toggle */
+  document.getElementById('i-bgtype').addEventListener('change',function(){
+    var v=this.value;
+    document.getElementById('bg-color-wrap').style.display=v==='color'?'':'none';
+    document.getElementById('bg-img-wrap').style.display=v==='image'?'':'none';
+  });
+
+  /* Background image upload */
+  document.getElementById('i-bgimg').addEventListener('change',function(){
+    var f=this.files&&this.files[0];
+    if(!f) return;
+    var reader=new FileReader();
+    reader.onload=function(){
+      /* Downscale for small file size */
+      var img=new Image();
+      img.onload=function(){
+        var max=1920,w=img.width,h=img.height;
+        var sc=Math.min(1,max/Math.max(w,h));
+        var cv=document.createElement('canvas');
+        cv.width=Math.round(w*sc);cv.height=Math.round(h*sc);
+        var cx=cv.getContext('2d');
+        if(cx){cx.drawImage(img,0,0,cv.width,cv.height);getCfg._bgImage=cv.toDataURL('image/jpeg',0.7);}
+        else{getCfg._bgImage=reader.result;}
+        refresh();
+        toast('Image loaded');
+      };
+      img.onerror=function(){getCfg._bgImage=reader.result;refresh();};
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(f);
+  });
+
+  refresh();
+
+  document.getElementById('dl-btn').onclick=download;
+  document.getElementById('cp-btn').onclick=function(){
+    var url=refresh._url||'';
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){toast('URL copied')}).catch(function(){prompt('Copy:',url)});
+    }else{prompt('Copy:',url)}
+  };
+})();
+</script>
+</body>
+</html>
