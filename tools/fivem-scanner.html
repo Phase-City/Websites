@@ -3,21 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FiveM Server Scanner</title>
+<title>Phase City // Server Scanner</title>
 <meta name="description" content="Scan and check the status of Phase City's FiveM server in real time.">
-<meta property="og:title" content="FiveM Server Scanner — Phase City">
+<meta property="og:title" content="Phase City // Server Scanner">
 <meta property="og:description" content="Scan and check the status of Phase City's FiveM server in real time.">
 <meta property="og:image" content="https://www.phasecity.net/og-image.jpg">
 <meta property="og:url" content="https://www.phasecity.net/tools/fivem-scanner.html">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="FiveM Server Scanner — Phase City">
+<meta name="twitter:title" content="Phase City // Server Scanner">
 <meta name="twitter:description" content="Scan and check the status of Phase City's FiveM server in real time.">
 <meta name="twitter:image" content="https://www.phasecity.net/og-image.jpg">
+<link rel="preconnect" href="https://fonts.cloudflare.com" crossorigin>
+<link href="https://fonts.cloudflare.com/css?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:20px}
+:root{--bg:#05020f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;padding:76px 20px 20px}
 .container{max-width:920px;margin:0 auto}
 h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin-bottom:6px;letter-spacing:1px}
 .subtitle{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:24px}
@@ -95,9 +97,48 @@ tr:hover td{background:rgba(123,104,238,.04)}
   .info-grid{grid-template-columns:1fr}
   .filter-input{width:100%}
 }
+
+::selection{background:#8b5cf666;color:#fff}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#05020f}
+::-webkit-scrollbar-thumb{background:#8b5cf64d;border-radius:3px}
+@keyframes twinkle{0%,to{opacity:0}50%{opacity:.7}}
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d) var(--dl) ease-in-out infinite;will-change:opacity;contain:strict}
+.tool-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#05020fe0;backdrop-filter:blur(24px);border-bottom:1px solid rgba(139,92,246,.1);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,32px)}
+.tool-nav .n-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.tool-nav .n-logo img{width:22px;height:20px;filter:drop-shadow(0 0 8px rgba(139,92,246,.4))}
+.tool-nav .n-logo span{font-family:Syne,sans-serif;font-weight:800;font-size:15px;letter-spacing:.05em}
+.tool-nav .n-logo .ac{color:#8b5cf6}
+.tool-nav .n-links{display:flex;gap:4px}
+.tool-nav .n-links a{color:#6b6b87;font-size:12px;font-weight:500;padding:5px 12px;border-radius:5px;border:1px solid transparent;transition:.3s;text-decoration:none}
+.tool-nav .n-links a:hover{background:#8b5cf61f;border-color:#8b5cf640;color:#c4b5fd}
+.tool-footer{padding:36px 24px;text-align:center;border-top:1px solid rgba(139,92,246,.06);position:relative;z-index:1;margin-top:40px}
+.tool-footer .fl{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.tool-footer .fl span{font-family:Syne,sans-serif;font-weight:700;font-size:12px;color:#6b6b87}
+.tool-footer .fl .ac{color:#8b5cf673}
+.tool-footer .cp{font-family:'JetBrains Mono',monospace;font-size:10px;color:#3d3d54;letter-spacing:.1em}
+@media(max-width:640px){.tool-nav .n-links{display:none}}
+@media(prefers-reduced-motion:reduce){.star{animation:none!important}}
 </style>
 </head>
 <body>
+<div class="stars" id="stars"></div>
+<nav class="tool-nav">
+<a href="/" class="n-logo">
+<img src="../img/nav-logo.webp" alt="">
+<span>PHASE<span class="ac">CITY</span></span>
+</a>
+<div class="n-links">
+<a href="index.html">Tools</a>
+<a href="/">Rules</a>
+<a href="../store.html">Store</a>
+</div>
+</nav>
+<script>
+(typeof requestIdleCallback==='function'?requestIdleCallback:setTimeout)(function(){var e=document.getElementById('stars'),t=document.createDocumentFragment(),n=window.innerWidth<640?40:80;for(var s=0;s<n;s++){var o=document.createElement('div');o.className='star';var c=Math.random()*2+.5;o.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+c+'px;height:'+c+'px;--d:'+(Math.random()*3+2)+'s;--dl:'+Math.random()*4+'s';t.appendChild(o)}e.appendChild(t)});
+</script>
+
 <div class="container">
   <h1>FIVEM SERVER SCANNER</h1>
   <p class="subtitle"><a href="/" style="color:inherit;text-decoration:none">Phase City</a> — Scan servers or find players across all FiveM</p>
@@ -833,5 +874,12 @@ document.getElementById('playerSearchInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') findPlayer();
 });
 </script>
+<footer class="tool-footer">
+<div class="fl">
+<img src="../img/nav-logo.webp" alt="" style="width:16px;height:16px">
+<span>PHASE<span class="ac">CITY</span></span>
+</div>
+<p class="cp">PHASECITY.NET &copy; 2026</p>
+</footer>
 </body>
 </html>
