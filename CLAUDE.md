@@ -22,6 +22,7 @@ This is a **static multi-page site** for Phase City (a FiveM GTA V roleplay comm
   lspd.html             # LSPD SOP (admin-gated accordions)
   pillbox-medical.html  # EMS SOP (admin-gated accordions)
   taskboard.html        # Internal dev kanban (admin-gated)
+  contests.html         # Photo/Referral/Quiz contest hub — staff-edited + Discord-bot-fed
   404.html              # Custom 404 (noindex)
 
 img/                    # webp assets (no PNGs — all converted)
@@ -51,9 +52,10 @@ re-compact it — tests verify the minified form still works.
 ### External services wired in-page
 
 - **Discord webhooks** — citizen-portal posts bug/suggestion/crash embeds to Discord; URLs are hardcoded constants at the top of the inline script
-- **JSONBin** — taskboard + citizen-portal persist tasks here; API key + bin ID in `JSONBIN_CONFIG`
+- **JSONBin** — taskboard + citizen-portal persist tasks here; API key + bin ID in `JSONBIN_CONFIG`. **contests.html** reads referral data from a separate bin using a read-only `X-Access-Key` (NOT the master key) via `REFERRAL_JSONBIN = { binId, apiKey }`
 - **Tebex** — store.html links out to Tebex package URLs via `tebexPackages` lookup table
 - **exchangerate-api.com** — store.html pulls live FX rates in `fetchRates()` with a hardcoded `fallback` object
+- **Discord referral bot** (external repo, not here) — writes to the contests.html JSONBin. Lives at `C:\Users\z4cha\Desktop\GTA Stuff\Phase\referralbot\`. Bot uses Discord.js v14, watches a referral channel for @mentions, and also posts a compact notification embed via webhook. Contract: `@mentioned user` is the referrer, `message author` is the referred player, only one mention per message, each player can only be referred once ever.
 
 ### Admin pages (lspd / pillbox / taskboard)
 
@@ -74,7 +76,7 @@ Tests live in `./tests/` (gitignored — not committed). `node_modules/` is syml
 ```bash
 cd tests
 
-npm test                  # Vitest: 1,169 static-analysis tests, 26 suites  (~13s)
+npm test                  # Vitest: 1,355 static-analysis tests, 26 suites  (~15s)
 npm test -- tests/getDiscordPing.test.js   # single suite
 npm run watch             # Vitest watch mode
 
@@ -95,7 +97,7 @@ Playwright auto-starts `../server.js` via its `webServer` config. Vitest uses a 
 
 | Suite | File | Purpose |
 |---|---|---|
-| **Vitest (static — 1,169 tests across 26 suites)** | | |
+| **Vitest (static — 1,355 tests across 26 suites)** | | |
 | bundle compile | `tests/tests/_bundle.test.js` | extracts every `<style>` + `<script>`, esbuild-minifies in memory, verifies round-trip parse + declared fn names preserved (8) |
 | citizen-portal JS logic | `tests/tests/{getDiscordPing,genTaskId,fileValidation,selectedBadge,renderFiles,submitEmbeds}.test.js` | unit tests for inline script functions (43) |
 | smoke | `tests/tests/smoke.test.js` | HTML parses, titles, SEO meta, store links, no dangling anchors (101) |
@@ -178,10 +180,51 @@ node sync-discord-members.js   # regenerates discord-members.json
 - **Design tokens differ per page** — each page has its own `:root { --v: ...; --t1: ... }` block. When syncing design between pages, update both the `:root` CSS variables AND any hardcoded rgba() triples in inline styles.
 - **Security meta** — admin pages (lspd/pillbox/taskboard) use `<meta name="robots" content="noindex,nofollow">`. Public pages must NOT have noindex.
 - **`og:image`** is a fixed `https://www.phasecity.net/og-image.jpg` (1200×630) across all pages — don't drift this.
-- **Re-minify after edits** — if you modify inline CSS/JS, run `node tests/minify-pages.mjs` to re-compact. The `_bundle` test verifies it's round-trip safe.
+- **Re-minify after edits** — if you modify inline CSS/JS, run `node tests/minify-pages.mjs` to re-compact. The `_bundle` test verifies it's round-trip safe. **The script runs on ALL pages in its `PAGES` array, not just the ones you edited** — re-running over already-minified pages creates noise (each esbuild invocation may emit slightly different bytes). If you only want to minify a new page, either run it once and `git checkout -- <untouched-files>` or edit the `PAGES` array temporarily.
+- **Minifier strips unused `catch` bindings** — esbuild rewrites `catch (_) {}` to `catch {}` which fails the `tests/js-css.test.js` fetch-safety check (its regex only matches `catch(...)` or `.catch(`). Fix: use a named binding and reference it (`catch(err){ void err }`) **or** chain `.catch(()=>null)` directly onto the fetch.
 - **Keyframes must be used** — the css-effects suite fails on orphaned `@keyframes`. When removing an element that uses an animation, remove the `@keyframes` block too.
 - **No PNGs in img/** — all images are webp. If you add a new asset, convert with `sharp` or `cwebp` first. The `og-image.jpg` at the repo root is the exception (social card).
 - **Performance hints** — hero images get `fetchpriority="high"` + `<link rel="preload" as="image">`; below-fold images get `loading="lazy"`.
+
+## Adding a new root page
+
+When adding an HTML page at the repo root (like `contests.html`), the test suite won't automatically pick it up — each test file has a hardcoded page array. Add the filename to **all** of:
+
+- `tests/tests/smoke.test.js` → `ROOT_PAGES` AND the inline `PUBLIC` array inside `describe('public-facing pages cross-link')`
+- `tests/tests/a11y.test.js` → `PUBLIC_PAGES` (or `ADMIN_PAGES` if the new page should have `noindex`)
+- `tests/tests/seo-ai.test.js` → `PUBLIC_PAGES` / `ADMIN_PAGES`
+- `tests/tests/css-effects.test.js` → `ALL_PAGES`
+- `tests/tests/click-interaction.test.js` → `ALL_PAGES`
+- `tests/tests/js-css.test.js` → `ALL_PAGES`
+- `tests/tests/link-destinations.test.js` → `ALL_PAGES`
+- `tests/tests/performance.test.js` → `ALL_PAGES`
+- `tests/tests/responsive.test.js` → `ALL_PAGES`
+- `tests/tests/encoding.test.js` → `ALL_PAGES`
+- `tests/tests/_bundle.test.js` → `PAGES` (and optionally add required fn names to the `required` map around line 155)
+- `tests/minify-pages.mjs` → `PAGES` (so re-running minifies the new page too)
+
+Then also update `sitemap.xml` with a new `<url>` entry and add a nav link from at least `index.html`.
+
+### jsdom polyfills for new pages
+
+The test harness runs inline scripts in jsdom's window context which **lacks some modern globals**:
+- `structuredClone` — if your script uses it, add a polyfill at the top: `if(typeof structuredClone==='undefined'){window.structuredClone=v=>JSON.parse(JSON.stringify(v))}`
+- `requestAnimationFrame` / `cancelAnimationFrame` — same treatment if the script calls them synchronously during init.
+- `fetch`, `IntersectionObserver`, `ResizeObserver`, `localStorage`, `sessionStorage`, `requestIdleCallback`, `alert`, `confirm`, `prompt`, `URL.createObjectURL` — already stubbed in `tests/setup.js`.
+
+Without these polyfills, `extractScript()` will eval the script and throw, causing every test on the new page to fail with the same error.
+
+### Icon-only buttons need `aria-label`
+
+`tests/a11y.test.js` rejects buttons or links whose visible text is just an emoji/icon (e.g. `<button>✕</button>`, `<button>☰</button>`). Always add `aria-label="Close modal"` (or similar) to those.
+
+### Mobile `@media` blocks need real content
+
+`tests/responsive.test.js` filters `@media (max-width: ≤768px)` blocks and requires each block's body to be > 50 chars AND contain at least one rule. A single-line hide like `@media(max-width:640px){.n-links{display:none}}` fails; add a few more legitimate mobile adaptations inside.
+
+## Adding a new tool page under `tools/`
+
+Tool pages auto-scan via `tests/tests/tools-smoke.test.js` — no array updates needed. But the tool pages' main `<script>` is extracted by `setup.js` which grabs the **last** `<script>` block in the file. If you add a stars/chrome script AFTER the tool's logic script, it becomes "the last script" and the test harness won't eval the tool's actual globals. Solution: place any chrome/stars script BEFORE the tool's main logic script (e.g. right after `</nav>`).
 
 ## Deploy config
 
