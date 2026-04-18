@@ -237,14 +237,14 @@
         <div style="font-size:48px;margin-bottom:16px;opacity:0.18">\u{1F4E1}</div>
         <div style="font-size:14px;color:var(--tm)">Leaderboard will appear here</div>
         <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--td);margin-top:6px;font-family:'JetBrains Mono',monospace">Staff panel \u2192 add players</div>
-      </div>`;return}const i=[1,0,2],n=["silver","gold","bronze"],d=["\u{1F948}","\u{1F947}","\u{1F949}"];a.innerHTML=i.map(t=>{const l=e[t];return l?`<div class="ref-card ${n[t]}">
-      <div class="ref-medal">${d[t]}</div>
+      </div>`;return}const i=[1,0,2],n=["silver","gold","bronze"],d=["\u{1F948}","\u{1F947}","\u{1F949}"];a.innerHTML=i.map((t,idx)=>{const l=e[t];return l?`<div class="ref-card ${n[idx]}">
+      <div class="ref-medal">${d[idx]}</div>
       <div class="ref-avatar">${initials(l.name)}</div>
       <div class="ref-name">${l.name}</div>
       <div class="ref-count">${l.count}</div>
       <div class="ref-label">verified referrals</div>
-    </div>`:`<div class="ref-card ${n[t]}" style="opacity:0.25">
-      <div class="ref-medal">${d[t]}</div>
+    </div>`:`<div class="ref-card ${n[idx]}" style="opacity:0.25">
+      <div class="ref-medal">${d[idx]}</div>
       <div class="ref-avatar" style="color:var(--td)">\u2014</div>
       <div class="ref-name" style="color:var(--td)">\u2014</div>
       <div class="ref-count" style="color:var(--td)">\u2014</div>
