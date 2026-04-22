@@ -9,10 +9,10 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date);gtag("config","G-V3GHF6JTNQ");</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Phase City // Suggestion Board</title>
-<meta name="description" content="Rate and discuss community suggestions for Phase City. Staff post ideas, players vote 1-10 and leave feedback that shapes the server.">
+<meta name="description" content="Rate and discuss community suggestions for Phase City. Council post ideas, players vote 1-10 and leave feedback that shapes the server.">
 <meta name="author" content="Phase City">
 <meta property="og:title" content="Phase City // Suggestion Board">
-<meta property="og:description" content="Rate and discuss community suggestions for Phase City. Staff post ideas, players vote 1-10 and leave feedback that shapes the server.">
+<meta property="og:description" content="Rate and discuss community suggestions for Phase City. Council post ideas, players vote 1-10 and leave feedback that shapes the server.">
 <meta property="og:image" content="https://www.phasecity.net/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -21,7 +21,7 @@
 <meta property="og:site_name" content="Phase City">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Phase City // Suggestion Board">
-<meta name="twitter:description" content="Rate and discuss community suggestions for Phase City. Staff post ideas, players vote 1-10 and leave feedback that shapes the server.">
+<meta name="twitter:description" content="Rate and discuss community suggestions for Phase City. Council post ideas, players vote 1-10 and leave feedback that shapes the server.">
 <meta name="twitter:image" content="https://www.phasecity.net/og-image.jpg">
 <meta name="twitter:site" content="@phasecity">
 <meta name="twitter:creator" content="@phasecity">
@@ -45,7 +45,7 @@
   body { font-family: 'Inter', system-ui, sans-serif; background: transparent; overflow-x: hidden; }
   html { background: #050505; }
   /* lift all direct body children above the star canvas */
-  body > *:not(#stars-canvas):not(.staff-login-btn) { position: relative; z-index: 1; }
+  body > *:not(#stars-canvas):not(.staff-login-btn):not(#admin-overlay) { position: relative; z-index: 1; }
   .display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
   .gradient-text { background: linear-gradient(135deg, #c084fc 0%, #9b7cff 40%, #00e5ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
   .gradient-purple { background: linear-gradient(135deg, #9b7cff 0%, #00e5ff 100%); }
@@ -134,7 +134,7 @@
 </head>
 <body class="text-zinc-100">
 
-<!-- Staff Login — subtle fixed button bottom right -->
+<!-- Council Login — subtle fixed button bottom right -->
 <button onclick="openAdmin()" class="staff-login-btn" aria-label="Open staff panel">
   Staff Login
 </button>
@@ -183,7 +183,7 @@
       Phase City<br><span class="shimmer-text">Suggestion Board.</span>
     </h1>
     <p class="text-zinc-400 text-lg max-w-xl mx-auto mb-8 fade-up-3">
-      Staff post ideas here. You rate them 1–10 and leave feedback. Every response is read — your voice shapes the server.
+      Council post ideas here. You rate them 1–10 and leave feedback. Every response is read — your voice shapes the server.
     </p>
     <div class="flex items-center justify-center gap-6 fade-up-3">
       <div class="text-center">
@@ -236,9 +236,9 @@
   <!-- LOGIN -->
   <div id="login-screen" class="min-h-screen flex items-center justify-center px-6">
     <div class="glass-purple rounded-2xl p-8 w-full max-w-sm glow-purple text-center">
-      <div class="display text-xs font-bold uppercase tracking-[0.3em] gradient-text mb-2">Staff Access</div>
+      <div class="display text-xs font-bold uppercase tracking-[0.3em] gradient-text mb-2">Council Access</div>
       <h2 class="display text-2xl font-bold mb-1">Admin Panel</h2>
-      <p class="text-zinc-500 text-sm mb-7">Enter your staff password to continue.</p>
+      <p class="text-zinc-500 text-sm mb-7">Enter your council password to continue.</p>
       <input type="password" id="pw-input" class="form-input text-center tracking-widest mb-3" placeholder="••••••••" aria-label="Staff password" onkeydown="if(event.key==='Enter')doLogin()">
       <button onclick="doLogin()" class="gradient-purple w-full text-white display font-bold uppercase tracking-wider text-sm rounded-xl py-3 hover:scale-[1.02] transition-transform mb-3">Enter</button>
       <div id="login-error" class="text-pink-500 text-xs min-h-[16px] mb-3"></div>
