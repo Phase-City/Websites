@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.svg">
+<link rel="manifest" href="manifest.json">
+<meta charset="UTF-8"/>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V3GHF6JTNQ"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date);gtag("config","G-V3GHF6JTNQ");</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Phase City // Suggestion Board</title>
+<meta name="description" content="Rate and discuss community suggestions for Phase City. Staff post ideas, players vote 1-10 and leave feedback that shapes the server.">
+<meta name="author" content="Phase City">
+<meta property="og:title" content="Phase City // Suggestion Board">
+<meta property="og:description" content="Rate and discuss community suggestions for Phase City. Staff post ideas, players vote 1-10 and leave feedback that shapes the server.">
+<meta property="og:image" content="https://www.phasecity.net/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://www.phasecity.net/suggestion-board.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phase City">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Phase City // Suggestion Board">
+<meta name="twitter:description" content="Rate and discuss community suggestions for Phase City. Staff post ideas, players vote 1-10 and leave feedback that shapes the server.">
+<meta name="twitter:image" content="https://www.phasecity.net/og-image.jpg">
+<meta name="twitter:site" content="@phasecity">
+<meta name="twitter:creator" content="@phasecity">
+<meta name="theme-color" content="#8B5CF6">
+<link rel="canonical" href="https://www.phasecity.net/suggestion-board.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Phase City",
+  "url": "https://www.phasecity.net",
+  "logo": "https://www.phasecity.net/og-image.jpg",
+  "sameAs": ["https://discord.gg/NSZHK6spre"]
+}
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root { --pc: #9b7cff; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: transparent; overflow-x: hidden; }
+  html { background: #050505; }
+  /* lift all direct body children above the star canvas */
+  body > *:not(#stars-canvas):not(.staff-login-btn) { position: relative; z-index: 1; }
+  .display { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.02em; }
+  .gradient-text { background: linear-gradient(135deg, #c084fc 0%, #9b7cff 40%, #00e5ff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .gradient-purple { background: linear-gradient(135deg, #9b7cff 0%, #00e5ff 100%); }
+  .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+  .glass-purple { background: linear-gradient(135deg, rgba(155,124,255,0.10) 0%, rgba(0,229,255,0.06) 100%); backdrop-filter: blur(12px); border: 1px solid rgba(155,124,255,0.35); }
+  .glow-purple { box-shadow: 0 0 80px -10px rgba(155,124,255,0.45); }
+  .grid-bg { background-image: linear-gradient(rgba(155,124,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(155,124,255,0.04) 1px, transparent 1px); background-size: 40px 40px; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .float-anim { animation: float 6s ease-in-out infinite; }
+
+  @keyframes pulse-ring { 0%{box-shadow:0 0 0 0 rgba(0,229,255,0.5)} 70%{box-shadow:0 0 0 12px rgba(0,229,255,0)} 100%{box-shadow:0 0 0 0 rgba(0,229,255,0)} }
+  .pulse-ring { animation: pulse-ring 2s infinite; }
+
+  @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+  .shimmer-text { background: linear-gradient(90deg,#c084fc 0%,#9b7cff 25%,#00e5ff 50%,#9b7cff 75%,#c084fc 100%); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:shimmer 6s linear infinite; }
+
+  @keyframes fade-up { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .fade-up   { animation: fade-up 0.5s ease both; }
+  .fade-up-2 { animation: fade-up 0.5s 0.1s ease both; }
+  .fade-up-3 { animation: fade-up 0.5s 0.2s ease both; }
+
+  /* ── RATING PIPS ── */
+  .pip {
+    flex: 1;
+    height: 42px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(113,113,122,1);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .pip:hover { border-color: var(--pc); color: var(--pc); background: rgba(155,124,255,0.08); }
+  .pip.active { background: var(--pc); border-color: var(--pc); color: #050505; }
+
+  /* ── ADMIN OVERLAY ── */
+  #admin-overlay { display:none; position:fixed; inset:0; background:rgba(5,5,5,0.97); z-index:200; overflow-y:auto; backdrop-filter:blur(20px); }
+  #admin-overlay.open { display:block; }
+
+  /* ── FORM INPUTS ── */
+  .form-input {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    color: rgba(244,244,245,1);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 11px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: rgba(155,124,255,0.5); }
+  .form-input::placeholder { color: rgba(82,82,91,1); }
+  textarea.form-input { min-height: 90px; resize: vertical; line-height: 1.6; }
+  select.form-input option { background: #0d0d14; }
+
+  /* scrollbar */
+  .drag-over{border-color:rgba(155,124,255,0.6)!important}
+  .staff-login-btn{position:fixed;bottom:24px;right:24px;z-index:50;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(113,113,122,1);font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:8px 16px;border-radius:8px;cursor:pointer;backdrop-filter:blur(12px);transition:all 0.2s}
+  .staff-login-btn:hover{color:white;border-color:rgba(155,124,255,0.4)}
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #050505; }
+  ::-webkit-scrollbar-thumb { background: rgba(155,124,255,0.3); border-radius:2px; }
+  h1 { font-size: clamp(2.5rem, 6vw, 3.75rem); }
+  @media(max-width:640px){
+    .hero-stats{flex-direction:column;gap:16px}
+    .form-input{font-size:16px}
+    body{padding-bottom:60px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .float-anim,.pulse-ring,.shimmer-text,.fade-up,.fade-up-2,.fade-up-3{animation:none!important}
+    #stars-canvas{display:none}
+  }
+</style>
+</head>
+<body class="text-zinc-100">
+
+<!-- Staff Login — subtle fixed button bottom right -->
+<button onclick="openAdmin()" class="staff-login-btn" aria-label="Open staff panel">
+  Staff Login
+</button>
+
+<!-- Stars canvas — fixed behind all content -->
+<canvas id="stars-canvas" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;display:block;"></canvas>
+
+<!-- ══════════════════════════════
+     NAV
+══════════════════════════════ -->
+<header class="sticky top-0 z-40 backdrop-blur-xl bg-black/70 border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-10">
+      <a href="https://phasecity.net" class="display text-2xl font-bold tracking-tighter">PHASE<span class="gradient-text"> CITY</span></a>
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-400">
+        <a href="https://phasecity.net" class="hover:text-white transition">Home</a>
+        <a href="store.html" class="hover:text-white transition">Store</a>
+        <a href="https://discord.gg/NSZHK6spre" class="hover:text-white transition">Discord</a>
+        <a href="https://phasecity.net#rules" class="hover:text-white transition">Rules</a>
+        <a href="suggestion-board.html" class="text-white relative">Suggestions<span class="absolute -bottom-5 left-0 right-0 h-0.5 gradient-purple rounded"></span></a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="https://phasecity.net" class="gradient-purple text-white font-bold rounded-md px-5 py-2 text-sm uppercase tracking-wider hover:scale-105 transition-transform display">
+        ← Home
+      </a>
+    </div>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<section class="relative overflow-hidden border-b border-white/5">
+  <div class="absolute inset-0 grid-bg opacity-50 pointer-events-none"></div>
+  <div class="absolute -top-32 -left-32 w-[500px] h-[500px] bg-gradient-to-br from-purple-600/30 to-cyan-500/20 rounded-full blur-[120px] pointer-events-none"></div>
+  <div class="absolute top-10 right-0 w-[400px] h-[400px] bg-gradient-to-br from-cyan-500/20 to-orange-400/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+  <div class="relative max-w-5xl mx-auto px-6 py-20 text-center">
+    <div class="inline-flex items-center gap-3 mb-8 fade-up">
+      <div class="w-2 h-2 bg-cyan-400 rounded-full pulse-ring"></div>
+      <div class="display text-xs font-bold tracking-[0.3em] text-violet-400 uppercase">Community Feedback</div>
+    </div>
+    <h1 class="display text-5xl md:text-6xl font-bold leading-[0.95] mb-5 fade-up-2">
+      Phase City<br><span class="shimmer-text">Suggestion Board.</span>
+    </h1>
+    <p class="text-zinc-400 text-lg max-w-xl mx-auto mb-8 fade-up-3">
+      Staff post ideas here. You rate them 1–10 and leave feedback. Every response is read — your voice shapes the server.
+    </p>
+    <div class="flex items-center justify-center gap-6 fade-up-3">
+      <div class="text-center">
+        <div class="display text-2xl font-bold gradient-text" id="hero-count">0</div>
+        <div class="text-xs text-zinc-500 uppercase tracking-widest mt-1">Active Suggestions</div>
+      </div>
+      <div class="w-px h-10 bg-white/10"></div>
+      <div class="text-center">
+        <div class="display text-2xl font-bold gradient-text" id="hero-votes">0</div>
+        <div class="text-xs text-zinc-500 uppercase tracking-widest mt-1">Total Votes</div>
+      </div>
+      <div class="w-px h-10 bg-white/10"></div>
+      <div class="text-center">
+        <div class="display text-2xl font-bold gradient-text" id="hero-avg">—</div>
+        <div class="text-xs text-zinc-500 uppercase tracking-widest mt-1">Avg Rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     BOARD
+══════════════════════════════ -->
+<main class="relative max-w-3xl mx-auto px-6 py-16">
+  <div class="absolute inset-0 grid-bg opacity-20 pointer-events-none"></div>
+  <div id="board" class="relative space-y-6"></div>
+</main>
+
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer class="border-t border-white/5 mt-8">
+  <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row gap-4 justify-between items-center text-xs text-zinc-600">
+    <div class="display text-lg font-bold tracking-tighter">PHASE<span class="gradient-text"> CITY</span></div>
+    <div>© 2026 Phase City. All rights reserved.</div>
+    <div class="flex items-center gap-4 display uppercase tracking-wider">
+      <span>🔒 SSL</span><span class="text-zinc-700">·</span><span>Tebex</span><span class="text-zinc-700">·</span><span>Stripe</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════
+     ADMIN OVERLAY
+══════════════════════════════ -->
+<div id="admin-overlay">
+
+  <!-- LOGIN -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center px-6">
+    <div class="glass-purple rounded-2xl p-8 w-full max-w-sm glow-purple text-center">
+      <div class="display text-xs font-bold uppercase tracking-[0.3em] gradient-text mb-2">Staff Access</div>
+      <h2 class="display text-2xl font-bold mb-1">Admin Panel</h2>
+      <p class="text-zinc-500 text-sm mb-7">Enter your staff password to continue.</p>
+      <input type="password" id="pw-input" class="form-input text-center tracking-widest mb-3" placeholder="••••••••" aria-label="Staff password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button onclick="doLogin()" class="gradient-purple w-full text-white display font-bold uppercase tracking-wider text-sm rounded-xl py-3 hover:scale-[1.02] transition-transform mb-3">Enter</button>
+      <div id="login-error" class="text-pink-500 text-xs min-h-[16px] mb-3"></div>
+      <button onclick="closeAdmin()" class="glass w-full text-zinc-400 display font-bold uppercase tracking-wider text-xs rounded-xl py-3 hover:text-white transition">Cancel</button>
+    </div>
+  </div>
+
+  <!-- PANEL -->
+  <div id="admin-panel" class="hidden max-w-6xl mx-auto px-6 py-12">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-10 pb-6 border-b border-white/5 flex-wrap gap-4">
+      <div>
+        <div class="display text-xs font-bold uppercase tracking-[0.3em] gradient-text mb-1">Admin Panel</div>
+        <h2 class="display text-3xl font-bold">Suggestion Board</h2>
+        <div class="flex items-center gap-2 mt-2">
+          <div class="w-1.5 h-1.5 bg-emerald-400 rounded-full pulse-ring"></div>
+          <span class="text-xs text-zinc-500">Live — refreshing every 10s · Last updated: <span id="last-refresh">just now</span></span>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="renderAdminPanel()" class="glass text-zinc-400 display font-bold uppercase tracking-wider text-xs rounded-xl px-5 py-2.5 hover:text-white transition">⟳ Refresh</button>
+        <button onclick="closeAdmin()" class="glass text-zinc-400 display font-bold uppercase tracking-wider text-xs rounded-xl px-5 py-2.5 hover:text-white transition">← Back to Board</button>
+        <button onclick="logoutAdmin()" class="bg-pink-500/10 border border-pink-500/30 text-pink-400 display font-bold uppercase tracking-wider text-xs rounded-xl px-5 py-2.5 hover:bg-pink-500/20 transition">Log Out</button>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-[380px_1fr] gap-8 items-start">
+
+      <!-- NEW SUGGESTION FORM -->
+      <div class="glass-purple rounded-2xl overflow-hidden sticky top-6">
+        <div class="px-6 py-4 border-b border-white/5">
+          <div class="display text-xs font-bold uppercase tracking-[0.25em] gradient-text">Post New Suggestion</div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <label class="display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 block mb-2">Title</label>
+            <input type="text" id="new-title" class="form-input" placeholder="Short, clear title..." aria-label="Suggestion title">
+          </div>
+          <div>
+            <label class="display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 block mb-2">Description</label>
+            <textarea id="new-desc" class="form-input" placeholder="Describe it in detail. What is it, why does it matter?" aria-label="Suggestion description"></textarea>
+          </div>
+          <div>
+            <label class="display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 block mb-2">Category</label>
+            <select id="new-tag" class="form-input" aria-label="Suggestion category">
+              <option value="gameplay">Gameplay</option>
+              <option value="economy">Economy</option>
+              <option value="vehicles">Vehicles</option>
+              <option value="social">Social</option>
+              <option value="server">Server</option>
+              <option value="general">General</option>
+            </select>
+          </div>
+          <div>
+            <label class="display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 block mb-2">Posted By</label>
+            <input type="text" id="new-author" class="form-input" placeholder="Staff name / role..." aria-label="Author name">
+          </div>
+          <div>
+            <label class="display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 block mb-2">Image <span class="text-zinc-700 normal-case tracking-normal" style="font-family:'Inter',sans-serif;font-weight:400;">(Optional)</span></label>
+            <!-- Drop zone -->
+            <div id="img-dropzone"
+              onclick="document.getElementById('new-img').click()"
+              ondragover="event.preventDefault();this.classList.add('drag-over')"
+              ondragleave="this.classList.remove('drag-over')"
+              ondrop="handleImgDrop(event)"
+              style="border:1px dashed rgba(255,255,255,0.12);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color 0.2s;background:rgba(255,255,255,0.02);">
+              <div id="img-dropzone-label">
+                <div style="font-size:22px;margin-bottom:6px;opacity:0.4;">🖼️</div>
+                <div class="display text-[10px] font-bold uppercase tracking-[0.15em] text-zinc-600">Click or drag & drop</div>
+                <div class="text-[10px] text-zinc-700 mt-1">PNG, JPG, WEBP · Max 2MB</div>
+              </div>
+              <div id="img-preview-wrap" style="display:none;">
+                <img id="img-preview" alt="Preview of uploaded image" style="max-height:140px;max-width:100%;border-radius:8px;margin:0 auto;display:block;object-fit:cover;">
+                <button onclick="event.stopPropagation();clearImg()" style="margin-top:8px;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#9b7cff;background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.25);border-radius:6px;padding:4px 12px;cursor:pointer;">✕ Remove</button>
+              </div>
+            </div>
+            <input type="file" id="new-img" accept="image/*" style="display:none;" aria-label="Upload image" onchange="handleImgSelect(this)">
+          </div>
+          <button onclick="postSuggestion()" class="gradient-purple w-full text-white display font-bold uppercase tracking-wider text-sm rounded-xl py-3.5 hover:scale-[1.02] transition-transform">
+            📤 Post to Board
+          </button>
+          <div id="post-error" class="text-cyan-500 text-xs min-h-[14px]"></div>
+        </div>
+      </div>
+
+      <!-- RESPONSE LIST -->
+      <div id="admin-responses" class="space-y-5"></div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ══════════════════════════════
+// STORAGE
+// ══════════════════════════════
+const ADMIN_PW   = 'PhaseCity2026!'; // ← change this
+const KEY_SUGS   = 'pc_suggestions';
+const KEY_RESP   = 'pc_responses';
+const KEY_DONE   = 'pc_submitted';
+
+const getSugs  = () => { try { return JSON.parse(localStorage.getItem(KEY_SUGS))||[]; } catch{ return []; } };
+const saveSugs = a  => localStorage.setItem(KEY_SUGS, JSON.stringify(a));
+const getResp  = () => { try { return JSON.parse(localStorage.getItem(KEY_RESP))||{}; } catch{ return {}; } };
+const saveResp = o  => localStorage.setItem(KEY_RESP, JSON.stringify(o));
+const getDone  = () => { try { return JSON.parse(localStorage.getItem(KEY_DONE))||[]; } catch{ return []; } };
+const markDone = id => { const d=getDone(); if(!d.includes(id)){d.push(id);localStorage.setItem(KEY_DONE,JSON.stringify(d));} };
+
+// ══════════════════════════════
+// COLOUR HELPERS
+// ══════════════════════════════
+function scoreColor(n) {
+  if (n <= 2) return '#f43f5e';
+  if (n <= 4) return '#fb923c';
+  if (n <= 6) return '#fbbf24';
+  if (n <= 8) return '#a3e635';
+  return '#4ade80';
+}
+
+function tagStyle(tag) {
+  const map = {
+    gameplay: { text:'#c084fc', bg:'rgba(0,229,255,0.1)',  border:'rgba(0,229,255,0.3)' },
+    economy:  { text:'#fbbf24', bg:'rgba(251,191,36,0.1)',   border:'rgba(251,191,36,0.3)' },
+    vehicles: { text:'#4ade80', bg:'rgba(74,222,128,0.1)',   border:'rgba(74,222,128,0.3)' },
+    social:   { text:'#00e5ff', bg:'rgba(155,124,255,0.1)',  border:'rgba(155,124,255,0.3)' },
+    server:   { text:'#f87171', bg:'rgba(248,113,113,0.1)',  border:'rgba(248,113,113,0.3)' },
+    general:  { text:'#71717a', bg:'rgba(113,113,122,0.08)', border:'rgba(113,113,122,0.25)' },
+  };
+  return map[tag] || map.general;
+}
+
+// ══════════════════════════════
+// RATINGS STATE
+// ══════════════════════════════
+const selectedRatings = {};
+
+function selectPip(id, val) {
+  selectedRatings[id] = val;
+  document.querySelectorAll(`[data-sug="${id}"].pip`).forEach(p => {
+    p.classList.remove('active');
+    p.style.setProperty('--pc', scoreColor(parseInt(p.dataset.val)));
+  });
+  const el = document.querySelector(`[data-sug="${id}"][data-val="${val}"]`);
+  if (el) el.classList.add('active');
+  const btn = document.getElementById(`submit-${id}`);
+  if (btn) { btn.disabled = false; btn.classList.remove('opacity-40','cursor-not-allowed'); }
+}
+
+// ══════════════════════════════
+// SUBMIT FEEDBACK
+// ══════════════════════════════
+function submitFeedback(id) {
+  const rating = selectedRatings[id];
+  if (!rating) return;
+  const comment = (document.getElementById(`comment-${id}`)?.value || '').trim();
+  const resp = getResp();
+  if (!resp[id]) resp[id] = [];
+  resp[id].push({
+    rating, comment,
+    timestamp: new Date().toLocaleString('en-CA', { month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit' })
+  });
+  saveResp(resp);
+  markDone(id);
+  renderBoard();
+}
+
+// ══════════════════════════════
+// PUBLIC BOARD RENDER
+// ══════════════════════════════
+function renderBoard() {
+  const sugs  = getSugs();
+  const done  = getDone();
+  const resp  = getResp();
+  const board = document.getElementById('board');
+
+  // hero stats
+  const allVotes = sugs.reduce((a,s) => a + (resp[s.id]||[]).length, 0);
+  const allRatings = sugs.flatMap(s => (resp[s.id]||[]).map(r=>r.rating));
+  const globalAvg  = allRatings.length ? (allRatings.reduce((a,b)=>a+b,0)/allRatings.length).toFixed(1) : '—';
+  document.getElementById('hero-count').textContent = sugs.length;
+  document.getElementById('hero-votes').textContent = allVotes;
+  document.getElementById('hero-avg').textContent   = globalAvg;
+
+  if (sugs.length === 0) {
+    board.innerHTML = `
+      <div class="glass rounded-2xl p-16 text-center">
+        <div class="text-5xl mb-5 opacity-20">📋</div>
+        <div class="display text-xl font-bold text-zinc-500 mb-2">No Suggestions Yet</div>
+        <p class="text-zinc-600 text-sm">Staff will post suggestions here soon. Check back!</p>
+      </div>`;
+    return;
+  }
+
+  board.innerHTML = sugs.map(sug => {
+    const responses  = resp[sug.id] || [];
+    const submitted  = done.includes(sug.id);
+    const avg        = responses.length ? (responses.reduce((a,r)=>a+r.rating,0)/responses.length).toFixed(1) : null;
+    const avgPct     = avg ? ((avg-1)/9*100).toFixed(1) : 0;
+    const avgColor   = avg ? scoreColor(parseFloat(avg)) : '#3f3f46';
+    const ts         = tagStyle(sug.tag);
+
+    const pips = Array.from({length:10},(_,i)=>{
+      const n = i+1;
+      const c = scoreColor(n);
+      return `<div class="pip" data-sug="${sug.id}" data-val="${n}" style="--pc:${c}" onclick="selectPip('${sug.id}',${n})">${n}</div>`;
+    }).join('');
+
+    return `
+    <div class="glass rounded-2xl overflow-hidden transition-all duration-300 hover:border-purple-500/20">
+
+      <!-- Card top -->
+      <div class="px-7 py-6 border-b border-white/5">
+        <div class="flex items-center gap-3 mb-4 flex-wrap">
+          <span class="display text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-lg" style="color:${ts.text};background:${ts.bg};border:1px solid ${ts.border};">${sug.tag}</span>
+          <span class="text-zinc-500 text-xs font-medium">📌 ${esc(sug.author)}</span>
+          <span class="text-zinc-600 text-xs ml-auto">${sug.date}</span>
+        </div>
+        <h2 class="display text-xl font-bold mb-3 leading-tight">${esc(sug.title)}</h2>
+        <p class="text-zinc-400 text-sm leading-relaxed">${esc(sug.body)}</p>
+        ${sug.image ? `<img src="${sug.image}" alt="Suggestion image" style="margin-top:14px;width:100%;max-height:260px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,0.07);">` : ''}
+      </div>
+
+      <!-- Community average bar -->
+      <div class="px-7 py-4 border-b border-white/5 flex items-center gap-4">
+        <span class="display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600 shrink-0">Community</span>
+        <div class="flex-1 h-2 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.05);">
+          <div class="h-full rounded-full transition-all duration-700" style="width:${avgPct}%;background:${avgColor};"></div>
+        </div>
+        <span class="display text-sm font-bold shrink-0" style="color:${avgColor};">${avg ?? '—'}</span>
+        <span class="text-zinc-600 text-xs shrink-0">${responses.length} vote${responses.length!==1?'s':''}</span>
+      </div>
+
+      ${submitted ? `
+      <!-- Already submitted -->
+      <div class="px-7 py-5 text-center">
+        <span class="display text-sm font-bold uppercase tracking-wider" style="color:#4ade80;">✓ Feedback Submitted — Thank you!</span>
+      </div>
+      ` : `
+      <!-- Rating pips -->
+      <div class="px-7 py-5 border-b border-white/5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Rate This Suggestion</span>
+          <span class="text-zinc-600 text-[10px]">Click to select</span>
+        </div>
+        <div class="flex gap-1.5 mb-2">${pips}</div>
+        <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider mt-2">
+          <span style="color:#9b7cff;">① Hate It</span>
+          <span style="color:#4ade80;">Love It ⑩</span>
+        </div>
+      </div>
+
+      <!-- Comment + submit -->
+      <div class="px-7 py-5">
+        <label class="display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 block mb-2">Leave a Comment <span class="text-zinc-700">(Optional)</span></label>
+        <textarea id="comment-${sug.id}" class="form-input mb-4" placeholder="Share your thoughts on this suggestion..."></textarea>
+        <div class="flex items-center justify-between gap-4 flex-wrap">
+          <span class="text-zinc-600 text-xs leading-relaxed">Rating required · One submission per suggestion.</span>
+          <button id="submit-${sug.id}" onclick="submitFeedback('${sug.id}')" disabled
+            class="gradient-purple text-white display font-bold uppercase tracking-wider text-xs rounded-xl px-7 py-3 transition-all hover:scale-105 opacity-40 cursor-not-allowed">
+            Send Feedback →
+          </button>
+        </div>
+      </div>
+      `}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════
+// ADMIN AUTH
+// ══════════════════════════════
+let loggedIn = false;
+
+function openAdmin() {
+  document.getElementById('admin-overlay').classList.add('open');
+  if (loggedIn) { showPanel(); }
+  else {
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('admin-panel').classList.add('hidden');
+    setTimeout(()=>document.getElementById('pw-input').focus(), 100);
+  }
+}
+
+function closeAdmin() {
+  document.getElementById('admin-overlay').classList.remove('open');
+}
+
+function logoutAdmin() {
+  loggedIn = false;
+  closeAdmin();
+}
+
+function doLogin() {
+  const pw  = document.getElementById('pw-input').value;
+  const err = document.getElementById('login-error');
+  if (pw === ADMIN_PW) {
+    loggedIn = true;
+    document.getElementById('pw-input').value = '';
+    err.textContent = '';
+    showPanel();
+  } else {
+    err.textContent = 'Incorrect password.';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+function showPanel() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('admin-panel').classList.remove('hidden');
+  renderAdminPanel();
+  // Auto-refresh every 10 seconds while panel is open
+  if (!window._adminRefreshTimer) {
+    window._adminRefreshTimer = setInterval(() => {
+      if (loggedIn && !document.getElementById('admin-panel').classList.contains('hidden')) {
+        renderAdminPanel();
+      }
+    }, 10000);
+  }
+}
+
+// ══════════════════════════════
+// IMAGE UPLOAD HELPERS
+// ══════════════════════════════
+let pendingImg = null; // base64 string
+
+function handleImgSelect(input) {
+  const file = input.files[0];
+  if (file) processImgFile(file);
+}
+
+function handleImgDrop(e) {
+  e.preventDefault();
+  document.getElementById('img-dropzone').style.borderColor = 'rgba(255,255,255,0.12)';
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) processImgFile(file);
+}
+
+function processImgFile(file) {
+  if (file.size > 2 * 1024 * 1024) {
+    alert('Image must be under 2MB.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    pendingImg = e.target.result; // base64 data URL
+    document.getElementById('img-preview').src = pendingImg;
+    document.getElementById('img-dropzone-label').style.display  = 'none';
+    document.getElementById('img-preview-wrap').style.display    = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImg() {
+  pendingImg = null;
+  document.getElementById('new-img').value = '';
+  document.getElementById('img-preview').src = '';
+  document.getElementById('img-dropzone-label').style.display = 'block';
+  document.getElementById('img-preview-wrap').style.display   = 'none';
+}
+
+// ══════════════════════════════
+// POST SUGGESTION
+// ══════════════════════════════
+function postSuggestion() {
+  const title  = document.getElementById('new-title').value.trim();
+  const body   = document.getElementById('new-desc').value.trim();
+  const tag    = document.getElementById('new-tag').value;
+  const author = document.getElementById('new-author').value.trim();
+  const err    = document.getElementById('post-error');
+  if (!title||!body||!author) { err.textContent='Title, description and author are required.'; return; }
+  err.textContent='';
+  const sugs = getSugs();
+  sugs.unshift({ id:'s'+Date.now(), title, body, tag, author, image: pendingImg || null, date: new Date().toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'}) });
+  saveSugs(sugs);
+  document.getElementById('new-title').value='';
+  document.getElementById('new-desc').value='';
+  document.getElementById('new-author').value='';
+  clearImg();
+  renderAdminPanel();
+  renderBoard();
+}
+
+// ══════════════════════════════
+// DELETE SUGGESTION
+// ══════════════════════════════
+function deleteSuggestion(id) {
+  if (!confirm('Delete this suggestion and all its responses?')) return;
+  saveSugs(getSugs().filter(s=>s.id!==id));
+  const r=getResp(); delete r[id]; saveResp(r);
+  renderAdminPanel();
+  renderBoard();
+}
+
+// ══════════════════════════════
+// ADMIN PANEL RENDER
+// ══════════════════════════════
+function renderAdminPanel() {
+  const sugs = getSugs();
+  const resp = getResp();
+  const pane = document.getElementById('admin-responses');
+
+  // Update last-refresh label
+  const el = document.getElementById('last-refresh');
+  if (el) el.textContent = new Date().toLocaleTimeString('en-CA', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+
+  if (sugs.length===0) {
+    pane.innerHTML = `<div class="glass rounded-2xl p-12 text-center"><div class="text-4xl mb-4 opacity-20">📋</div><div class="display text-lg font-bold text-zinc-500">No suggestions posted yet.</div></div>`;
+    return;
+  }
+
+  pane.innerHTML = sugs.map(sug => {
+    const responses = resp[sug.id]||[];
+    const avg       = responses.length ? (responses.reduce((a,r)=>a+r.rating,0)/responses.length).toFixed(1) : null;
+    const avgPct    = avg ? ((avg-1)/9*100).toFixed(1) : 0;
+    const avgColor  = avg ? scoreColor(parseFloat(avg)) : '#3f3f46';
+    const ts        = tagStyle(sug.tag);
+
+    const entriesHeader = `
+      <div class="px-6 py-3 border-b border-white/5 flex items-center justify-between" style="background:rgba(255,255,255,0.01);">
+        <span class="display text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-500">
+          Player Responses
+        </span>
+        <span class="display text-[10px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-md" style="background:rgba(155,124,255,0.1);border:1px solid rgba(155,124,255,0.25);color:#c084fc;">
+          ${responses.length} total
+        </span>
+      </div>`;
+
+    const entries = responses.length===0
+      ? `${entriesHeader}<div class="px-6 py-8 text-sm text-zinc-600 text-center italic">No responses yet — check back once players start voting.</div>`
+      : entriesHeader + responses.slice().reverse().map((r, i) => {
+          const c = scoreColor(r.rating);
+          const num = responses.length - i;
+          return `
+          <div class="px-6 py-5 border-b border-white/5 last:border-0" style="background:rgba(255,255,255,0.01);">
+            <div class="flex items-center gap-3 mb-3">
+              <!-- Response number -->
+              <span class="display text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600">#${num}</span>
+              <!-- Score badge -->
+              <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg" style="background:${c}15;border:1px solid ${c}30;">
+                <span class="display text-xs font-bold" style="color:${c};">Rating</span>
+                <span class="display text-xl font-bold leading-none" style="color:${c};">${r.rating}<span class="text-xs text-zinc-500 font-normal">/10</span></span>
+              </div>
+              <!-- mini bar -->
+              <div class="flex-1 h-1.5 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.05);">
+                <div class="h-full rounded-full" style="width:${((r.rating-1)/9*100).toFixed(0)}%;background:${c};"></div>
+              </div>
+              <span class="text-xs text-zinc-600 shrink-0">${r.timestamp}</span>
+            </div>
+            ${r.comment
+              ? `<p class="text-sm text-zinc-300 leading-relaxed pl-1 border-l-2 ml-1" style="border-color:${c}40;padding-left:12px;">${esc(r.comment)}</p>`
+              : `<p class="text-xs text-zinc-600 italic">No comment left.</p>`}
+          </div>`;
+        }).join('');
+
+    return `
+    <div class="glass rounded-2xl overflow-hidden">
+      <!-- Header -->
+      <div class="px-6 py-5 border-b border-white/5 flex items-start justify-between gap-4">
+        <div>
+          <span class="display text-[9px] font-bold uppercase tracking-[0.2em] px-2.5 py-1 rounded-md inline-block mb-2" style="color:${ts.text};background:${ts.bg};border:1px solid ${ts.border};">${sug.tag}</span>
+          <div class="display text-lg font-bold leading-tight mb-1">${esc(sug.title)}</div>
+          <div class="text-xs text-zinc-500">Posted by ${esc(sug.author)} · ${sug.date}</div>
+          ${sug.image ? `<img src="${sug.image}" alt="" style="margin-top:10px;width:100%;max-height:160px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.07);">` : ''}
+        </div>
+        <button onclick="deleteSuggestion('${sug.id}')" class="bg-pink-500/10 border border-pink-500/30 text-pink-400 display font-bold uppercase text-[10px] tracking-wider px-3 py-2 rounded-lg hover:bg-pink-500/20 transition shrink-0">Delete</button>
+      </div>
+
+      <!-- Avg bar -->
+      <div class="px-6 py-4 border-b border-white/5 flex items-center gap-4">
+        <span class="display text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600 shrink-0 w-16">Average</span>
+        <div class="flex-1 h-3 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.05);">
+          <div class="h-full rounded-full transition-all duration-700" style="width:${avgPct}%;background:${avgColor};"></div>
+        </div>
+        <span class="display text-base font-bold shrink-0" style="color:${avgColor};">${avg??'—'}</span>
+        <span class="text-zinc-600 text-xs shrink-0">${responses.length} response${responses.length!==1?'s':''}</span>
+      </div>
+
+      <!-- Entries — fully expanded, all responses visible -->
+      <div>${entries}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════
+// UTIL
+// ══════════════════════════════
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/\n/g,'<br>');
+}
+
+// ══════════════════════════════
+// STAR FIELD — CONTINUOUS TWINKLE
+// ══════════════════════════════
+(function () {
+  const canvas = document.getElementById('stars-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  let stars = [], W = 0, H = 0, tick = 0;
+
+  const TINTS = ['255,255,255','255,255,255','255,255,255','155,124,255','0,229,255','196,181,253','103,232,249','255,255,255'];
+
+  function rand(a, b) { return Math.random() * (b - a) + a; }
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function init() {
+    stars = [];
+    const n = Math.floor((W * H) / 3200);
+    for (let i = 0; i < n; i++) {
+      const big  = Math.random() > 0.82;
+      const hero = Math.random() > 0.96;
+      stars.push({
+        x:      rand(0, W),
+        y:      rand(0, H),
+        r:      hero ? rand(1.5, 2.4) : big ? rand(0.9, 1.5) : rand(0.3, 0.85),
+        tint:   TINTS[Math.floor(Math.random() * TINTS.length)],
+        cross:  big || hero,
+        clen:   hero ? rand(12, 22) : rand(5, 11),
+
+        // Base twinkle — slow sine wave
+        baseAmp:   rand(0.08, 0.22),   // how bright it sits normally
+        baseFreq:  rand(0.004, 0.014), // how fast the base pulse is
+        basePhase: rand(0, Math.PI * 2),
+
+        // Fast flicker — high frequency noise layered on top
+        flickAmp:   rand(0.04, 0.14),
+        flickFreq:  rand(0.03, 0.09),
+        flickPhase: rand(0, Math.PI * 2),
+
+        // Sparkle burst — random bright flash event
+        burstOp:    0,     // current burst opacity
+        burstDecay: rand(0.015, 0.045),
+        nextBurst:  rand(60, 400),  // frames until next burst
+        burstTimer: 0,
+      });
+    }
+  }
+
+  function getOp(s) {
+    // layered sine waves = natural twinkle
+    const base  = s.baseAmp  * (0.5 + 0.5 * Math.sin(tick * s.baseFreq  + s.basePhase));
+    const flick = s.flickAmp * (0.5 + 0.5 * Math.sin(tick * s.flickFreq + s.flickPhase));
+    return Math.min(1, Math.max(0.01, base + flick + s.burstOp));
+  }
+
+  function glow(x, y, r, tint, alpha) {
+    if (alpha <= 0.005 || r <= 0) return;
+    try {
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0,   `rgba(${tint},${Math.min(1, alpha)})`);
+      g.addColorStop(0.4, `rgba(${tint},${Math.min(1, alpha * 0.45)})`);
+      g.addColorStop(1,   `rgba(${tint},0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    } catch(e) {}
+  }
+
+  function drawCross(s, op) {
+    if (!s.cross || op < 0.3) return;
+    try {
+      const fade = Math.min(1, (op - 0.3) / 0.5);
+      const len  = s.clen * op;
+      ctx.save();
+      ctx.lineWidth = 0.7;
+
+      const hg = ctx.createLinearGradient(s.x - len, s.y, s.x + len, s.y);
+      hg.addColorStop(0,   `rgba(${s.tint},0)`);
+      hg.addColorStop(0.5, `rgba(${s.tint},${fade * 0.95})`);
+      hg.addColorStop(1,   `rgba(${s.tint},0)`);
+
+      const vg = ctx.createLinearGradient(s.x, s.y - len, s.x, s.y + len);
+      vg.addColorStop(0,   `rgba(${s.tint},0)`);
+      vg.addColorStop(0.5, `rgba(${s.tint},${fade * 0.95})`);
+      vg.addColorStop(1,   `rgba(${s.tint},0)`);
+
+      ctx.strokeStyle = hg;
+      ctx.beginPath(); ctx.moveTo(s.x - len, s.y); ctx.lineTo(s.x + len, s.y); ctx.stroke();
+      ctx.strokeStyle = vg;
+      ctx.beginPath(); ctx.moveTo(s.x, s.y - len); ctx.lineTo(s.x, s.y + len); ctx.stroke();
+
+      // diagonal arms on hero stars
+      if (s.r > 1.5) {
+        const dl = len * 0.45;
+        ctx.globalAlpha = fade * 0.28;
+        ctx.lineWidth = 0.4;
+        ctx.strokeStyle = `rgb(${s.tint})`;
+        ctx.beginPath();
+        ctx.moveTo(s.x - dl, s.y - dl); ctx.lineTo(s.x + dl, s.y + dl);
+        ctx.moveTo(s.x + dl, s.y - dl); ctx.lineTo(s.x - dl, s.y + dl);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      ctx.restore();
+    } catch(e) {}
+  }
+
+  function frame() {
+    tick++;
+    ctx.clearRect(0, 0, W, H);
+
+    for (const s of stars) {
+      // burst timer
+      s.burstTimer++;
+      if (s.burstTimer >= s.nextBurst) {
+        s.burstOp    = rand(0.35, 0.85); // bright flash
+        s.nextBurst  = s.burstTimer + rand(80, 500);
+        s.burstDecay = rand(0.012, 0.05);
+      }
+      // decay burst
+      if (s.burstOp > 0) {
+        s.burstOp = Math.max(0, s.burstOp - s.burstDecay);
+      }
+
+      const op = getOp(s);
+
+      // outer halo — only on bigger stars
+      if (s.r > 0.8) glow(s.x, s.y, s.r * (10 + op * 18), s.tint, op * 0.20);
+      // inner bloom
+      glow(s.x, s.y, s.r * (3 + op * 6), s.tint, op * 0.60);
+
+      // core dot
+      ctx.globalAlpha = op;
+      ctx.fillStyle   = `rgb(${s.tint})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+
+      drawCross(s, op);
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  let rzTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(rzTimer);
+    rzTimer = setTimeout(() => { resize(); init(); }, 250);
+  });
+
+  resize();
+  init();
+  frame();
+})();
+
+// ══════════════════════════════
+// INIT
+// ══════════════════════════════
+renderBoard();
+</script>
+
+<footer style="padding:32px 24px;text-align:center;border-top:1px solid rgba(255,255,255,0.05);position:relative;z-index:1">
+<p style="font-family:'Space Grotesk',sans-serif;font-size:11px;color:rgba(113,113,122,1);letter-spacing:0.1em">
+<a href="store.html" style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(113,113,122,0.4);padding-bottom:1px">Store</a> &middot;
+<a href="https://discord.gg/NSZHK6spre" style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(113,113,122,0.4);padding-bottom:1px">Discord</a> &middot;
+PHASECITY.NET &copy; 2026
+</p>
+</footer>
+
+</body>
+</html>
