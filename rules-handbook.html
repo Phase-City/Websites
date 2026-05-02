@@ -92,6 +92,14 @@
 
 <main>
 
+<div class="search-bar" style="max-width:640px;margin:0 auto 32px;padding:0 24px">
+<div style="position:relative">
+<input type="text" id="rule-search" placeholder="Search rules…" aria-label="Search rules" style="width:100%;padding:14px 20px 14px 46px;background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.2);border-radius:12px;color:#e2e0ff;font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .3s">
+<span style="position:absolute;left:16px;top:50%;transform:translateY(-50%);opacity:.4;font-size:18px;pointer-events:none">🔍</span>
+</div>
+<div id="search-status" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b6b87;letter-spacing:.08em;margin-top:8px;text-align:center;display:none"></div>
+</div>
+
 <!-- ══ ENFORCEMENT ══ -->
 <div class="sec-hdr" id="enforcement">
   <div class="sec-label">⚖️ Moderation System</div>
@@ -582,6 +590,6 @@
   <div class="ft-txt">© 2026 Phase City — All Rights Reserved &nbsp;·&nbsp; <a href="https://phasecity.net">phasecity.net</a></div>
 </footer>
 
-<script>var r=Object.defineProperty;var a=(t,e)=>r(t,"name",{value:e,configurable:!0});var c=Object.defineProperty,s=a((t,e)=>c(t,"name",{value:e,configurable:!0}),"s");(function(){const t=document.getElementById("stars"),e=document.createDocumentFragment();for(let n=0;n<160;n++){const o=document.createElement("span"),d=Math.random()<.65?1:Math.random()<.8?1.5:2;o.style.cssText=`width:${d}px;height:${d}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2.5+Math.random()*7}s;--dl:${-Math.random()*9}s;--o:${.12+Math.random()*.4};`,e.appendChild(o)}t.appendChild(e)})();function tog(t){const e=t.classList.contains("open");if(t.classList.toggle("open"),!e){const n=t.querySelector(".card-content");n&&(n.style.animation="none",n.offsetHeight,n.style.animation="")}}a(tog,"tog"),s(tog,"tog");</script>
+<script>var r=Object.defineProperty;var a=(t,e)=>r(t,"name",{value:e,configurable:!0});var c=Object.defineProperty,s=a((t,e)=>c(t,"name",{value:e,configurable:!0}),"s");(function(){const t=document.getElementById("stars"),e=document.createDocumentFragment();for(let n=0;n<160;n++){const o=document.createElement("span"),d=Math.random()<.65?1:Math.random()<.8?1.5:2;o.style.cssText=`width:${d}px;height:${d}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2.5+Math.random()*7}s;--dl:${-Math.random()*9}s;--o:${.12+Math.random()*.4};`,e.appendChild(o)}t.appendChild(e)})();function tog(t){const e=t.classList.contains("open");if(t.classList.toggle("open"),!e){const n=t.querySelector(".card-content");n&&(n.style.animation="none",n.offsetHeight,n.style.animation="")}}a(tog,"tog"),s(tog,"tog");(function(){var input=document.getElementById("rule-search");var status=document.getElementById("search-status");if(!input)return;input.addEventListener("focus",function(){input.style.borderColor="rgba(139,92,246,.5)"});input.addEventListener("blur",function(){input.style.borderColor="rgba(139,92,246,.2)"});var cards=document.querySelectorAll(".card");var headers=document.querySelectorAll(".sec-hdr");var debounce=null;input.addEventListener("input",function(){clearTimeout(debounce);debounce=setTimeout(filterRules,200)});function filterRules(){var q=input.value.trim().toLowerCase();if(!q){cards.forEach(function(c){c.style.display=""});headers.forEach(function(h){h.style.display=""});status.style.display="none";return}var shown=0;cards.forEach(function(c){var text=c.textContent.toLowerCase();if(text.indexOf(q)!==-1){c.style.display="";c.classList.add("open");shown++}else{c.style.display="none";c.classList.remove("open")}});headers.forEach(function(h){h.style.display="none"});status.style.display="block";status.textContent=shown+" rule"+(shown!==1?"s":"")+" matching \""+input.value.trim()+"\""}})();</script>
 </body>
 </html>
