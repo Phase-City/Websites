@@ -6,7 +6,7 @@
 <link rel="manifest" href="manifest.json">
 <meta charset="UTF-8"/>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-V3GHF6JTNQ"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date);gtag("config","G-V3GHF6JTNQ");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(!a||!a.href)return;var u;try{u=new URL(a.href,location.href)}catch(_){return}var dest=null;if(u.hostname.indexOf("discord")>-1)dest="discord";else if(u.protocol==="fivem:")dest="fivem_connect";else if(u.hostname.indexOf("tebex")>-1)dest="store_tebex";else if(u.pathname.indexOf("/store.html")===0||u.pathname==="/store"||u.pathname.endsWith("/store.html"))dest="store";else if(u.hostname&&u.hostname!==location.hostname)dest="outbound_"+u.hostname;if(!dest)return;var p=a.closest&&a.closest("[data-loc]");var loc=(p&&p.dataset&&p.dataset.loc)||"body";if(window.gtag)gtag("event","cta_click",{cta_destination:dest,cta_location:loc,link_url:a.href,page_path:location.pathname})},true);</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date);gtag("config","G-V3GHF6JTNQ");document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(!a||!a.href)return;var u;try{u=new URL(a.href,location.href)}catch(_){return}var dest=null;if(u.hostname.indexOf("discord")>-1)dest="discord";else if(u.protocol==="fivem:")dest="fivem_connect";else if(u.hostname.indexOf("tebex")>-1)dest="store_tebex";else if(u.hostname.indexOf("store.phasecity")>-1)dest="store";else if(u.pathname.indexOf("/store.html")===0||u.pathname==="/store"||u.pathname.endsWith("/store.html"))dest="store";else if(u.hostname&&u.hostname!==location.hostname)dest="outbound_"+u.hostname;if(!dest)return;var p=a.closest&&a.closest("[data-loc]");var loc=(p&&p.dataset&&p.dataset.loc)||"body";if(window.gtag)gtag("event","cta_click",{cta_destination:dest,cta_location:loc,link_url:a.href,page_path:location.pathname})},true);</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Phase City // Suggestion Board</title>
 <meta name="description" content="Rate and discuss community suggestions for Phase City. Council post ideas, players vote 1-10 and leave feedback that shapes the server.">
@@ -151,7 +151,7 @@
       <a href="https://phasecity.net" class="display text-2xl font-bold tracking-tighter">PHASE<span class="gradient-text"> CITY</span></a>
       <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-400" data-loc="nav">
         <a href="https://phasecity.net" class="hover:text-white transition">Home</a>
-        <a href="store.html" class="hover:text-white transition">Store</a>
+        <a href="https://store.phasecity.net/" class="hover:text-white transition">Store</a>
         <a href="https://discord.gg/NSZHK6spre" class="hover:text-white transition">Discord</a>
         <a href="https://phasecity.net#rules" class="hover:text-white transition">Rules</a>
         <a href="suggestion-board.html" class="text-white relative">Suggestions<span class="absolute -bottom-5 left-0 right-0 h-0.5 gradient-purple rounded"></span></a>
@@ -903,7 +903,7 @@ renderBoard();
 
 <footer data-loc="footer" style="padding:32px 24px;text-align:center;border-top:1px solid rgba(255,255,255,0.05);position:relative;z-index:1">
 <p style="font-family:'Space Grotesk',sans-serif;font-size:11px;color:rgba(113,113,122,1);letter-spacing:0.1em">
-<a href="store.html" style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(113,113,122,0.4);padding-bottom:1px">Store</a> &middot;
+<a href="https://store.phasecity.net/" style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(113,113,122,0.4);padding-bottom:1px">Store</a> &middot;
 <a href="https://discord.gg/NSZHK6spre" style="color:inherit;text-decoration:none;border-bottom:1px dotted rgba(113,113,122,0.4);padding-bottom:1px">Discord</a> &middot;
 PHASECITY.NET &copy; 2026
 </p>
