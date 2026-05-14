@@ -306,5 +306,37 @@ JOIN OUR DISCORD
 {"@type":"Question","name":"What are the enforcement points?","acceptedAnswer":{"@type":"Answer","text":"Phase City uses a point-based enforcement system. Accumulating points leads to escalating consequences from warnings to permanent removal."}}
 ]}
 </script>
+<script>
+(function(){
+  const el = document.querySelector('.live-strip');
+  if (!el) return;
+  const id = el.getAttribute('data-cfx-id');
+  if (!id) { el.classList.add('live-fallback'); return; }
+  const textEl = el.querySelector('.live-text');
+  let ctrl;
+  function render(n, max) {
+    if (typeof n !== 'number' || n < 0) {
+      el.classList.add('live-fallback');
+      textEl.textContent = 'Community online · join the Discord';
+      return;
+    }
+    el.classList.remove('live-fallback');
+    const cap = (typeof max === 'number' && max > 0) ? ` / ${max}` : '';
+    textEl.innerHTML = `<strong>${n}</strong>${cap} player${n === 1 ? '' : 's'} online`;
+  }
+  function poll() {
+    if (document.visibilityState !== 'visible') return;
+    if (ctrl) ctrl.abort();
+    ctrl = new AbortController();
+    fetch('https://servers.frontend.fivem.net/api/servers/single/' + id, { signal: ctrl.signal })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => render(j && j.Data && j.Data.clients, j && j.Data && j.Data.sv_maxclients))
+      .catch(() => { /* keep fallback */ });
+  }
+  poll();
+  setInterval(poll, 60000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') poll(); });
+})();
+</script>
 </body>
 </html>
