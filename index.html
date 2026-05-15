@@ -1,304 +1,1210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="apple-touch-icon" href="apple-touch-icon.svg">
-<link rel="manifest" href="manifest.json">
-<link rel="prefetch" href="https://store.phasecity.net/">
-<link rel="prefetch" href="citizen-portal.html">
 <meta charset="UTF-8">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V3GHF6JTNQ"></script>
-<script>var b=Object.defineProperty;var m=(n,t)=>b(n,"name",{value:t,configurable:!0});var u=Object.defineProperty,f=m((n,t)=>u(n,"name",{value:t,configurable:!0}),"f"),h=Object.defineProperty,d=f((n,t)=>h(n,"name",{value:t,configurable:!0}),"d"),o=Object.defineProperty,i=d((n,t)=>o(n,"name",{value:t,configurable:!0}),"i"),g=Object.defineProperty,r=i((n,t)=>g(n,"name",{value:t,configurable:!0}),"r"),e=Object.defineProperty,a=r((n,t)=>e(n,"name",{value:t,configurable:!0}),"a");window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}m(gtag,"gtag"),f(gtag,"gtag"),d(gtag,"gtag"),i(gtag,"gtag"),r(gtag,"gtag"),a(gtag,"gtag"),gtag("js",new Date),gtag("config","G-V3GHF6JTNQ"),document.addEventListener("click",function(n){var t=n.target.closest&&n.target.closest("a");if(!(!t||!t.href)){var c;try{c=new URL(t.href,location.href)}catch{return}var l=null;if(c.hostname.indexOf("discord")>-1?l="discord":c.protocol==="fivem:"?l="fivem_connect":c.hostname.indexOf("tebex")>-1?l="store_tebex":c.hostname.indexOf("store.phasecity")>-1||c.pathname.indexOf("/store.html")===0||c.pathname==="/store"||c.pathname.endsWith("/store.html")?l="store":c.hostname&&c.hostname!==location.hostname&&(l="outbound_"+c.hostname),!!l){var s=t.closest&&t.closest("[data-loc]"),v=s&&s.dataset&&s.dataset.loc||"body";window.gtag&&gtag("event","cta_click",{cta_destination:l,cta_location:v,link_url:t.href,page_path:location.pathname})}}},!0);</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Phase City // Serious FiveM Roleplay</title>
-<meta name="description" content="Serious FiveM roleplay on Phase City. Community-governed whitelist server with custom economy, factions, and active staff. Apply to join — decisions in 24-48 hours.">
-<meta name="author" content="Claude Crichlow">
+<meta name="description" content="Serious FiveM roleplay on Phase City. Community-governed whitelist server with custom economy, factions, and active staff.">
 <meta property="og:title" content="Phase City // Serious FiveM Roleplay">
-<meta property="og:description" content="Serious FiveM roleplay on Phase City. Community-governed whitelist server with custom economy, factions, and active staff. Apply to join — decisions in 24-48 hours.">
 <meta property="og:image" content="https://www.phasecity.net/og-image.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://www.phasecity.net">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Phase City">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Phase City // Serious FiveM Roleplay">
-<meta name="twitter:description" content="Serious FiveM roleplay on Phase City. Community-governed whitelist server with custom economy, factions, and active staff. Apply to join — decisions in 24-48 hours.">
-<meta name="twitter:image" content="https://www.phasecity.net/og-image.jpg">
-<meta name="twitter:site" content="@phasecity">
-<meta name="twitter:creator" content="@phasecity">
 <meta name="theme-color" content="#8B5CF6">
-<link rel="canonical" href="https://www.phasecity.net/">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Phase City",
-  "url": "https://www.phasecity.net",
-  "logo": "https://www.phasecity.net/og-image.jpg",
-  "sameAs": [
-    "https://discord.gg/NSZHK6spre"
-  ]
+<title>Phase City // Serious FiveM Roleplay</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060812;--bg2:#080b18;
+  --violet:#8b5cf6;--violet2:#7c3aed;
+  --sky:#0ea5e9;--sky2:#38bdf8;
+  --amber:#f59e0b;--amber2:#fbbf24;
+  --pink:#ec4899;--pink2:#f472b6;
+  --emerald:#10b981;--emerald2:#34d399;
+  --crimson:#ef4444;--crimson2:#f87171;
+  --gold:#ffd700;
+  --surface:rgba(255,255,255,.032);
+  --surface2:rgba(255,255,255,.055);
+  --border:rgba(255,255,255,.07);
+  --txt:#eeeeff;--txt2:rgba(185,195,230,.65);--txt3:rgba(140,155,200,.4);
 }
-</script>
-<link rel="preconnect" href="https://fonts.cloudflare.com" crossorigin>
-<link href="https://fonts.cloudflare.com/css?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<style>:root{--bg: #05020f;--card: rgba(139,92,246,.03);--bdr: rgba(139,92,246,.12);--bdr-h: rgba(139,92,246,.35);--t1: #e2e0ff;--t2: #a5a3c2;--tm: #6b6b87;--td: #3d3d54;--v: #8b5cf6;--vl: #c4b5fd;--cy: #06b6d4;--cl: #67e8f9;--am: #f59e0b;--ro: #ec4899;--gr: #10b981;--rd: #ef4444 }*,*:before,*:after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}::selection{background:#8b5cf666;color:#fff}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:#8b5cf64d;border-radius:3px}body{background:var(--bg);color:var(--t1);font-family:DM Sans,sans-serif;line-height:1.7;overflow-x:hidden}a{color:inherit;text-decoration:none}code{font-family:JetBrains Mono,monospace;font-size:.88em;background:#8b5cf61a;padding:1px 6px;border-radius:4px;color:var(--vl)}@keyframes twinkle{0%,to{opacity:0}50%{opacity:.7}}@keyframes float{0%,to{transform:translateY(0)}50%{transform:translateY(-12px)}}@keyframes grad{0%{background-position:0 50%}50%{background-position:100% 50%}to{background-position:0 50%}}.stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d) var(--dl) ease-in-out infinite;will-change:opacity;contain:strict}nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#05020fe0;backdrop-filter:blur(24px);border-bottom:1px solid rgba(139,92,246,.1);height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px)}.n-logo{display:flex;align-items:center;gap:10px}.n-logo svg{filter:drop-shadow(0 0 12px rgba(139,92,246,.3))}.n-logo span{font-family:Syne,sans-serif;font-weight:800;font-size:17px;letter-spacing:.05em}.n-logo .ac{color:var(--v)}.n-links{display:flex;gap:4px;flex-wrap:wrap}.n-links a{color:var(--tm);font-size:13px;font-weight:500;padding:6px 14px;border-radius:6px;border:1px solid transparent;transition:.3s}.n-links a:hover,.n-links a.nav-on{background:#8b5cf61f;border-color:#8b5cf640;color:var(--vl)}.store-link{background:linear-gradient(135deg,#8b5cf633,#06b6d433);border:1px solid rgba(139,92,246,.35);color:#e2e0ff;font-weight:600;letter-spacing:.06em}.wrap{max-width:920px;margin:0 auto;padding:0 clamp(16px,4vw,32px);position:relative;z-index:1}section{padding:100px 0;content-visibility:auto;contain-intrinsic-size:auto 800px}.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px;position:relative}.hero-glow{position:absolute;top:12%;left:50%;transform:translate(-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.1),transparent 70%);pointer-events:none}.hero-moon{animation:float 6s ease-in-out infinite;margin-bottom:36px}.hero-moon svg{filter:drop-shadow(0 0 40px rgba(139,92,246,.35))}.hero h1{font-family:Syne,sans-serif;font-weight:800;font-size:clamp(48px,9vw,96px);line-height:1;letter-spacing:-.02em;margin-bottom:8px}.hero .grtxt{background:linear-gradient(135deg,#e2e0ff,#c4b5fd 35%,#8b5cf6 65%,#06b6d4);background-size:200% 200%;animation:grad 6s ease infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.hero-sub{font-family:JetBrains Mono,monospace;font-size:12px;color:var(--v);letter-spacing:.35em;text-transform:uppercase;margin-bottom:28px}.hero-desc{font-size:clamp(15px,2.5vw,18px);color:var(--tm);max-width:520px;margin:0 auto 40px;line-height:1.8}.hero-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}.btn-p{background:linear-gradient(135deg,#8b5cf6,#7c3aed);border:0;color:#fff;font-family:Syne,sans-serif;font-weight:700;font-size:13px;padding:13px 28px;border-radius:8px;cursor:pointer;letter-spacing:.06em;transition:.3s;box-shadow:0 4px 20px #8b5cf640;display:inline-block}.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 30px #8b5cf666}.btn-o{background:0;border:1px solid rgba(139,92,246,.35);color:var(--vl);font-family:Syne,sans-serif;font-weight:700;font-size:13px;padding:13px 28px;border-radius:8px;cursor:pointer;letter-spacing:.06em;transition:.3s;display:inline-block}.btn-o:hover{background:#8b5cf614;transform:translateY(-2px)}.scroll-h{position:absolute;bottom:36px;left:50%;transform:translate(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:.35}.scroll-h span{font-family:JetBrains Mono,monospace;font-size:10px;letter-spacing:.2em;color:var(--tm)}.scroll-h .ln{width:1px;height:28px;background:linear-gradient(to bottom,var(--v),transparent)}.slbl{font-family:JetBrains Mono,monospace;font-size:11px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;margin-bottom:14px;text-align:center}.stit{font-family:Syne,sans-serif;font-weight:800;font-size:clamp(30px,5vw,48px);text-align:center;margin-bottom:12px;line-height:1.1}.sdsc{font-size:15px;color:var(--tm);text-align:center;max-width:560px;margin:0 auto 56px;line-height:1.7}.note{background:var(--card);border:1px solid var(--bdr);border-radius:16px;padding:28px 24px;margin-bottom:36px;overflow:hidden}.note.bv{border-left:3px solid var(--v)}.note.ba{border-left:3px solid var(--am)}.note p{font-size:14.5px;color:var(--t2);margin-bottom:10px}.note p:last-child{margin-bottom:0}.note strong{color:var(--t1)}.note em{color:var(--am);font-style:normal;font-weight:600}.tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;margin-bottom:20px}.tbl th{background:#8b5cf61a;font-family:JetBrains Mono,monospace;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--vl);padding:14px 18px;text-align:left;border-bottom:1px solid var(--bdr)}.tbl td{padding:12px 18px;border-bottom:1px solid rgba(139,92,246,.06);font-size:14px;color:var(--t2)}.tbl tr:last-child td{border-bottom:0}.pts{font-family:JetBrains Mono,monospace;font-weight:500;font-size:13px}.tbl.cy th{background:#06b6d414;color:var(--cl)}.tbl.am th{background:#f59e0b14;color:var(--am)}.tbl.ro th{background:#ec489914;color:var(--ro)}.wnotes{list-style:none;padding:0;margin-top:20px}.wnotes li{font-size:13.5px;color:var(--tm);padding:8px 0 8px 20px;position:relative;border-bottom:1px solid rgba(139,92,246,.04)}.wnotes li:before{content:"\25b8";position:absolute;left:0;color:var(--v);font-weight:700}.wnotes li:last-child{border-bottom:0}.rc{background:var(--card);border:1px solid var(--bdr);border-radius:16px;margin-bottom:20px;overflow:hidden;transition:.3s}.rc:hover{border-color:var(--bdr-h)}.rh{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}.rh:hover{background:#8b5cf608}.rh-l{display:flex;align-items:center;gap:14px}.ricon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}.rh-t{font-family:Syne,sans-serif;font-weight:700;font-size:17px}.rh-c{font-family:JetBrains Mono,monospace;font-size:11px;color:var(--tm);margin-top:2px}.rchev{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:transform .3s;flex-shrink:0}.rc.open .rchev{transform:rotate(180deg)}.rbody{max-height:0;opacity:0;overflow:hidden;transition:max-height .5s ease,opacity .3s ease}.rc.open .rbody{max-height:8000px;opacity:1}.rb-in{padding:0 24px 20px;border-top:1px solid var(--bdr)}.rsub{margin-top:16px;padding-top:16px;border-top:1px solid rgba(139,92,246,.08)}.rsub-t{font-family:Syne,sans-serif;font-weight:700;font-size:15px;color:var(--vl);margin-bottom:12px}.ri{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(139,92,246,.05)}.ri:last-child{border-bottom:0}.rid{font-family:JetBrains Mono,monospace;font-size:12px;font-weight:500;min-width:32px;padding-top:2px;flex-shrink:0}.rtx{font-size:14px;line-height:1.75;color:var(--t2)}.rtx strong{color:var(--t1);font-weight:600}.wrn{color:var(--am);font-weight:600}.dng{color:var(--rd);font-weight:600}.lc{padding:32px 28px;background:var(--card);border:1px solid var(--bdr);border-radius:16px;margin-bottom:24px;transition:.3s;position:relative;overflow:hidden}.lc:hover{border-color:var(--bdr-h)}.lc .bar{position:absolute;left:0;top:0;bottom:0;width:3px}.lc-hd{display:flex;align-items:center;gap:12px;margin-bottom:14px}.lc-hd .num{font-family:JetBrains Mono,monospace;font-size:10px;color:var(--tm);letter-spacing:.15em}.lc-hd h3{font-family:Syne,sans-serif;font-weight:700;font-size:20px}.lc p{font-size:15px;line-height:1.85;color:var(--t2)}.gg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}.gc{padding:28px 24px;background:#06b6d405;border:1px solid rgba(6,182,212,.1);border-radius:16px;transition:.3s}.gc:hover{border-color:#06b6d459;background:#06b6d40d}.gc-i{width:44px;height:44px;border-radius:10px;background:#06b6d414;border:1px solid rgba(6,182,212,.15);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}.gc h3{font-family:Syne,sans-serif;font-weight:700;font-size:16px;margin-bottom:10px}.gc p{font-size:14px;line-height:1.75;color:var(--tm)}.jc{padding:60px 40px;text-align:center;border-radius:24px;background:linear-gradient(135deg,#8b5cf612,#06b6d40d);border:1px solid rgba(139,92,246,.2);position:relative;overflow:hidden}.jc .glow{position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.12),transparent);pointer-events:none}.jc h2{font-family:Syne,sans-serif;font-weight:800;font-size:clamp(26px,4vw,38px);margin:20px 0 12px;line-height:1.1}.jc>p{font-size:15px;color:var(--tm);max-width:440px;margin:0 auto 32px;line-height:1.7}.jbtns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}.btn-d{background:linear-gradient(135deg,#5865f2,#4752c4);border:0;color:#fff;font-family:Syne,sans-serif;font-weight:700;font-size:13px;padding:13px 28px;border-radius:8px;cursor:pointer;letter-spacing:.06em;transition:.3s;box-shadow:0 4px 20px #5865f240;display:inline-flex;align-items:center;gap:8px}.btn-d:hover{transform:translateY(-2px);box-shadow:0 8px 30px #5865f266}.btn-cn{background:0;border:1px solid rgba(6,182,212,.35);color:var(--cl);font-family:Syne,sans-serif;font-weight:700;font-size:13px;padding:13px 28px;border-radius:8px;cursor:pointer;letter-spacing:.06em;transition:.3s}.btn-cn:hover{background:#06b6d414;transform:translateY(-2px)}footer{padding:40px 24px;text-align:center;border-top:1px solid rgba(139,92,246,.06)}.fl{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}.fl span{font-family:Syne,sans-serif;font-weight:700;font-size:13px;color:var(--tm)}.fl .ac{color:#8b5cf673}footer .cp{font-family:JetBrains Mono,monospace;font-size:11px;color:var(--td);letter-spacing:.1em}.rv{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}.rv.vis{opacity:1;transform:translateY(0)}@media(max-width:640px){.n-links{display:none}.inv-grid{grid-template-columns:1fr}.rh{padding:16px 18px}.rb-in{padding:0 18px 16px}section{padding:70px 0}.jc{padding:40px 24px}.lc{padding:24px 20px}}@media(prefers-reduced-motion:reduce){.star,.hero-moon,.hero .grtxt{animation:none!important}}.gb-callout{display:flex;align-items:center;gap:14px;margin-top:24px;padding:20px 22px;background:linear-gradient(135deg,#8b5cf614,#8b5cf605);border:1px solid rgba(139,92,246,.25);border-left:3px solid var(--v);border-radius:12px;text-decoration:none;transition:.25s}.gb-callout:hover{border-color:var(--v);background:linear-gradient(135deg,#8b5cf624,#8b5cf60a)}.gb-icon{font-size:28px;flex-shrink:0}.gb-body{flex:1}.gb-title{font-family:Syne,sans-serif;font-weight:700;font-size:16px;color:var(--t1);margin-bottom:4px}.gb-desc{font-size:13.5px;color:var(--t2);line-height:1.55}.gb-open{font-family:JetBrains Mono,monospace;font-size:11px;color:var(--v);letter-spacing:.15em;flex-shrink:0}.gb-callout-alt{margin-top:12px;border-left-color:var(--cy)!important;background:linear-gradient(135deg,#06b6d414,#06b6d405)!important}.gb-callout-alt:hover{border-color:var(--cy)!important;background:linear-gradient(135deg,#06b6d424,#06b6d40a)!important}.gb-open-alt{color:var(--cy)!important}.inv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.inv-card{display:block;padding:32px 28px;border-radius:16px;text-decoration:none;transition:.3s;position:relative;overflow:hidden}.inv-card-gang{background:linear-gradient(135deg,#8b5cf61a,#8b5cf605);border:1px solid rgba(139,92,246,.3);border-left:4px solid var(--v)}.inv-card-gang:hover{border-color:var(--v);background:linear-gradient(135deg,#8b5cf629,#8b5cf60a);transform:translateY(-3px);box-shadow:0 12px 40px #8b5cf626}.inv-card-portal{background:linear-gradient(135deg,#06b6d41a,#06b6d405);border:1px solid rgba(6,182,212,.3);border-left:4px solid var(--cy)}.inv-card-portal:hover{border-color:var(--cy);background:linear-gradient(135deg,#06b6d429,#06b6d40a);transform:translateY(-3px);box-shadow:0 12px 40px #06b6d426}.inv-card-suggest{background:linear-gradient(135deg,#f59e0b1a,#f59e0b05);border:1px solid rgba(245,158,11,.3);border-left:4px solid var(--am)}.inv-card-suggest:hover{border-color:var(--am);background:linear-gradient(135deg,#f59e0b29,#f59e0b0a);transform:translateY(-3px);box-shadow:0 12px 40px #f59e0b26}.inv-card-suggest .inv-tag,.inv-card-suggest .inv-cta{color:var(--am)}.inv-icon{font-size:36px;margin-bottom:16px;display:block}.inv-tag{font-family:JetBrains Mono,monospace;font-size:10px;letter-spacing:.25em;color:var(--tm);text-transform:uppercase;margin-bottom:10px}.inv-card-gang .inv-tag{color:var(--v)}.inv-card-portal .inv-tag{color:var(--cy)}.inv-title{font-family:Syne,sans-serif;font-weight:800;font-size:clamp(20px,3vw,26px);color:var(--t1);margin-bottom:12px;line-height:1.2}.inv-desc{font-size:14.5px;line-height:1.7;color:var(--t2);margin-bottom:20px}.inv-desc strong{color:var(--t1);font-weight:600}.inv-cta{font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.18em;font-weight:500}.inv-card-gang .inv-cta{color:var(--v)}.inv-card-portal .inv-cta{color:var(--cy)}.live-strip{display:inline-flex;align-items:center;gap:8px;min-height:28px;padding:4px 14px;margin:-12px auto 22px;background:#10b9810f;border:1px solid rgba(16,185,129,.18);border-radius:999px;font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--t2)}.live-strip .live-dot{width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981aa;flex-shrink:0}.live-strip.live-fallback .live-dot{background:#8b5cf6;box-shadow:0 0 8px #8b5cf6aa}.live-strip .live-text strong{color:var(--t1);font-weight:700}.hero-trust{font-family:JetBrains Mono,monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--tm);margin-bottom:18px}.hero-tertiary{margin-top:18px;font-size:13px}.hero-tertiary a{color:var(--cl);border-bottom:1px dashed rgba(103,232,249,.35);padding-bottom:1px;transition:color .2s,border-color .2s}.hero-tertiary a:hover{color:#fff;border-bottom-color:#fff}@media(max-width:640px){.live-strip{font-size:10px;letter-spacing:.08em}}</style>
-<script>window._mfq=window._mfq||[];(function(){var m=document.createElement("script");m.type="text/javascript";m.defer=true;m.src="//cdn.mouseflow.com/projects/4d455178-363e-4bec-983c-dec10d6ba14d.js";document.getElementsByTagName("head")[0].appendChild(m)})();</script>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Rajdhani',sans-serif;overflow-x:hidden;cursor:none}
+::selection{background:var(--violet);color:#000}
+*{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+#cur{position:fixed;width:8px;height:8px;background:var(--sky2);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .2s,height .2s}
+#cur2{position:fixed;width:34px;height:34px;border:1px solid rgba(56,189,248,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .4s cubic-bezier(.23,1,.32,1),width .3s,height .3s}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:linear-gradient(var(--violet),var(--sky));border-radius:4px}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 40px;
+  background:rgba(6,8,18,.88);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);gap:12px;
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.nav-logo img{height:44px;width:auto;filter:drop-shadow(0 0 10px rgba(155,124,255,.5))}
+.nav-logo-text{font-family:'Orbitron',monospace;font-size:13px;font-weight:900;letter-spacing:4px;background:linear-gradient(90deg,#c8d4ff,#80e8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.nav-link{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,210,255,.55);text-decoration:none;padding:7px 11px;border-radius:50px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.04);transition:all .22s;white-space:nowrap}
+.nav-link:hover{color:var(--sky2);border-color:rgba(56,189,248,.4);background:rgba(56,189,248,.08);box-shadow:0 0 12px rgba(56,189,248,.2)}
+.nav-link.store-link{color:var(--amber2);border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.05)}
+.nav-link.store-link:hover{box-shadow:0 0 12px rgba(251,191,36,.3)}
+.nav-cta{font-family:'Orbitron',monospace;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#000;background:linear-gradient(135deg,var(--sky2),var(--violet));border:none;padding:11px 22px;border-radius:50px;cursor:pointer;white-space:nowrap;text-decoration:none;box-shadow:0 0 20px rgba(56,189,248,.3);transition:all .25s;flex-shrink:0}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(139,92,246,.5)}
+
+/* HERO */
+#hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;position:relative;overflow:hidden;
+  padding:100px 40px 80px;
+  background:
+    radial-gradient(ellipse 70% 60% at 20% 30%, rgba(124,58,237,.22) 0%,transparent 60%),
+    radial-gradient(ellipse 55% 50% at 80% 60%, rgba(14,165,233,.18) 0%,transparent 55%),
+    radial-gradient(ellipse 45% 40% at 60% 10%, rgba(236,72,153,.12) 0%,transparent 50%),
+    var(--bg);
+}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(139,92,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,246,.04) 1px,transparent 1px);background-size:70px 70px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 100%)}
+.hero-badge{display:inline-flex;align-items:center;gap:12px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:7px;text-transform:uppercase;color:var(--sky2);text-shadow:0 0 14px rgba(56,189,248,.7);background:rgba(14,165,233,.06);border:1px solid rgba(14,165,233,.2);border-radius:50px;padding:9px 24px;margin-bottom:24px;position:relative;z-index:2}
+.hero-badge::before,.hero-badge::after{content:'';width:22px;height:1px;background:currentColor;opacity:.4}
+.hero-dot{width:6px;height:6px;background:var(--sky2);border-radius:50%;box-shadow:0 0 8px var(--sky2);animation:pulse 1.8s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.hero-title-wrap{position:relative;z-index:2;margin-bottom:18px;width:100%;max-width:1000px}
+#heroCanvas{display:block;width:100%;height:clamp(80px,16vw,180px)}
+.hero-sub{font-family:'Orbitron',monospace;font-size:clamp(9px,1.2vw,12px);font-weight:600;letter-spacing:4px;text-transform:uppercase;color:rgba(180,200,255,.5);margin-bottom:24px;position:relative;z-index:2}
+.hero-desc{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:400;color:rgba(210,220,255,.7);line-height:1.8;max-width:580px;margin:0 auto 32px;position:relative;z-index:2;text-shadow:0 1px 10px rgba(0,0,0,.9)}
+.hero-ip-bar{display:flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:50px;padding:10px 20px;margin:0 auto 28px;width:fit-content;position:relative;z-index:2;color:rgba(180,200,255,.6)}
+.ip-label{color:rgba(140,160,200,.4);font-size:9px;letter-spacing:3px;text-transform:uppercase}
+.ip-val{color:var(--sky2);letter-spacing:1px;text-shadow:0 0 10px rgba(56,189,248,.5)}
+.ip-copy{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:2px;color:#000;background:var(--sky2);border:none;padding:6px 14px;border-radius:50px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.ip-copy:hover{background:var(--violet);box-shadow:0 0 12px rgba(139,92,246,.5)}
+.hero-btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;z-index:2}
+.hero-btn{font-family:'Orbitron',monospace;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;border:none;padding:13px 26px;border-radius:50px;cursor:pointer;text-decoration:none;display:inline-block;transition:all .28s}
+.btn-primary{background:linear-gradient(135deg,var(--violet),var(--sky));color:#000;box-shadow:0 0 24px rgba(139,92,246,.4),0 4px 16px rgba(0,0,0,.5)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 36px rgba(56,189,248,.5),0 8px 24px rgba(0,0,0,.6)}
+.btn-green{background:var(--emerald);color:#000;box-shadow:0 0 20px rgba(16,185,129,.35)}
+.btn-green:hover{background:var(--emerald2);transform:translateY(-2px)}
+.btn-outline{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);color:rgba(210,220,255,.8)}
+.btn-outline:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.25);color:#fff}
+.btn-amber{background:var(--amber);color:#000;box-shadow:0 0 20px rgba(245,158,11,.35)}
+.btn-amber:hover{background:var(--amber2);transform:translateY(-2px)}
+
+/* MARQUEE */
+.marquee-bar{padding:12px 0;border-top:1px solid rgba(139,92,246,.12);border-bottom:1px solid rgba(139,92,246,.12);overflow:hidden;background:rgba(139,92,246,.03)}
+.marquee-track{display:flex;gap:0;animation:marquee 28s linear infinite;width:max-content}
+.marquee-item{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;padding:0 28px;white-space:nowrap;color:var(--violet);opacity:.65;text-shadow:0 0 8px rgba(139,92,246,.4)}
+.marquee-item span{opacity:.25;margin:0 8px}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* SECTIONS */
+.section{padding:100px 8vw;position:relative}
+.section-inner{max-width:1200px;margin:0 auto}
+.section-eyebrow{font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:7px;text-transform:uppercase;color:var(--sky2);text-shadow:0 0 12px rgba(56,189,248,.7);margin-bottom:12px;display:block}
+.sec-canvas{display:block;width:100%;max-width:700px;height:clamp(55px,8vw,100px);margin-bottom:16px}
+.section-rule{width:60px;height:2px;background:linear-gradient(90deg,var(--violet),var(--sky));margin-bottom:36px}
+.section-desc{font-size:16px;color:var(--txt2);line-height:1.8;max-width:640px;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+
+/* ABOUT */
+#about{background:radial-gradient(ellipse 60% 50% at 90% 50%,rgba(139,92,246,.12) 0%,transparent 55%),radial-gradient(ellipse 40% 40% at 5% 50%,rgba(14,165,233,.08) 0%,transparent 50%),var(--bg2)}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:52px}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;transition:all .3s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,currentColor,transparent);opacity:0;transition:opacity .3s}
+.feature-card:hover{transform:translateY(-5px);border-color:rgba(255,255,255,.14);background:var(--surface2);box-shadow:0 20px 55px rgba(0,0,0,.6)}
+.feature-card:hover::before{opacity:.5}
+.feature-icon{font-size:26px;margin-bottom:14px;display:block}
+.feature-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:10px}
+.feature-desc{font-size:14px;color:var(--txt2);line-height:1.7}
+.feature-desc a{text-decoration:none;transition:opacity .2s}.feature-desc a:hover{opacity:.7}
+
+/* HOW TO JOIN */
+#how-to-join{background:radial-gradient(ellipse 50% 60% at 10% 50%,rgba(16,185,129,.10) 0%,transparent 55%),radial-gradient(ellipse 60% 50% at 90% 50%,rgba(56,189,248,.09) 0%,transparent 55%),var(--bg)}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:20px;margin-top:52px}
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px 28px 28px 24px;display:flex;gap:20px;align-items:flex-start;transition:all .3s cubic-bezier(.23,1,.32,1);border-left:3px solid var(--border)}
+.step-card:hover{transform:translateY(-4px);background:var(--surface2);box-shadow:0 16px 50px rgba(0,0,0,.55)}
+.step-num{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;line-height:1;flex-shrink:0;width:44px;text-align:center}
+.step-body h3{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fff;margin-bottom:8px}
+.step-body p{font-size:14px;color:var(--txt2);line-height:1.7}
+.step-body a{text-decoration:none;transition:opacity .2s}.step-body a:hover{opacity:.7}
+code.ip{color:var(--emerald2);background:rgba(16,185,129,.1);padding:2px 8px;border-radius:4px;font-size:12px}
+.step-card:nth-child(1){border-left-color:var(--violet)}.step-card:nth-child(1) .step-num{color:var(--violet);text-shadow:0 0 16px rgba(139,92,246,.7)}
+.step-card:nth-child(2){border-left-color:var(--sky2)}.step-card:nth-child(2) .step-num{color:var(--sky2);text-shadow:0 0 16px rgba(56,189,248,.7)}
+.step-card:nth-child(3){border-left-color:var(--pink)}.step-card:nth-child(3) .step-num{color:var(--pink);text-shadow:0 0 16px rgba(236,72,153,.7)}
+.step-card:nth-child(4){border-left-color:var(--amber2)}.step-card:nth-child(4) .step-num{color:var(--amber2);text-shadow:0 0 16px rgba(251,191,36,.7)}
+.step-card:nth-child(5){border-left-color:var(--emerald2)}.step-card:nth-child(5) .step-num{color:var(--emerald2);text-shadow:0 0 16px rgba(52,211,153,.7)}
+.step-card:nth-child(6){border-left-color:var(--crimson2)}.step-card:nth-child(6) .step-num{color:var(--crimson2);text-shadow:0 0 16px rgba(248,113,113,.7)}
+
+/* LORE */
+#lore{background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(139,92,246,.14) 0%,transparent 55%),radial-gradient(ellipse 50% 60% at 80% 80%,rgba(245,158,11,.08) 0%,transparent 50%),var(--bg2)}
+.lore-chapters{display:flex;flex-direction:column;gap:0;margin-top:52px}
+.lore-chapter{display:grid;grid-template-columns:180px 1fr;gap:40px;padding:40px 0;border-top:1px solid var(--border);align-items:start}
+.lore-chapter:last-child{border-bottom:1px solid var(--border)}
+.lore-ch-num{font-family:'Orbitron',monospace;font-size:clamp(48px,6vw,76px);font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.08);padding-top:8px}
+.lore-ch-tag{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--txt3);margin-top:8px;display:block}
+.lore-icon{font-size:18px;margin-top:6px;display:block}
+.lore-body h3{font-family:'Orbitron',monospace;font-size:clamp(15px,2vw,21px);font-weight:900;text-transform:uppercase;letter-spacing:-.5px;color:#fff;margin-bottom:14px;text-shadow:0 2px 20px rgba(0,0,0,.8)}
+.lore-body p{font-size:15px;color:rgba(200,215,255,.65);line-height:1.85;text-shadow:0 1px 8px rgba(0,0,0,.8)}
+
+/* GET INVOLVED — fully clickable cards */
+#involved{background:radial-gradient(ellipse 60% 50% at 15% 50%,rgba(245,158,11,.10) 0%,transparent 55%),radial-gradient(ellipse 50% 50% at 85% 50%,rgba(239,68,68,.09) 0%,transparent 55%),var(--bg)}
+.involved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:52px}
+.involve-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:32px;text-decoration:none;display:flex;flex-direction:column;
+  transition:all .3s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden;
+  cursor:pointer;
+}
+.involve-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,currentColor,transparent);opacity:0;transition:opacity .3s}
+.involve-card:hover{transform:translateY(-5px);box-shadow:0 20px 55px rgba(0,0,0,.6);background:var(--surface2);border-color:rgba(255,255,255,.14)}
+.involve-card:hover::before{opacity:.7}
+.involve-tag{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.involve-title{font-family:'Orbitron',monospace;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#fff;margin-bottom:12px;text-shadow:0 2px 16px rgba(0,0,0,.8)}
+.involve-desc{font-size:14px;color:var(--txt2);line-height:1.7;margin-bottom:20px;flex:1;text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.involve-link-label{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;transition:letter-spacing .2s;margin-top:auto}
+.involve-card:hover .involve-link-label{letter-spacing:4px}
+
+/* RULES & GANG BIBLE — clickable blocks */
+#guidelines{background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(14,165,233,.06));border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.rules-wrap{max-width:1200px;margin:0 auto;padding:64px 8vw}
+.rules-inner{display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap}
+.rules-text h2{font-family:'Orbitron',monospace;font-size:clamp(18px,2.8vw,30px);font-weight:900;text-transform:uppercase;color:#fff;margin-bottom:8px;letter-spacing:-.5px}
+.rules-text p{font-size:15px;color:var(--txt2)}
+.rules-btns{display:flex;gap:12px;flex-wrap:wrap}
+.rules-btn{font-family:'Orbitron',monospace;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:12px 26px;border-radius:50px;text-decoration:none;display:inline-block;transition:all .25s;cursor:pointer}
+.rules-btn-solid{background:var(--violet);color:#fff;box-shadow:0 0 20px rgba(139,92,246,.4)}
+.rules-btn-solid:hover{background:var(--violet2);transform:translateY(-2px);box-shadow:0 0 30px rgba(139,92,246,.6)}
+.rules-btn-outline{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);color:rgba(210,220,255,.8)}
+.rules-btn-outline:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.3);color:#fff}
+
+/* CORE RULES PREVIEW */
+#core-rules{background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(139,92,246,.08) 0%,transparent 55%),var(--bg2)}
+.rules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:52px}
+.rule-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px;transition:all .3s}
+.rule-card:hover{border-color:rgba(255,255,255,.12);background:var(--surface2);transform:translateY(-3px);box-shadow:0 14px 44px rgba(0,0,0,.5)}
+.rule-icon{font-size:22px;margin-bottom:12px;display:block}
+.rule-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.rule-desc{font-size:13px;color:var(--txt2);line-height:1.7}
+
+/* GANG BIBLE SECTION */
+#gang-bible{background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(239,68,68,.10) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 20% 50%,rgba(245,158,11,.09) 0%,transparent 50%),var(--bg)}
+.bible-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:52px}
+.bible-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px;transition:all .3s;position:relative}
+.bible-card:hover{border-color:rgba(239,68,68,.25);background:var(--surface2);transform:translateY(-3px);box-shadow:0 14px 44px rgba(0,0,0,.5)}
+.bible-part{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--txt3);margin-bottom:6px;display:block}
+.bible-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.bible-items{list-style:none;display:flex;flex-direction:column;gap:7px}
+.bible-items li{font-size:13px;color:var(--txt2);line-height:1.55;padding-left:14px;position:relative}
+.bible-items li::before{content:'—';position:absolute;left:0;opacity:.35;font-size:10px;top:2px}
+
+/* STORE */
+#store{background:radial-gradient(ellipse 60% 50% at 20% 50%,rgba(251,191,36,.09) 0%,transparent 55%),radial-gradient(ellipse 50% 50% at 80% 50%,rgba(139,92,246,.09) 0%,transparent 55%),var(--bg2)}
+.store-note{display:inline-flex;align-items:center;gap:8px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--emerald2);background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.2);border-radius:50px;padding:7px 18px;margin-bottom:32px;text-shadow:0 0 10px rgba(52,211,153,.6)}
+.vip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;margin-top:52px;margin-bottom:52px}
+.vip-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:20px;
+  padding:28px;transition:all .3s cubic-bezier(.23,1,.32,1);
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
+  text-decoration:none;
+}
+.vip-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,currentColor,transparent);opacity:.4;transition:opacity .3s}
+.vip-card:hover{transform:translateY(-5px);box-shadow:0 20px 55px rgba(0,0,0,.6);background:var(--surface2)}
+.vip-card:hover::before{opacity:.9}
+.vip-card.best-value{border-color:rgba(251,191,36,.3);box-shadow:0 0 30px rgba(251,191,36,.1)}
+.vip-level{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--txt3);margin-bottom:6px}
+.vip-name{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;text-transform:uppercase;letter-spacing:-.5px;color:#fff;margin-bottom:4px}
+.vip-type{font-size:11px;color:var(--txt3);margin-bottom:16px;letter-spacing:1px}
+.vip-price{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;margin-bottom:4px}
+.vip-period{font-size:11px;color:var(--txt3);margin-bottom:20px}
+.vip-perks{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:20px;flex:1}
+.vip-perks li{font-size:13px;color:var(--txt2);display:flex;gap:8px;align-items:flex-start}
+.vip-perks li::before{content:'✦';font-size:10px;margin-top:2px;flex-shrink:0}
+.vip-btn{font-family:'Orbitron',monospace;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#000;border:none;padding:11px 24px;border-radius:50px;cursor:pointer;transition:all .25s;text-align:center;display:block;text-decoration:none;margin-top:auto}
+.vip-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.store-extras-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;margin-top:32px}
+.extra-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px;transition:all .3s;position:relative;overflow:hidden;text-decoration:none;display:flex;flex-direction:column}
+.extra-card:hover{transform:translateY(-4px);background:var(--surface2);box-shadow:0 16px 48px rgba(0,0,0,.55)}
+.extra-name{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fff;margin-bottom:6px}
+.extra-sub{font-size:11px;color:var(--txt3);margin-bottom:12px;letter-spacing:1px}
+.extra-price{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;margin-bottom:16px}
+.extra-desc{font-size:13px;color:var(--txt2);line-height:1.65;flex:1;margin-bottom:16px}
+.extra-btn{font-family:'Orbitron',monospace;font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#000;border:none;padding:10px 20px;border-radius:50px;cursor:pointer;transition:all .25s;text-align:center;display:block;margin-top:auto;text-decoration:none}
+.extra-btn:hover{filter:brightness(1.1)}
+
+/* CONTESTS */
+#contests{background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(139,92,246,.10) 0%,transparent 55%),var(--bg)}
+.contests-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:52px}
+.contest-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:28px;transition:all .3s;position:relative;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;cursor:pointer}
+.contest-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,currentColor,transparent);opacity:.3;transition:opacity .3s}
+.contest-card:hover{transform:translateY(-5px);background:var(--surface2);box-shadow:0 20px 55px rgba(0,0,0,.6);border-color:rgba(255,255,255,.14)}
+.contest-card:hover::before{opacity:.8}
+.contest-icon{font-size:32px;margin-bottom:14px;display:block}
+.contest-name{font-family:'Orbitron',monospace;font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#fff;margin-bottom:10px;text-shadow:0 2px 16px rgba(0,0,0,.8)}
+.contest-desc{font-size:14px;color:var(--txt2);line-height:1.7;flex:1;margin-bottom:16px}
+.contest-link{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;transition:letter-spacing .2s;margin-top:auto}
+.contest-card:hover .contest-link{letter-spacing:4px}
+
+/* RP GUIDELINES */
+#rp-guidelines{background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(56,189,248,.07) 0%,transparent 55%),var(--bg2)}
+.rp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:52px}
+.rp-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px;transition:all .3s}
+.rp-card:hover{border-color:rgba(255,255,255,.12);background:var(--surface2);transform:translateY(-3px);box-shadow:0 14px 44px rgba(0,0,0,.5)}
+.rp-icon{font-size:22px;margin-bottom:12px;display:block}
+.rp-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.rp-desc{font-size:13px;color:var(--txt2);line-height:1.7}
+
+/* FLY IN */
+#fly-in{background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(139,92,246,.16) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 20% 20%,rgba(14,165,233,.12) 0%,transparent 55%),var(--bg2);text-align:center;padding:120px 8vw;position:relative;overflow:hidden}
+.fly-in-logo{height:80px;width:auto;margin:0 auto 24px;display:block;filter:drop-shadow(0 0 20px rgba(155,124,255,.5));animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.fly-in-title{font-family:'Orbitron',monospace;font-size:clamp(26px,4.5vw,52px);font-weight:900;text-transform:uppercase;letter-spacing:-1px;color:#fff;margin-bottom:16px;text-shadow:0 0 40px rgba(139,92,246,.3)}
+.fly-in-sub{font-size:16px;color:var(--txt2);max-width:480px;margin:0 auto 36px;line-height:1.8}
+.fly-in-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* FOOTER */
+footer{padding:40px 8vw;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;background:var(--bg2)}
+.footer-logo-wrap{display:flex;align-items:center;gap:10px}
+.footer-logo-img{height:32px;width:auto;filter:drop-shadow(0 0 6px rgba(155,124,255,.4))}
+.footer-brand{font-family:'Orbitron',monospace;font-size:11px;font-weight:900;letter-spacing:4px;color:rgba(200,210,255,.3)}
+.footer-note{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(140,155,200,.25);text-transform:uppercase}
+.footer-links{display:flex;gap:14px;flex-wrap:wrap}
+.footer-link{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(180,195,230,.3);text-decoration:none;transition:color .2s}
+.footer-link:hover{color:var(--sky2)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .85s cubic-bezier(.23,1,.32,1),transform .85s cubic-bezier(.23,1,.32,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.12s}.reveal-delay-2{transition-delay:.24s}.reveal-delay-3{transition-delay:.36s}.reveal-delay-4{transition-delay:.48s}.reveal-delay-5{transition-delay:.60s}
+
+/* UTILS */
+.text-center{text-align:center}
+.mb-8{margin-bottom:8px}
+.best-badge{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--amber);color:#000;padding:4px 12px;border-radius:50px;display:inline-block;margin-bottom:12px}
+
+@media(max-width:900px){
+  nav{padding:12px 20px;gap:10px}
+  .nav-links{display:none}
+  .hero-btns{gap:10px}
+  .lore-chapter{grid-template-columns:1fr;gap:16px}
+  .lore-ch-num{font-size:40px}
+  .section{padding:70px 24px}
+  .rules-inner{flex-direction:column;text-align:center}
+  footer{flex-direction:column;text-align:center}
+  .section-inner{max-width:100%}
+}
+
+/* ── Section header banner — full bleed ── */
+.section-header-wrap {
+  position: relative;
+  /* Pull out of section padding to go full width */
+  margin-left: -8vw;
+  margin-right: -8vw;
+  margin-bottom: 52px;
+  overflow: hidden;
+  padding-left: 8vw;
+  padding-right: 8vw;
+}
+.section-banner {
+  position: absolute;
+  inset: 0;
+  background-image: url('img/v3-section-default.webp');
+  background-size: cover;
+  background-position: center 25%;
+  opacity: 0;
+  transition: opacity .7s ease;
+}
+.section-banner.loaded {
+  opacity: 1;
+}
+/* Gradient overlay — fades edges into section bg, keeps text crisp */
+.section-header-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(6,8,18,.75) 0%,
+      rgba(6,8,18,.4)  40%,
+      rgba(6,8,18,.4)  60%,
+      rgba(6,8,18,.85) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(6,8,18,.7) 0%,
+      transparent 20%,
+      transparent 80%,
+      rgba(6,8,18,.7) 100%
+    );
+  z-index: 1;
+  pointer-events: none;
+}
+/* Content above overlay */
+.section-header-wrap .section-eyebrow,
+.section-header-wrap .sec-canvas,
+.section-header-wrap .section-rule {
+  position: relative;
+  z-index: 2;
+}
+.section-header-wrap .section-eyebrow {
+  padding-top: 44px;
+  display: block;
+}
+.section-header-wrap .sec-canvas {
+  width: 100%;
+  max-width: 800px;
+  height: clamp(65px, 9vw, 115px);
+  margin-bottom: 0;
+}
+.section-header-wrap .section-rule {
+  margin-bottom: 44px;
+  display: block;
+}
+
+/* Inner padding so content isn't flush to the banner edge
+.section-header-wrap .section-eyebrow {
+  padding: 36px 36px 0;
+}
+.section-header-wrap .sec-canvas {
+  padding: 0 36px;
+  max-width: calc(700px + 72px);
+  box-sizing: border-box;
+  width: 100%;
+  height: clamp(60px, 8.5vw, 105px);
+  margin-bottom: 0;
+}
+.section-header-wrap .section-rule {
+  margin: 16px 36px 36px;
+  display: block;
+}
+
+
+/* Fly-in text white */
+#fly-in .fly-in-title { color: #fff !important; text-shadow: 0 2px 20px rgba(0,0,0,.9), 0 0 40px rgba(139,92,246,.3) !important; }
+#fly-in .fly-in-sub   { color: #fff !important; text-shadow: 0 1px 12px rgba(0,0,0,.95) !important; }
+
+
+/* All section descriptions white */
+.section-desc,
+.feature-desc,
+.step-body p,
+.lore-body p,
+.involve-desc,
+.rule-desc,
+.bible-items li,
+.vip-perks li,
+.extra-desc,
+.contest-desc,
+.rp-desc,
+.rules-text p,
+.fly-in-sub {
+  color: #ffffff !important;
+  text-shadow: 0 1px 10px rgba(0,0,0,.9), 0 0 20px rgba(0,0,0,.7) !important;
+}
+
+
+/* Lore chapter image */
+.lore-ch-img {
+  width: 100%;
+  max-width: 160px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-top: 12px;
+  display: block;
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  transition: transform .4s ease;
+}
+.lore-chapter:hover .lore-ch-img {
+  transform: scale(1.03);
+}
+
+
+/* Hide chapter number and tag when image is present */
+.lore-chapter:has(.lore-ch-img) .lore-ch-num,
+.lore-chapter:has(.lore-ch-img) .lore-ch-tag {
+  display: none !important;
+}
+
+
+/* Hero text white */
+#hero .hero-sub,
+#hero .hero-desc,
+#hero .hero-ip-bar {
+  color: #ffffff !important;
+  text-shadow: 0 1px 12px rgba(0,0,0,.95), 0 0 30px rgba(0,0,0,.8) !important;
+}
+#hero .ip-label { color: rgba(255,255,255,.55) !important; }
+#hero .ip-val   { color: #38bdf8 !important; text-shadow: 0 0 12px rgba(56,189,248,.7) !important; }
+
+</style>
 </head>
 <body>
-<div class="stars" id="stars"></div>
-<nav data-loc="nav">
-<a href="#hero" class="n-logo">
-<img src="img/nav-logo.webp" alt="" style="width:24px;height:22px;filter:drop-shadow(0 0 8px rgba(139,92,246,.4))">
-<span>PHASE<span class="ac">CITY</span></span>
-</a>
-<div class="n-links">
-<a href="#about">About</a>
-<a href="#how-to-join">How to Join</a>
-<a href="#lore">Lore</a>
-<a href="#involved">Get Involved</a>
-<a href="rules-handbook.html">Rules</a>
-<a href="gang-bible.html">Gang Bible</a>
-<a href="#guidelines">Guidelines</a>
-<a href="#fly-in">Fly In</a>
-<a href="contests.html">Contests</a>
-<a href="https://store.phasecity.net/" class="store-link">🛒 Store</a>
-</div>
+
+<div id="cur"></div>
+<div id="cur2"></div>
+
+<nav>
+  <a href="#hero" class="nav-logo">
+    <div style="position:relative;z-index:2;display:contents"><img src="img/v3-logo.webp" alt="Phase City">
+    <span class="nav-logo-text">PHASECITY</span>
+  </a>
+  <div class="nav-links">
+    <a href="#about"       class="nav-link">About</a>
+    <a href="#how-to-join" class="nav-link">How to Join</a>
+    <a href="#lore"        class="nav-link">Lore</a>
+    <a href="#involved"    class="nav-link">Get Involved</a>
+    <a href="#core-rules"  class="nav-link">Rules</a>
+    <a href="#gang-bible"  class="nav-link">Gang Bible</a>
+    <a href="#store"       class="nav-link">Store</a>
+    <a href="#contests"    class="nav-link">Contests</a>
+    <a href="#rp-guidelines" class="nav-link">Guidelines</a>
+    <a href="#fly-in"      class="nav-link">Fly In</a>
+    <a href="https://www.phasecity.net/store.html" class="nav-link store-link">🛒 Full Store</a>
+  </div>
+  <a href="fivem://connect/join.phasecity.net" class="nav-cta">Connect</a>
 </nav>
-<div class="ipbar" role="region" aria-label="Server connection info" style="position:relative;z-index:5;background:linear-gradient(90deg,rgba(139,92,246,.10),rgba(6,182,212,.10));border-bottom:1px solid rgba(139,92,246,.18);padding:8px 20px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.04em">
-<span style="opacity:.65;text-transform:uppercase">Server IP</span>
-<code id="ipbar-ip" style="color:var(--cy);font-weight:500;user-select:all">join.phasecity.net:30120</code>
-<button type="button" onclick="(function(b){try{navigator.clipboard.writeText('join.phasecity.net:30120');b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)}catch(e){b.textContent='Copy failed'}})(this)" aria-label="Copy server IP" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.35);color:inherit;font-family:inherit;font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;text-transform:uppercase;letter-spacing:.05em">Copy</button>
-<a href="fivem://connect/join.phasecity.net:30120" style="background:var(--v);color:#fff;font-family:inherit;font-size:11px;padding:4px 10px;border-radius:6px;text-decoration:none;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Connect &rarr;</a>
-</div>
-<main>
-<section class="hero" id="hero">
-<div class="hero-glow"></div>
-<div class="hero-moon">
-<img src="img/hero-moon.webp" alt="Phase City" width="360" height="360" fetchpriority="high" style="width:clamp(200px,40vw,360px);height:auto;filter:drop-shadow(0 0 40px rgba(139,92,246,.4))">
-</div>
-<h1><span class="grtxt">PHASE CITY</span></h1>
-<p class="hero-sub">Serious FiveM Roleplay &middot; Community-Governed &middot; Whitelist Open</p>
-<div class="live-strip" data-cfx-id="3m634r" aria-live="polite">
-<span class="live-dot" aria-hidden="true"></span>
-<span class="live-text">Community online &middot; join the Discord</span>
-</div>
-<p class="hero-trust">Whitelist &middot; 24&ndash;48h decisions &middot; Active staff</p>
-<p class="hero-desc">A player-driven city with a custom economy, whitelisted factions, and active staff. Write your story, build your crew, earn your name.</p>
-<div class="hero-btns" data-loc="hero">
-<a href="https://discord.gg/NSZHK6spre" target="_blank" rel="noopener noreferrer" class="btn-d">
-<svg width="18" height="14" viewBox="0 0 71 55" fill="currentColor" aria-hidden="true"><path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 40.8 40.8 0 00-1.8 3.7 54 54 0 00-16.2 0A39 39 0 0025.4.3a.2.2 0 00-.2-.1A58.4 58.4 0 0010.5 4.9a.2.2 0 00-.1.1C1.5 18.7-.9 32.2.3 45.5v.2a58.9 58.9 0 0017.7 9 .2.2 0 00.3-.1 42 42 0 003.6-5.9.2.2 0 00-.1-.3 38.8 38.8 0 01-5.5-2.7.2.2 0 010-.4l1.1-.9a.2.2 0 01.2 0 42 42 0 0035.6 0 .2.2 0 01.2 0l1.1.9a.2.2 0 010 .3 36.4 36.4 0 01-5.5 2.7.2.2 0 00-.1.3 47.2 47.2 0 003.6 5.9.2.2 0 00.3.1A58.7 58.7 0 0070.4 45.7v-.2C72 30.2 68 16.7 60.2 5a.2.2 0 00-.1-.1zM23.7 37.3c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.5 3.2 6.4 7.2c0 4-2.8 7.2-6.4 7.2zm23.7 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.5 3.2 6.4 7.2c0 4-2.9 7.2-6.4 7.2z"/></svg>
-JOIN OUR DISCORD
-</a>
-<a href="fivem://connect/join.phasecity.net:30120" class="btn-o">CONNECT IN-GAME</a>
-</div>
-<p class="hero-tertiary"><a href="https://store.phasecity.net/">Support the server &rarr;</a></p>
-<div class="scroll-h"><span>SCROLL</span><div class="ln"></div></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-img" style="position:absolute;inset:0;background-image:url('img/v3-hero-bg.webp');background-size:cover;background-position:center 30%;opacity:.45;z-index:0;pointer-events:none"></div>
+  <div class="hero-bg-overlay" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,18,.55) 0%,rgba(6,8,18,.2) 40%,rgba(6,8,18,.2) 60%,rgba(6,8,18,.8) 100%),linear-gradient(90deg,rgba(6,8,18,.4) 0%,transparent 30%,transparent 70%,rgba(6,8,18,.4) 100%);z-index:0;pointer-events:none"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-badge">
+    <div class="hero-dot"></div>
+    Serious FiveM Roleplay &nbsp;·&nbsp; Whitelist Open
+  </div>
+  <div class="hero-title-wrap">
+    <canvas id="heroCanvas"></canvas>
+  </div>
+  <p class="hero-sub">Community-Governed &nbsp;·&nbsp; Custom Economy &nbsp;·&nbsp; Active Staff</p>
+  <p class="hero-desc">A player-driven city with whitelisted factions, custom-built systems, and a community that values story over chaos. Write your story. Build your crew. Earn your name.</p>
+  <div class="hero-ip-bar">
+    <span class="ip-label">Server IP</span>
+    <span class="ip-val">join.phasecity.net</span>
+    <button class="ip-copy" onclick="copyIP()">Copy</button>
+  </div>
+  <div class="hero-btns">
+    <a href="#how-to-join" class="hero-btn btn-primary">Apply to Join</a>
+    <a href="fivem://connect/join.phasecity.net" class="hero-btn btn-green">Connect Now</a>
+    <a href="#core-rules" class="hero-btn btn-outline">Server Rules</a>
+    <a href="#gang-bible" class="hero-btn btn-amber">Gang Bible</a>
+  </div>
 </section>
-<section id="about">
-<div class="wrap rv">
-<p class="slbl" style="color:var(--cy)">WELCOME TO</p>
-<h2 class="stit">Phase City</h2>
-<div style="width:80px;height:2px;background:linear-gradient(90deg,var(--v),var(--cy));margin:0 auto 40px"></div>
-<p class="sdsc">A premium FiveM roleplay experience built on trust, creativity, and community. Our custom-built systems create a living, breathing world where your choices matter.</p>
+
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span class="marquee-item">Serious Roleplay<span>/</span></span>
+    <span class="marquee-item">Custom Economy<span>/</span></span>
+    <span class="marquee-item">Whitelisted Factions<span>/</span></span>
+    <span class="marquee-item">Active Staff<span>/</span></span>
+    <span class="marquee-item">Community Governed<span>/</span></span>
+    <span class="marquee-item">Phase City FiveM<span>/</span></span>
+    <span class="marquee-item">Write Your Story<span>/</span></span>
+    <span class="marquee-item">Serious Roleplay<span>/</span></span>
+    <span class="marquee-item">Custom Economy<span>/</span></span>
+    <span class="marquee-item">Whitelisted Factions<span>/</span></span>
+    <span class="marquee-item">Active Staff<span>/</span></span>
+    <span class="marquee-item">Community Governed<span>/</span></span>
+    <span class="marquee-item">Phase City FiveM<span>/</span></span>
+    <span class="marquee-item">Write Your Story<span>/</span></span>
+  </div>
 </div>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+  <div class="section-inner">
+    <div class="section-header-wrap">
+      <div class="section-banner"></div>
+      <span class="section-eyebrow reveal">Welcome to Phase City</span>
+    <canvas class="sec-canvas reveal" data-text="BUILT DIFFERENT" data-cfg="about"></canvas>
+    <div class="section-rule reveal"></div>
+    </div>
+    <p class="section-desc reveal">Phase City isn't another cookie-cutter server. Here's what sets us apart — from custom economy systems to a community that actually governs itself.</p>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1" style="color:var(--violet)">
+        <span class="feature-icon">🎭</span>
+        <div class="feature-title">Serious Roleplay</div>
+        <p class="feature-desc">Whitelisted entry, enforced rules, and a community that values story over chaos. Every interaction matters here.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2" style="color:var(--amber2)">
+        <span class="feature-icon">💰</span>
+        <div class="feature-title">Custom Economy</div>
+        <p class="feature-desc">Player-run businesses, dynamic markets, and real economic consequences. Build an empire or go broke trying.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3" style="color:var(--sky2)">
+        <span class="feature-icon">⚖️</span>
+        <div class="feature-title">Community-Governed</div>
+        <p class="feature-desc">Transparent moderation, public suggestion board, and a council that listens. Your voice shapes the server.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1" style="color:var(--emerald2)">
+        <span class="feature-icon">🛡️</span>
+        <div class="feature-title">Active Staff</div>
+        <p class="feature-desc">Dedicated team online daily. Applications reviewed in 24–48 hours. Tickets answered, not ignored.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2" style="color:var(--pink2)">
+        <span class="feature-icon">👥</span>
+        <div class="feature-title">Whitelisted Factions</div>
+        <p class="feature-desc">PD, EMS, DOJ, gangs — all with custom SOPs, structured leadership, and active rosters looking for members.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3" style="color:var(--crimson2)">
+        <span class="feature-icon">🔧</span>
+        <div class="feature-title">Custom Tools</div>
+        <p class="feature-desc">In-house scanner, radio frequencies, keybind builder, interactive map, and more — all free at our <a href="https://www.phasecity.net/tools/index.html" style="color:var(--crimson2)">tools hub.</a></p>
+      </div>
+    </div>
+  </div>
 </section>
-<section id="why">
-<div class="wrap rv">
-<p class="slbl" style="color:var(--v)">WHY PHASE CITY</p>
-<h2 class="stit">Built Different</h2>
-<p class="sdsc">Phase City isn't another cookie-cutter server. Here's what sets us apart.</p>
-<div class="gg">
-<div class="gc">
-<div class="gc-i">🎭</div>
-<h3>Serious Roleplay</h3>
-<p>Whitelisted entry, enforced rules, and a community that values story over chaos. Every interaction matters here.</p>
-</div>
-<div class="gc">
-<div class="gc-i">💰</div>
-<h3>Custom Economy</h3>
-<p>Player-run businesses, dynamic markets, and real economic consequences. Build an empire or go broke trying.</p>
-</div>
-<div class="gc">
-<div class="gc-i">⚖️</div>
-<h3>Community-Governed</h3>
-<p>Transparent moderation, public suggestion board, and a council that listens. Your voice shapes the server.</p>
-</div>
-<div class="gc">
-<div class="gc-i">🛡️</div>
-<h3>Active Staff</h3>
-<p>Dedicated team online daily. Applications reviewed in 24–48 hours. Tickets answered, not ignored.</p>
-</div>
-<div class="gc">
-<div class="gc-i">👥</div>
-<h3>Whitelisted Factions</h3>
-<p>PD, EMS, DOJ, gangs — all with custom SOPs, structured leadership, and active rosters looking for new members.</p>
-</div>
-<div class="gc">
-<div class="gc-i">🔧</div>
-<h3>Custom Tools</h3>
-<p>In-house scanner, radio frequencies, keybind builder, interactive map, and more — all free at <a href="tools/index.html" style="color:var(--cy)">our tools hub</a>.</p>
-</div>
-</div>
-</div>
+
+<!-- HOW TO JOIN -->
+<section id="how-to-join" class="section">
+  <div class="section-inner">
+    <div class="section-header-wrap">
+      <div class="section-banner" style="background-image:url('img/v3-how-to-join-banner.webp');background-position:center 20%"></div>
+      <span class="section-eyebrow reveal">Get Started</span>
+    <canvas class="sec-canvas reveal" data-text="HOW TO JOIN" data-cfg="join"></canvas>
+    <div class="section-rule reveal"></div>
+    </div>
+    <p class="section-desc reveal">Applications reviewed within 24–48 hours. No voice interview. Just a short written app so we know you're a good fit for serious RP.</p>
+    <div class="steps-grid">
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h3>Own GTA V &amp; Install FiveM</h3>
+          <p>Grab GTA V on Steam or Rockstar, then install the free FiveM client from <a href="https://fivem.net" style="color:var(--sky2)">fivem.net.</a></p>
+        </div>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h3>Join Our Discord</h3>
+          <p><a href="https://discord.gg/NSZHK6spre" style="color:var(--sky2)">discord.gg/NSZHK6spre</a> — the hub for announcements, applications, and community.</p>
+        </div>
+      </div>
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h3>Submit Your Whitelist App</h3>
+          <p>Find the application channel in Discord. Short written form — tell us about your character and RP experience.</p>
+        </div>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h3>Read the Rules</h3>
+          <p>Skim <a href="#core-rules" style="color:var(--amber2)">the server rules</a> before your first session. Know the warning system and what FailRP means here.</p>
+        </div>
+      </div>
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <h3>Connect &amp; Roleplay</h3>
+          <p>Once approved, connect to <code class="ip">join.phasecity.net</code> and start writing your story.</p>
+        </div>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-num">06</div>
+        <div class="step-body">
+          <h3>Explore FiveM Tools</h3>
+          <p><a href="https://www.phasecity.net/tools/index.html" style="color:var(--crimson2)">Scanner, radio frequencies, keybinds, map, optimizer</a> — everything you need for the city.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
-<section id="how-to-join">
-<div class="wrap rv">
-<p class="slbl" style="color:var(--v)">GET STARTED</p>
-<h2 class="stit">How To Join Phase City</h2>
-<div style="width:80px;height:2px;background:linear-gradient(90deg,var(--v),var(--cy));margin:0 auto 40px"></div>
-<p class="sdsc" style="margin-bottom:36px">Applications reviewed within 24&ndash;48 hours. No voice interview. Just a short written app so we know you're a good fit for serious RP.</p>
-<ol style="list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;counter-reset:jstep">
-<li style="counter-increment:jstep;position:relative;padding:22px 20px 20px 64px;border:1px solid rgba(139,92,246,.22);border-radius:14px;background:rgba(139,92,246,.04)"><span style="position:absolute;left:18px;top:18px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--cy));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:15px">1</span><h3 style="margin:0 0 6px;font-family:'Syne',sans-serif;font-size:16px;letter-spacing:.02em">Own GTA V &amp; install FiveM</h3><p style="margin:0;font-size:14px;line-height:1.5;opacity:.8">Grab GTA V on Steam / Rockstar, then install the free FiveM client from <a href="https://fivem.net" target="_blank" rel="noopener noreferrer" style="color:var(--cy)">fivem.net</a>.</p></li>
-<li style="counter-increment:jstep;position:relative;padding:22px 20px 20px 64px;border:1px solid rgba(139,92,246,.22);border-radius:14px;background:rgba(139,92,246,.04)"><span style="position:absolute;left:18px;top:18px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--cy));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:15px">2</span><h3 style="margin:0 0 6px;font-family:'Syne',sans-serif;font-size:16px;letter-spacing:.02em">Join our Discord</h3><p style="margin:0;font-size:14px;line-height:1.5;opacity:.8"><a href="https://discord.gg/NSZHK6spre" target="_blank" rel="noopener noreferrer" style="color:var(--cy)">discord.gg/NSZHK6spre</a> &mdash; the hub for announcements, applications, and community.</p></li>
-<li style="counter-increment:jstep;position:relative;padding:22px 20px 20px 64px;border:1px solid rgba(139,92,246,.22);border-radius:14px;background:rgba(139,92,246,.04)"><span style="position:absolute;left:18px;top:18px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--cy));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:15px">3</span><h3 style="margin:0 0 6px;font-family:'Syne',sans-serif;font-size:16px;letter-spacing:.02em">Submit your whitelist app</h3><p style="margin:0;font-size:14px;line-height:1.5;opacity:.8">Find the application channel in Discord. Short written form &mdash; tell us about your character and RP experience.</p></li>
-<li style="counter-increment:jstep;position:relative;padding:22px 20px 20px 64px;border:1px solid rgba(139,92,246,.22);border-radius:14px;background:rgba(139,92,246,.04)"><span style="position:absolute;left:18px;top:18px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--cy));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:15px">4</span><h3 style="margin:0 0 6px;font-family:'Syne',sans-serif;font-size:16px;letter-spacing:.02em">Read the rules</h3><p style="margin:0;font-size:14px;line-height:1.5;opacity:.8">Skim <a href="rules-handbook.html" style="color:var(--cy)">the server rules</a> before your first session. Know the warning system and what FailRP means here.</p></li>
-<li style="counter-increment:jstep;position:relative;padding:22px 20px 20px 64px;border:1px solid rgba(139,92,246,.22);border-radius:14px;background:rgba(139,92,246,.04)"><span style="position:absolute;left:18px;top:18px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--v),var(--cy));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:15px">5</span><h3 style="margin:0 0 6px;font-family:'Syne',sans-serif;font-size:16px;letter-spacing:.02em">Connect &amp; roleplay</h3><p style="margin:0;font-size:14px;line-height:1.5;opacity:.8">Once approved, connect to <code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--cy)">join.phasecity.net:30120</code> and start writing your story.</p></li>
-<li style="counter-increment:jstep;position:relative;padding:0;border:1px solid rgba(6,182,212,.35);border-radius:14px;background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(6,182,212,.08));transition:transform .25s,box-shadow .25s,border-color .25s;cursor:pointer" onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 28px rgba(139,92,246,.2)';this.style.borderColor='rgba(6,182,212,.6)'" onmouseleave="this.style.transform='';this.style.boxShadow='';this.style.borderColor='rgba(6,182,212,.35)'"><a href="tools/index.html" style="display:block;padding:22px 20px 20px 64px;text-decoration:none;color:inherit"><span style="position:absolute;left:18px;top:18px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--v));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;color:#fff;font-size:15px">6</span><h3 style="margin:0 0 6px;font-family:'Syne',sans-serif;font-size:16px;letter-spacing:.02em;display:flex;align-items:center;gap:8px">Explore FiveM Tools <span style="font-size:14px;opacity:.7;transition:transform .2s">&rarr;</span></h3><p style="margin:0;font-size:14px;line-height:1.5;opacity:.8">Scanner, radio frequencies, keybinds, map, optimizer &mdash; everything you need for the city.</p></a></li>
-</ol>
-</div>
+
+<!-- LORE -->
+<section id="lore" class="section">
+  <div class="section-inner">
+    <div class="section-header-wrap">
+      <div class="section-banner" style="background-image:url('img/v3-lore-banner.webp');background-position:center 30%"></div>
+      <span class="section-eyebrow reveal">The Story</span>
+    <canvas class="sec-canvas reveal" data-text="THE LORE" data-cfg="lore"></canvas>
+    <div class="section-rule reveal"></div>
+    </div>
+    <p class="section-desc reveal">Where shadows hold secrets and every corner has a price. Phase City's story is written by the people who live it.</p>
+    <div class="lore-chapters">
+      <div class="lore-chapter reveal">
+        <div><div class="lore-ch-num">01</div><span class="lore-ch-tag">Chapter One</span><img class="lore-ch-img" src="img/v3-lore-ch1.webp" alt="The Founding"></div>
+        <div class="lore-body">
+          <h3>The Founding</h3>
+          <p>Phase City wasn't built — it was forged. In the aftermath of San Andreas' economic collapse, a consortium of power brokers, underground kingpins, and visionary politicians carved out a new jurisdiction from the bones of Los Santos. They called it Phase City — a place where reinvention wasn't just possible, it was required. The old rules didn't apply here. The city operated under its own charter, its own law enforcement, its own economy.</p>
+        </div>
+      </div>
+      <div class="lore-chapter reveal">
+        <div><div class="lore-ch-num">02</div><span class="lore-ch-tag">Chapter Two</span><img class="lore-ch-img" src="img/v3-lore-ch2.webp" alt="The Three Pillars"></div>
+        <div class="lore-body">
+          <h3>The Three Pillars</h3>
+          <p>Phase City runs on three pillars: Order, Commerce, and Shadow. Law enforcement maintains a tenuous grip — enforcing laws that bend but rarely break. Commerce flows through legitimate businesses. And then there's the Shadow — drug operations, weapons trafficking, underground racing circuits, and heist crews that operate with surgical precision. The city needs all three pillars to stand. Remove one, and everything collapses.</p>
+        </div>
+      </div>
+      <div class="lore-chapter reveal">
+        <div><div class="lore-ch-num">03</div><span class="lore-ch-tag">Chapter Three</span><img class="lore-ch-img" src="img/v3-lore-ch3.webp" alt="The Districts"></div>
+        <div class="lore-body">
+          <h3>The Districts</h3>
+          <p>Downtown Phase City pulses with neon and ambition. South Side is where the streets talk and loyalty is currency. Vinewood Hills is where old money watches the chaos below through tinted glass. Sandy Shores remains lawless in spirit — a frontier where jurisdiction thins. Paleto Bay is quiet, almost too quiet — the kind of place where people go to disappear. Every district has its own rhythm, its own rules, its own legends.</p>
+        </div>
+      </div>
+      <div class="lore-chapter reveal">
+        <div><div class="lore-ch-num">04</div><span class="lore-ch-tag">Chapter Four</span><img class="lore-ch-img" src="img/v3-lore-ch4.webp" alt="Your Chapter Begins"></div>
+        <div class="lore-body">
+          <h3>Your Chapter Begins</h3>
+          <p>You arrive in Phase City with nothing but a name and a choice. Put on the badge and hold the line. Build a business empire. Descend into the underworld and make your crew legend. Or walk the razor's edge between all worlds. In Phase City, your story isn't written for you. Every alliance, every betrayal, every bullet and every handshake shapes the living narrative. The moon rises over Phase City tonight. What happens next is up to you.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
-<section id="lore">
-<div class="wrap rv">
-<p class="slbl" style="color:var(--am)">THE STORY</p>
-<h2 class="stit">The Story of Phase City</h2>
-<p class="sdsc" style="font-style:italic">Where shadows hold secrets and every corner has a price</p>
-<div class="lc"><div class="bar" style="background:linear-gradient(to bottom,var(--v),var(--cy))"></div>
-<div class="lc-hd"><img src="img/nav-logo.webp" alt="" style="width:28px;height:26px"><div><span class="num">CHAPTER 01</span><h3>The Founding</h3></div></div>
-<p>Phase City wasn't built — it was forged. In the aftermath of San Andreas' economic collapse, a consortium of power brokers, underground kingpins, and visionary politicians carved out a new jurisdiction from the bones of Los Santos. They called it Phase City — a place where reinvention wasn't just possible, it was required. The old rules didn't apply here. The city operated under its own charter, its own law enforcement, its own economy. What emerged was something between a utopia and a powder keg: a city where anyone could become anything, if they had the nerve to survive the climb.</p>
-</div>
-<div class="lc"><div class="bar" style="background:linear-gradient(to bottom,var(--am),var(--ro))"></div>
-<div class="lc-hd"><span style="font-size:24px">⚖️</span><div><span class="num">CHAPTER 02</span><h3>The Three Pillars</h3></div></div>
-<p>Phase City runs on three pillars: Order, Commerce, and Shadow. Law enforcement maintains a tenuous grip on order — enforcing laws that bend but rarely break. Commerce flows through legitimate businesses, from mechanic shops to the towers where fortunes are made and lost daily. And then there's the Shadow — the unspoken third pillar. Drug operations, weapons trafficking, underground racing circuits, and heist crews that operate with surgical precision. The city needs all three pillars to stand. Remove one, and everything collapses.</p>
-</div>
-<div class="lc"><div class="bar" style="background:linear-gradient(to bottom,var(--cy),var(--gr))"></div>
-<div class="lc-hd"><span style="font-size:24px">🏙️</span><div><span class="num">CHAPTER 03</span><h3>The Districts</h3></div></div>
-<p>Downtown Phase City pulses with neon and ambition — skyscrapers housing corporate empires and penthouse dealings. South Side is where the streets talk and loyalty is currency. Vinewood Hills is where old money watches the chaos below through tinted glass. Sandy Shores remains lawless in spirit — a frontier where jurisdiction thins and the desert keeps its own counsel. Paleto Bay up north is quiet, almost too quiet — the kind of place where people go to disappear. Every district has its own rhythm, its own rules, its own legends being written every day.</p>
-</div>
-<div class="lc"><div class="bar" style="background:linear-gradient(to bottom,var(--ro),var(--v))"></div>
-<div class="lc-hd"><span style="font-size:24px">✦</span><div><span class="num">CHAPTER 04</span><h3>Your Chapter Begins</h3></div></div>
-<p>You arrive in Phase City with nothing but a name and a choice. Will you put on the badge and hold the thin blue line? Will you build a business empire, navigating politics and protection rackets? Will you descend into the underworld, building a crew that becomes legend? Or will you walk the razor's edge between all worlds, playing every side until you own the board? In Phase City, your story isn't written for you. Every alliance, every betrayal, every bullet and every handshake shapes the living narrative. The moon rises over Phase City tonight. What happens next is up to you.</p>
-</div>
-</div>
-</section>
-<section id="involved">
-<div class="wrap rv">
-<p class="slbl" style="color:var(--cy)">GET INVOLVED</p>
-<h2 class="stit">Shape The City</h2>
-<p class="sdsc">Bring a crew that's ready to run, or help us fix what's broken — both move the city forward.</p>
-<div class="inv-grid">
-<a href="phase-city-gang-poster.html" class="inv-card inv-card-gang">
-<div class="inv-icon">🎯</div>
-<div class="inv-tag">NOW RECRUITING · ESTABLISHED CREWS</div>
-<div class="inv-title">Bring Your Crew</div>
-<div class="inv-desc">Organized groups of <strong>10, 15 &amp; 20</strong> arrive with packages built for them — custom territory, backing vehicles, priority queue, apparel tokens, and more.</div>
-<div class="inv-cta">SEE RECRUITMENT PACKAGES →</div>
-</a>
-<a href="citizen-portal.html" class="inv-card inv-card-portal">
-<div class="inv-icon">🛠️</div>
-<div class="inv-tag">CITIZEN PORTAL · HELP IMPROVE THE CITY</div>
-<div class="inv-title">Report a Bug or Crash</div>
-<div class="inv-desc">Found something broken? Submit it through the Citizen Portal — reports get routed directly to the dev team.</div>
-<div class="inv-cta">OPEN CITIZEN PORTAL →</div>
-</a>
-<a href="suggestion-board.html" class="inv-card inv-card-suggest">
-<div class="inv-icon">💡</div>
-<div class="inv-tag">SUGGESTION BOARD · YOUR VOICE MATTERS</div>
-<div class="inv-title">Rate &amp; Discuss Ideas</div>
-<div class="inv-desc">Council post ideas, you rate them 1–10 and leave feedback. Every response is read — your voice shapes the server.</div>
-<div class="inv-cta">OPEN SUGGESTION BOARD →</div>
-</a>
-</div>
-</div>
-</section>
-<section id="rules-cta">
-<div class="wrap rv">
-<div class="jc" style="background:linear-gradient(135deg,#ec489912,#8b5cf612);border-color:rgba(236,72,153,.2)">
-<div class="glow"></div>
-<span style="font-size:40px">📋</span>
-<h2>Server Rules &amp; Handbook</h2>
-<p>Our full ruleset — core rules, extended rules, warning point system, and the gang handbook — all in one place.</p>
-<div class="jbtns" data-loc="jc">
-<a href="rules-handbook.html" class="btn-p">VIEW FULL RULES</a>
-<a href="gang-bible.html" class="btn-o">GANG BIBLE</a>
-</div>
-</div>
-</div>
-</section>
-<section id="guidelines">
-<div class="wrap rv">
-<p class="slbl" style="color:var(--cy)">BEST PRACTICES</p>
-<h2 class="stit">Roleplay Guidelines</h2>
-<p class="sdsc">Not rules — but the wisdom that separates good roleplay from legendary roleplay.</p>
-<div class="gg">
-<div class="gc">
-<div class="gc-i">👤</div>
-<h3>Creating Your Character</h3>
-<p>Build a character with depth — backstory, motivations, flaws, and goals. Avoid stereotypes and one-dimensional archetypes. Consider their voice, mannerisms, and how they react under pressure. Your character should feel like a real person dropped into an extraordinary city.</p>
-</div>
-<div class="gc">
-<div class="gc-i">💬</div>
-<h3>Initiating Roleplay</h3>
-<p>Approach others with purpose. Use /me commands and emotes to bring scenes to life. Read the room — if someone is mid-scenario, find a natural way to join or observe. Quality interactions create the stories everyone remembers.</p>
-</div>
-<div class="gc">
-<div class="gc-i">⚡</div>
-<h3>Handling Conflict</h3>
-<p>Conflict drives great storytelling, but it must be earned. Build tension through dialogue, threats, and escalation before resorting to violence. If you lose a fight or get arrested, roll with it — some of the best RP comes from consequences.</p>
-</div>
-<div class="gc">
-<div class="gc-i">🏥</div>
-<h3>Working With Emergency Services</h3>
-<p>EMS and police are players too. Give them quality scenarios. If you're downed, stay in character and roleplay injuries. If arrested, engage with the booking process. These interactions are content for everyone involved.</p>
-</div>
-<div class="gc">
-<div class="gc-i">📈</div>
-<h3>Growing in the City</h3>
-<p>Progression takes time. Build relationships, earn trust, climb organically. The best crime bosses started as corner runners. The best chiefs started as cadets. Let your story unfold naturally and the city will reward you.</p>
-</div>
-<div class="gc">
-<div class="gc-i">🌟</div>
-<h3>New Player Tips</h3>
-<p>Start at the apartments and explore. Visit local businesses, introduce yourself, find your niche. Join Discord to connect with the community. Don't be afraid to ask questions — we all started somewhere. Focus on creating good RP and the rest follows.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="fly-in">
-<div class="wrap rv">
-<div class="jc">
-<div class="glow"></div>
-<img src="img/nav-logo.webp" alt="" style="width:56px;height:51px;filter:drop-shadow(0 0 16px rgba(139,92,246,.4))">
-<h2>Ready to Fly In?</h2>
-<p>Join our Discord to apply for whitelist, meet the community, and begin writing your story.</p>
-<div class="jbtns" data-loc="jc">
-<a href="https://discord.gg/NSZHK6spre" target="_blank" rel="noopener noreferrer" class="btn-d">
-<svg width="18" height="14" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 40.8 40.8 0 00-1.8 3.7 54 54 0 00-16.2 0A39 39 0 0025.4.3a.2.2 0 00-.2-.1A58.4 58.4 0 0010.5 4.9a.2.2 0 00-.1.1C1.5 18.7-.9 32.2.3 45.5v.2a58.9 58.9 0 0017.7 9 .2.2 0 00.3-.1 42 42 0 003.6-5.9.2.2 0 00-.1-.3 38.8 38.8 0 01-5.5-2.7.2.2 0 01 0-.4l1.1-.9a.2.2 0 01.2 0 42 42 0 0035.6 0 .2.2 0 01.2 0l1.1.9a.2.2 0 010 .3 36.4 36.4 0 01-5.5 2.7.2.2 0 00-.1.3 47.2 47.2 0 003.6 5.9.2.2 0 00.3.1A58.7 58.7 0 0070.4 45.7v-.2C72 30.2 68 16.7 60.2 5a.2.2 0 00-.1-.1zM23.7 37.3c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.5 3.2 6.4 7.2c0 4-2.8 7.2-6.4 7.2zm23.7 0c-3.5 0-6.4-3.2-6.4-7.2s2.8-7.2 6.4-7.2 6.5 3.2 6.4 7.2c0 4-2.9 7.2-6.4 7.2z"/></svg>
-        JOIN DISCORD
+
+<!-- GET INVOLVED -->
+<section id="involved" class="section">
+  <div class="section-inner">
+    <div class="section-header-wrap">
+      <div class="section-banner" style="background-image:url('img/v3-involved-banner.webp');background-position:center 20%"></div>
+      <span class="section-eyebrow reveal">Get Involved</span>
+    <canvas class="sec-canvas reveal" data-text="SHAPE THE CITY" data-cfg="involved"></canvas>
+    <div class="section-rule reveal"></div>
+    </div>
+    <div class="involved-grid">
+      <a href="https://www.phasecity.net/phase-city-gang-poster.html" class="involve-card reveal reveal-delay-1" style="color:var(--amber2)">
+        <div class="involve-tag" style="color:var(--amber2)">🎯 Now Recruiting</div>
+        <div class="involve-title">Established Crews</div>
+        <p class="involve-desc">Organized groups of 10, 15 &amp; 20 arrive with packages built for them — custom territory, backing vehicles, priority queue, apparel tokens, and more.</p>
+        <span class="involve-link-label" style="color:var(--amber2)">See Recruitment Packages -&gt;</span>
       </a>
-<a href="fivem://connect/join.phasecity.net:30120" class="btn-cn">CONNECT: phasecity.net</a>
-<a href="https://store.phasecity.net/" class="btn-o">SUPPORT THE SERVER</a>
+      <a href="https://www.phasecity.net/citizen-portal.html" class="involve-card reveal reveal-delay-2" style="color:var(--sky2)">
+        <div class="involve-tag" style="color:var(--sky2)">🛠️ Citizen Portal</div>
+        <div class="involve-title">Help Improve the City</div>
+        <p class="involve-desc">Found something broken? Submit it through the Citizen Portal — reports get routed directly to the dev team. Your bug fix is someone else's smooth session.</p>
+        <span class="involve-link-label" style="color:var(--sky2)">Open Citizen Portal -&gt;</span>
+      </a>
+      <a href="https://www.phasecity.net/suggestion-board.html" class="involve-card reveal reveal-delay-3" style="color:var(--emerald2)">
+        <div class="involve-tag" style="color:var(--emerald2)">💡 Suggestion Board</div>
+        <div class="involve-title">Your Voice Matters</div>
+        <p class="involve-desc">Council posts ideas, you rate them 1–10 and leave feedback. Every response is read — your voice shapes the server, not just the suggestion box.</p>
+        <span class="involve-link-label" style="color:var(--emerald2)">Open Suggestion Board -&gt;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- RULES STRIP -->
+<div id="guidelines">
+  <div class="rules-wrap">
+    <div class="rules-inner">
+      <div class="rules-text reveal">
+        <h2>Server Rules &amp; Handbook</h2>
+        <p>Full ruleset — core rules, warning system, extended rules, and the gang handbook — all in one place.</p>
+      </div>
+      <div class="rules-btns reveal reveal-delay-1">
+        <a href="https://www.phasecity.net/rules-handbook.html" class="rules-btn rules-btn-solid">View Full Rules</a>
+        <a href="https://www.phasecity.net/gang-bible.html" class="rules-btn rules-btn-outline">Gang Bible</a>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
+
+<!-- CORE RULES PREVIEW -->
+<section id="core-rules" class="section">
+  <div class="section-inner">
+    <div class="section-header-wrap">
+      <div class="section-banner" style="background-image:url('img/v3-rules-banner.webp');background-position:center 25%"></div>
+      <span class="section-eyebrow reveal">Core Rules</span>
+    <canvas class="sec-canvas reveal" data-text="THE RULES" data-cfg="rules"></canvas>
+    <div class="section-rule reveal"></div>
+    </div>
+    <p class="section-desc reveal">The foundation of Phase City. Breaking these has consequences — warnings, bans, and faction removal. Know them before you connect.</p>
+    <div class="rules-grid">
+      <div class="rule-card reveal reveal-delay-1" style="color:var(--crimson2)">
+        <span class="rule-icon">🚫</span>
+        <div class="rule-title" style="color:var(--crimson2)">No Metagaming</div>
+        <p class="rule-desc">Using out-of-character information in-character is prohibited. What you know as a player, your character does not know. Stream sniping falls under this rule.</p>
+      </div>
+      <div class="rule-card reveal reveal-delay-2" style="color:var(--crimson2)">
+        <span class="rule-icon">🔫</span>
+        <div class="rule-title" style="color:var(--crimson2)">No RDM / VDM</div>
+        <p class="rule-desc">Random Deathmatch and Vehicle Deathmatch are banned. Every violent action requires in-character justification and proper initiation. No murder for no reason.</p>
+      </div>
+      <div class="rule-card reveal reveal-delay-3" style="color:var(--amber2)">
+        <span class="rule-icon">💀</span>
+        <div class="rule-title" style="color:var(--amber2)">New Life Rule (NLR)</div>
+        <p class="rule-desc">Upon death you forget the circumstances of that death. You may not return to the area of your death for 15 minutes. You cannot seek revenge for your own death.</p>
+      </div>
+      <div class="rule-card reveal" style="color:var(--amber2)">
+        <span class="rule-icon">🎮</span>
+        <div class="rule-title" style="color:var(--amber2)">No Fail RP</div>
+        <p class="rule-desc">Act realistically. Your character fears death, values their life, and behaves consistently with the world. Unrealistic actions (suicide cliffs, magic vehicles) are prohibited.</p>
+      </div>
+      <div class="rule-card reveal reveal-delay-1" style="color:var(--violet)">
+        <span class="rule-icon">🎙️</span>
+        <div class="rule-title" style="color:var(--violet)">Respect In All Channels</div>
+        <p class="rule-desc">Hate speech, harassment, slurs, and targeted abuse are zero-tolerance. Conflict is in-character. OOC disrespect has no place here regardless of what happened in a scene.</p>
+      </div>
+      <div class="rule-card reveal reveal-delay-2" style="color:var(--violet)">
+        <span class="rule-icon">🏛️</span>
+        <div class="rule-title" style="color:var(--violet)">No Cop Baiting</div>
+        <p class="rule-desc">Deliberately provoking law enforcement without realistic in-character motivation is prohibited. If you want a police chase, build a reason for it through actual RP first.</p>
+      </div>
+      <div class="rule-card reveal reveal-delay-3" style="color:var(--sky2)">
+        <span class="rule-icon">⚠️</span>
+        <div class="rule-title" style="color:var(--sky2)">Warning Point System</div>
+        <p class="rule-desc">Violations earn warning points. 5 points = 1-week ban. 10 points = 1-month ban. 20 points = permanent removal. Points expire after 90 days of clean play.</p>
+      </div>
+      <div class="rule-card reveal" style="color:var(--sky2)">
+        <span class="rule-icon">🔒</span>
+        <div class="rule-title" style="color:var(--sky2)">Gunplay Rules</div>
+        <p class="rule-desc">Full verbal initiation required. No shooting from vehicles without prior initiation. Hostage scenes must follow the hostage RP standard. Surrendering must be honored.</p>
+      </div>
+      <div class="rule-card reveal reveal-delay-1" style="color:var(--emerald2)">
+        <span class="rule-icon">🏥</span>
+        <div class="rule-title" style="color:var(--emerald2)">Combat Logging</div>
+        <p class="rule-desc">Logging out during an active RP scenario is strictly prohibited. If you must disconnect, /me and notify the other players. Staff can review disconnection logs.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px" class="reveal">
+      <a href="https://www.phasecity.net/rules-handbook.html" class="rules-btn rules-btn-solid">Read Full Rulebook -&gt;</a>
+    </div>
+  </div>
+</section>
+
+<!-- GANG BIBLE -->
+<section id="gang-bible" class="section">
+  <div class="section-inner">
+    <div class="section-header-wrap">
+      <div class="section-banner" style="background-image:url('img/v3-gang-banner.webp');background-position:center 35%"></div>
+      <span class="section-eyebrow reveal">Gang Handbook</span>
+    <canvas class="sec-canvas reveal" data-text="GANG BIBLE" data-cfg="gang"></canvas>
+    <div class="section-rule reveal"></div>
+    </div>
+    <p class="section-desc reveal">This handbook governs all whitelisted gang activity on Phase City. It supplements the main server ruleset — it does not replace it.</p>
+    <div class="bible-grid">
+      <div class="bible-card reveal reveal-delay-1" style="color:var(--crimson2)">
+        <span class="bible-part">Part 1</span>
+        <div class="bible-title" style="color:var(--crimson2)">📖 Philosophy</div>
+        <ul class="bible-items">
+          <li>Gang RP is about building a living criminal organization with culture, hierarchy, and consequence.</li>
+          <li>Gang RP is NOT a license to shoot. Gangs that consistently produce shoot-first RP get reviewed.</li>
+          <li>Every hostile action must be backed by genuine in-character reasoning. Build the narrative.</li>
+        </ul>
+      </div>
+      <div class="bible-card reveal reveal-delay-2" style="color:var(--amber2)">
+        <span class="bible-part">Part 2 &amp; 3</span>
+        <div class="bible-title" style="color:var(--amber2)">📋 Whitelist &amp; Membership</div>
+        <ul class="bible-items">
+          <li>Minimum 6 confirmed founding members, named leadership, written lore submission required.</li>
+          <li>All newly whitelisted gangs enter a 14-day probationary period.</li>
+          <li>Rosters must be updated within 48 hours of any membership change.</li>
+          <li>Hangaround period is 7 days minimum before full patch.</li>
+          <li>Gang below 6 active members for 14+ days is subject to whitelist removal.</li>
+        </ul>
+      </div>
+      <div class="bible-card reveal reveal-delay-3" style="color:var(--violet)">
+        <span class="bible-part">Part 4 &amp; 5</span>
+        <div class="bible-title" style="color:var(--violet)">🏙️ Territory &amp; Colors</div>
+        <ul class="bible-items">
+          <li>Territory is a narrative anchor — your home, your block. It is not a mechanical kill zone.</li>
+          <li>Territory must be approved by staff at time of whitelist application.</li>
+          <li>Castle defense: up to 6 members, no additional spotters.</li>
+          <li>Full members must wear identifiable gang colors during gang-representative activities.</li>
+          <li>Impersonating another gang is prohibited.</li>
+        </ul>
+      </div>
+      <div class="bible-card reveal" style="color:var(--pink2)">
+        <span class="bible-part">Part 6 &amp; 7</span>
+        <div class="bible-title" style="color:var(--pink2)">⚔️ Beef &amp; War</div>
+        <ul class="bible-items">
+          <li>Valid beef: repeated robbery, disrespect of leadership, defacing tags, breaking deals.</li>
+          <li>After a scene ends — 5 min no shooting — a 30-minute cooldown begins.</li>
+          <li>New members have a 7-day lockout before participating in active beefs.</li>
+          <li>War requires documented history across at least 3 incidents over 7 days.</li>
+          <li>Max war duration: 14 days. 14-day ceasefire follows resolution.</li>
+        </ul>
+      </div>
+      <div class="bible-card reveal reveal-delay-1" style="color:var(--sky2)">
+        <span class="bible-part">Part 9 &amp; 10</span>
+        <div class="bible-title" style="color:var(--sky2)">🎯 Standards &amp; Strikes</div>
+        <ul class="bible-items">
+          <li>RP before violence. Gang members are held to the highest initiation standard.</li>
+          <li>A hit cannot be executed on someone with zero prior interaction with your gang.</li>
+          <li>1 strike = formal warning. 2 strikes = war rights suspended 14 days.</li>
+          <li>3 strikes = gang whitelist removal. Members revert to unwhitelisted crew.</li>
+        </ul>
+      </div>
+      <div class="bible-card reveal reveal-delay-2" style="color:var(--emerald2)">
+        <span class="bible-part">Part 11</span>
+        <div class="bible-title" style="color:var(--emerald2)">🌐 OOC Standards</div>
+        <ul class="bible-items">
+          <li>You are a representative of your gang in every interaction — IC and OOC.</li>
+          <li>Beef stays IC. Conflict between gangs ends when you close the game.</li>
+          <li>Accept the L. Losing a fight or war is a story moment, not a reason to quit.</li>
+          <li>Raise disputes through proper channels after the scene, respectfully.</li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px" class="reveal">
+      <a href="https://www.phasecity.net/gang-bible.html" class="rules-btn rules-btn-solid" style="background:var(--crimson);box-shadow:0 0 20px rgba(239,68,68,.4)">Full Gang Bible -&gt;</a>
+    </div>
+  </div>
+</section>
+
+<!-- STORE -->
+<section id="store" class="section">
+  <div class="section-inner">
+    <div class="section-header-wrap">
+      <div class="section-banner" style="background-image:url('img/v3-store-banner.webp');background-position:center 30%"></div>
+      <span class="section-eyebrow reveal">Support the Server</span>
+    <canvas class="sec-canvas reveal" data-text="THE STORE" data-cfg="store"></canvas>
+    <div class="section-rule reveal"></div>
+    </div>
+    <p class="section-desc reveal">Support Phase City and unlock exclusive content. Cosmetic and supporter perks only — no pay-to-win. Gameplay is earned in-game.</p>
+    <div style="margin-top:16px" class="reveal">
+      <span class="store-note">✦ No Pay-to-Win &nbsp;·&nbsp; Cosmetic &amp; Supporter Perks Only</span>
+    </div>
+    <div class="vip-grid">
+      <a href="https://phasecity.tebex.io/package/7327194" class="vip-card reveal reveal-delay-1" style="color:var(--sky2)">
+        <div class="vip-level">Level 1</div>
+        <div class="vip-name">Mythril</div>
+        <div class="vip-type">Monthly Backing</div>
+        <div class="vip-price" style="color:var(--sky2)">$30</div>
+        <div class="vip-period">per month</div>
+        <ul class="vip-perks">
+          <li>Mythril Monthly Backing Vehicle</li>
+          <li>One Custom License Plate</li>
+          <li>LV1 Priority Queue</li>
+          <li>Access To Backing Chat</li>
+          <li>Early Supporter Discord Role</li>
+        </ul>
+        <span class="vip-btn" style="background:var(--sky2)">Purchase Now</span>
+      </a>
+      <a href="https://phasecity.tebex.io/package/7327208" class="vip-card reveal reveal-delay-2" style="color:var(--violet)">
+        <div class="vip-level">Level 2</div>
+        <div class="vip-name">Diamond</div>
+        <div class="vip-type">Monthly Backing</div>
+        <div class="vip-price" style="color:var(--violet)">$60</div>
+        <div class="vip-period">per month</div>
+        <ul class="vip-perks">
+          <li>Diamond Monthly Backing Vehicle</li>
+          <li>Two Custom License Plates</li>
+          <li>LV2 Priority Queue</li>
+          <li>Access To Backing Chat</li>
+          <li>Early Supporter Discord Role</li>
+        </ul>
+        <span class="vip-btn" style="background:var(--violet)">Purchase Now</span>
+      </a>
+      <a href="https://phasecity.tebex.io/package/7327211" class="vip-card reveal reveal-delay-3" style="color:var(--pink2)">
+        <div class="vip-level">Level 3</div>
+        <div class="vip-name">Obsidian</div>
+        <div class="vip-type">Monthly Backing</div>
+        <div class="vip-price" style="color:var(--pink2)">$90</div>
+        <div class="vip-period">per month</div>
+        <ul class="vip-perks">
+          <li>Obsidian Monthly Backing Vehicle</li>
+          <li>Three Custom License Plates</li>
+          <li>Two Custom Apparel Tokens</li>
+          <li>LV3 Priority Queue</li>
+          <li>Access To Backing Chat</li>
+        </ul>
+        <span class="vip-btn" style="background:var(--pink2)">Purchase Now</span>
+      </a>
+      <a href="https://phasecity.tebex.io/package/7327214" class="vip-card best-value reveal" style="color:var(--amber2)">
+        <span class="best-badge">⬦ Best Value ⬦</span>
+        <div class="vip-level">Level 4 — Ultimate</div>
+        <div class="vip-name">Phase</div>
+        <div class="vip-type">Ultimate Backing</div>
+        <div class="vip-price" style="color:var(--amber2)">$120</div>
+        <div class="vip-period">per month</div>
+        <ul class="vip-perks">
+          <li>All 3 Backing Cars OR "1 of 1" Token</li>
+          <li>Three Custom License Plates</li>
+          <li>Three Custom Apparel Tokens</li>
+          <li>PHASE Top Priority Queue</li>
+          <li>First Access To Beta Testing</li>
+          <li>Early Supporter Discord Role</li>
+        </ul>
+        <span class="vip-btn" style="background:var(--amber)">Purchase Now</span>
+      </a>
+    </div>
+    <h3 style="font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(200,210,255,.5);margin-bottom:20px;text-align:center" class="reveal">One-Time Purchases &amp; Extras</h3>
+    <div class="store-extras-grid">
+      <a href="https://phasecity.tebex.io/package/7334767" class="extra-card reveal reveal-delay-1" style="color:var(--gold)">
+        <div class="extra-name">1 of 1 Token</div>
+        <div class="extra-sub">Exclusive · One-Time Purchase</div>
+        <div class="extra-price" style="color:var(--gold)">$100</div>
+        <p class="extra-desc">A unique vehicle token redeemable for one lore-friendly vehicle that no other player will ever own. Sports cars, SUVs, luxury sedans, motorcycles eligible.</p>
+        <span class="extra-btn" style="background:var(--gold)">Purchase Now</span>
+      </a>
+      <a href="https://discord.gg/NSZHK6spre" class="extra-card reveal reveal-delay-2" style="color:var(--violet)">
+        <div class="extra-name">Clothing Token</div>
+        <div class="extra-sub">Custom Apparel · Approval Required</div>
+        <div class="extra-price" style="color:var(--violet)">$15</div>
+        <p class="extra-desc">Custom textures and models, unique to your character. Open a Discord ticket first with reference images for staff approval, then purchase with your approval code.</p>
+        <span class="extra-btn" style="background:var(--violet);color:#fff">Open Ticket First</span>
+      </a>
+      <a href="https://discord.gg/NSZHK6spre" class="extra-card reveal reveal-delay-3" style="color:var(--amber2)">
+        <div class="extra-name">Chains Token</div>
+        <div class="extra-sub">Custom Jewelry · Approval Required</div>
+        <div class="extra-price" style="color:var(--amber2)">$15</div>
+        <p class="extra-desc">Custom jewelry textures and models, unique to your character. Requires Discord ticket and staff approval before purchase. Delivered within 48–72 hours.</p>
+        <span class="extra-btn" style="background:var(--amber)">Open Ticket First</span>
+      </a>
+      <a href="https://phasecity.tebex.io/package/7206651" class="extra-card reveal" style="color:var(--emerald2)">
+        <div class="extra-name">App Verification</div>
+        <div class="extra-sub">Priority Application Review</div>
+        <div class="extra-price" style="color:var(--emerald2)">$5</div>
+        <p class="extra-desc">Skip the queue. After purchase, open a ticket in Discord with your payment confirmation. Priority review — does not guarantee approval.</p>
+        <span class="extra-btn" style="background:var(--emerald)">Purchase Now</span>
+      </a>
+      <a href="https://phasecity.tebex.io/package/7334777" class="extra-card reveal reveal-delay-1" style="color:var(--sky2)">
+        <div class="extra-name">24-HR Ban Appeal</div>
+        <div class="extra-sub">Expedited Appeal Review</div>
+        <div class="extra-price" style="color:var(--sky2)">$20</div>
+        <p class="extra-desc">24-hour guaranteed review by senior staff. Submit via Discord ticket first. Does not guarantee unban. Not for permanent removals (20+ points).</p>
+        <span class="extra-btn" style="background:var(--sky)">Purchase Now</span>
+      </a>
+    </div>
+    <div style="text-align:center;margin-top:40px" class="reveal">
+      <a href="https://www.phasecity.net/store.html" class="rules-btn rules-btn-solid" style="background:linear-gradient(135deg,var(--amber),var(--violet));box-shadow:0 0 24px rgba(245,158,11,.3)">Full Store -&gt;</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTESTS -->
+<section id="contests" class="section">
+  <div class="section-inner">
+    <div class="section-header-wrap">
+      <div class="section-banner" style="background-image:url('img/v3-contests-banner.webp');background-position:center 25%"></div>
+      <span class="section-eyebrow reveal">Community</span>
+    <canvas class="sec-canvas reveal" data-text="CONTESTS" data-cfg="contests"></canvas>
+    <div class="section-rule reveal"></div>
+    </div>
+    <p class="section-desc reveal">Two monthly competitions and a live game show. Compete for glory and prove you know Phase City better than anyone.</p>
+    <div class="contests-grid">
+      <a href="https://www.phasecity.net/contests.html" class="contest-card reveal reveal-delay-1" style="color:var(--pink2)">
+        <span class="contest-icon">📷</span>
+        <div class="contest-name">Photo Competition</div>
+        <p class="contest-desc">Monthly screenshot contest. Show off the best moments from your time in Phase City — cinematic, creative, or just plain wild. Monthly theme announced in Discord.</p>
+        <span class="contest-link" style="color:var(--pink2)">Enter Competition -&gt;</span>
+      </a>
+      <a href="https://www.phasecity.net/contests.html" class="contest-card reveal reveal-delay-2" style="color:var(--sky2)">
+        <span class="contest-icon">📡</span>
+        <div class="contest-name">Referral Contest</div>
+        <p class="contest-desc">Bring the city to life — recruit, compete, conquer. Monthly leaderboard tracks who's bringing the most quality players to Phase City. Top recruiters earn prizes.</p>
+        <span class="contest-link" style="color:var(--sky2)">View Leaderboard -&gt;</span>
+      </a>
+      <a href="https://www.phasecity.net/contests.html" class="contest-card reveal reveal-delay-3" style="color:var(--amber2)">
+        <span class="contest-icon">🎯</span>
+        <div class="contest-name">The Big Quiz</div>
+        <p class="contest-desc">Phase City's premier live game show — episode by episode. Test your knowledge of the city, its lore, and its rules. Series leaderboard tracks all-time champions.</p>
+        <span class="contest-link" style="color:var(--amber2)">View Series Board -&gt;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- RP GUIDELINES -->
+<section id="rp-guidelines" class="section">
+  <div class="section-inner">
+    <div class="section-header-wrap">
+      <div class="section-banner" style="background-image:url('img/v3-guidelines-banner.webp');background-position:center 30%"></div>
+      <span class="section-eyebrow reveal">Best Practices</span>
+    <canvas class="sec-canvas reveal" data-text="RP GUIDELINES" data-cfg="guidelines"></canvas>
+    <div class="section-rule reveal"></div>
+    </div>
+    <p class="section-desc reveal">Not rules — the wisdom that separates good roleplay from legendary roleplay. Read these, live by them, and the city will reward you.</p>
+    <div class="rp-grid">
+      <div class="rp-card reveal reveal-delay-1" style="color:var(--violet)">
+        <span class="rp-icon">👤</span>
+        <div class="rp-title" style="color:var(--violet)">Creating Your Character</div>
+        <p class="rp-desc">Build a character with depth — backstory, motivations, flaws, and goals. Avoid stereotypes and one-dimensional archetypes. Your character should feel like a real person dropped into an extraordinary city.</p>
+      </div>
+      <div class="rp-card reveal reveal-delay-2" style="color:var(--sky2)">
+        <span class="rp-icon">💬</span>
+        <div class="rp-title" style="color:var(--sky2)">Initiating Roleplay</div>
+        <p class="rp-desc">Approach others with purpose. Use /me commands and emotes to bring scenes to life. Read the room — if someone is mid-scenario, find a natural way to join. Quality interactions create the stories everyone remembers.</p>
+      </div>
+      <div class="rp-card reveal reveal-delay-3" style="color:var(--amber2)">
+        <span class="rp-icon">⚡</span>
+        <div class="rp-title" style="color:var(--amber2)">Handling Conflict</div>
+        <p class="rp-desc">Conflict drives great storytelling, but it must be earned. Build tension through dialogue and escalation before resorting to violence. If you lose or get arrested, roll with it — the best RP comes from consequences.</p>
+      </div>
+      <div class="rp-card reveal" style="color:var(--emerald2)">
+        <span class="rp-icon">🏥</span>
+        <div class="rp-title" style="color:var(--emerald2)">Working With Emergency Services</div>
+        <p class="rp-desc">EMS and police are players too. Give them quality scenarios. If downed, stay in character and roleplay injuries. If arrested, engage with the booking process. These interactions are content for everyone.</p>
+      </div>
+      <div class="rp-card reveal reveal-delay-1" style="color:var(--pink2)">
+        <span class="rp-icon">📈</span>
+        <div class="rp-title" style="color:var(--pink2)">Growing in the City</div>
+        <p class="rp-desc">Progression takes time. Build relationships, earn trust, climb organically. The best crime bosses started as corner runners. The best chiefs started as cadets. Let your story unfold naturally.</p>
+      </div>
+      <div class="rp-card reveal reveal-delay-2" style="color:var(--crimson2)">
+        <span class="rp-icon">🌟</span>
+        <div class="rp-title" style="color:var(--crimson2)">New Player Tips</div>
+        <p class="rp-desc">Start at the apartments and explore. Visit local businesses, introduce yourself, find your niche. Join Discord to connect with the community. Don't be afraid to ask questions — we all started somewhere.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLY IN -->
+<section id="fly-in" style="background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(139,92,246,.16) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 20% 20%,rgba(14,165,233,.12) 0%,transparent 55%),var(--bg2);text-align:center;padding:120px 8vw;overflow:hidden;position:relative">
+  <div style="position:absolute;inset:0;background-image:url('img/v3-flyin-bg.webp');background-size:cover;background-position:center 30%;opacity:.50;pointer-events:none;z-index:0"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,8,18,.6) 0%,rgba(6,8,18,.3) 40%,rgba(6,8,18,.3) 60%,rgba(6,8,18,.7) 100%);pointer-events:none;z-index:1"></div>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center">
+<img src="img/v3-logo.webp" class="fly-in-logo" alt="Phase City">
+  <h2 class="fly-in-title">Ready to Fly In?</h2>
+  <p class="fly-in-sub">Join our Discord to apply for whitelist, meet the community, and begin writing your story in Phase City.</p>
+  <div class="fly-in-btns">
+    <a href="https://discord.gg/NSZHK6spre" class="hero-btn btn-primary">Join Discord</a>
+    <a href="fivem://connect/join.phasecity.net" class="hero-btn btn-green">Connect: Phase City</a>
+  </div>
 </div>
 </section>
-</main>
-<footer data-loc="footer">
-<div class="fl">
-<img src="img/nav-logo.webp" alt="" style="width:18px;height:18px">
-<span>PHASE<span class="ac">CITY</span></span>
-</div>
-<p class="cp">PHASECITY.NET &copy; 2026 &mdash; ALL RIGHTS RESERVED</p>
+
+<footer>
+  <div class="footer-logo-wrap">
+    <img src="img/v3-logo.webp" class="footer-logo-img" alt="Phase City">
+    <span class="footer-brand">PHASECITY</span>
+  </div>
+  <div class="footer-links">
+    <a href="#core-rules"   class="footer-link">Rules</a>
+    <a href="#gang-bible"   class="footer-link">Gang Bible</a>
+    <a href="#store"        class="footer-link">Store</a>
+    <a href="#contests"     class="footer-link">Contests</a>
+    <a href="https://www.phasecity.net/tools/index.html" class="footer-link">Tools</a>
+    <a href="https://discord.gg/NSZHK6spre"             class="footer-link">Discord</a>
+    <a href="https://www.phasecity.net/citizen-portal.html" class="footer-link">Portal</a>
+  </div>
+  <span class="footer-note">PHASECITY.NET &copy; 2026 &mdash; ALL RIGHTS RESERVED</span>
 </footer>
-<script>(typeof requestIdleCallback=="function"?requestIdleCallback:setTimeout)(function(){const e=document.getElementById("stars"),t=document.createDocumentFragment(),n=window.innerWidth<640?40:80;for(let s=0;s<n;s++){const o=document.createElement("div");o.className="star";const c=Math.random()*2+.5;o.style.cssText="left:"+Math.random()*100+"%;top:"+Math.random()*100+"%;width:"+c+"px;height:"+c+"px;--d:"+(Math.random()*3+2)+"s;--dl:"+Math.random()*4+"s",t.appendChild(o)}e.appendChild(t)}),document.addEventListener("click",function(e){const t=e.target.closest(".rh");if(t){const n=t.closest(".rc");n&&n.classList.toggle("open")}});const obs=new IntersectionObserver(e=>{e.forEach(t=>{t.isIntersecting&&t.target.classList.add("vis")})},{threshold:.1});document.querySelectorAll(".rv").forEach(e=>obs.observe(e));const sections=document.querySelectorAll("section[id]"),navLinks=document.querySelectorAll(".n-links a");let activeNav=null;const navObs=new IntersectionObserver(e=>{e.forEach(t=>{if(t.isIntersecting){const n="#"+t.target.id;activeNav&&activeNav.classList.remove("nav-on");const s=[...navLinks].find(o=>o.getAttribute("href")===n);s&&(s.classList.add("nav-on"),activeNav=s)}})},{threshold:.3});sections.forEach(e=>navObs.observe(e));</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"What is Phase City?","acceptedAnswer":{"@type":"Answer","text":"Phase City is a community-governed GTA roleplay city built from the ground up with its own unique lore and rules."}},
-{"@type":"Question","name":"How do I join Phase City?","acceptedAnswer":{"@type":"Answer","text":"Join our Discord server and submit an application. Once approved, you can connect to the server and start roleplaying."}},
-{"@type":"Question","name":"What are the enforcement points?","acceptedAnswer":{"@type":"Answer","text":"Phase City uses a point-based enforcement system. Accumulating points leads to escalating consequences from warnings to permanent removal."}}
-]}
+
+<script>
+const HEAD_CFG = {
+  hero:       { fill:'#ffffff', glow:'rgba(255,255,255,' },
+  about:      { fill:'#a78bfa', glow:'rgba(167,139,250,' },
+  join:       { fill:'#34d399', glow:'rgba(52,211,153,'  },
+  lore:       { fill:'#fbbf24', glow:'rgba(251,191,36,'  },
+  involved:   { fill:'#f472b6', glow:'rgba(244,114,182,' },
+  rules:      { fill:'#f87171', glow:'rgba(248,113,113,' },
+  gang:       { fill:'#fb923c', glow:'rgba(251,146,60,'  },
+  store:      { fill:'#fbbf24', glow:'rgba(251,191,36,'  },
+  contests:   { fill:'#e879f9', glow:'rgba(232,121,249,' },
+  guidelines: { fill:'#38bdf8', glow:'rgba(56,189,248,'  },
+};
+
+function drawStreaks(ctx,W,H){
+  const sets=[
+    {ax:-30,ay:H*.35,bx:W*.3,by:-H*.08,c1:'rgba(255,120,0,0)',c2:'rgba(255,100,0,0.85)',c3:'rgba(255,180,0,0.5)',w:36},
+    {ax:-60,ay:H*.55,bx:W*.22,by:H*.1, c1:'rgba(0,140,255,0)',c2:'rgba(0,170,255,0.8)',c3:'rgba(180,230,255,0.45)',w:18},
+    {ax:-10,ay:H*.47,bx:W*.18,by:H*.05,c1:'rgba(255,80,0,0)',c2:'rgba(255,140,0,0.65)',c3:'rgba(255,220,80,0.35)',w:10},
+    {ax:W+20,ay:H*.3, bx:W*.72,by:-H*.06,c1:'rgba(255,140,0,0)',c2:'rgba(255,110,0,0.85)',c3:'rgba(255,200,0,0.5)',w:30},
+    {ax:W+40,ay:H*.52,bx:W*.8, by:H*.12, c1:'rgba(0,100,255,0)',c2:'rgba(0,150,255,0.75)',c3:'rgba(100,220,255,0.4)',w:16},
+    {ax:W+10,ay:H*.42,bx:W*.74,by:H*.08,c1:'rgba(180,60,255,0)',c2:'rgba(160,80,255,0.6)',c3:'rgba(200,160,255,0.3)',w:10},
+  ];
+  sets.forEach(s=>{
+    const g=ctx.createLinearGradient(s.ax,s.ay,s.bx,s.by);
+    g.addColorStop(0,s.c1);g.addColorStop(0.35,s.c2);g.addColorStop(0.7,s.c3);g.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.save();ctx.globalCompositeOperation='screen';
+    ctx.strokeStyle=g;ctx.lineWidth=s.w;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(s.ax,s.ay);ctx.lineTo(s.bx,s.by);ctx.stroke();ctx.restore();
+  });
+}
+
+function renderBold(canvas,text,cfg){
+  if(!canvas||!text)return;
+  const dpr=Math.min(window.devicePixelRatio||1,3);
+  const W=canvas.offsetWidth,H=canvas.offsetHeight;
+  if(!W||!H)return;
+  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);ctx.clearRect(0,0,W,H);
+  let fs=H*.68;
+  ctx.font=`900 ${fs}px 'Orbitron',monospace`;
+  while(ctx.measureText(text).width>W*.92&&fs>10){fs--;ctx.font=`900 ${fs}px 'Orbitron',monospace`;}
+  const cx=W/2,cy=H/2+fs*.35;
+  ctx.textAlign='center';ctx.textBaseline='alphabetic';
+  if(cfg.streaks)drawStreaks(ctx,W,H);
+  ctx.save();ctx.shadowBlur=fs*.28;ctx.shadowColor='rgba(0,0,0,1)';ctx.shadowOffsetY=fs*.07;ctx.fillStyle=cfg.fill;ctx.fillText(text,cx,cy);ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(0,0,0,0.85)';ctx.lineWidth=fs*.028;ctx.lineJoin='round';ctx.strokeText(text,cx,cy);ctx.restore();
+  ctx.save();ctx.shadowBlur=fs*.5;ctx.shadowColor=cfg.glow+'0.9)';ctx.fillStyle=cfg.fill;ctx.globalAlpha=.55;ctx.fillText(text,cx,cy);ctx.restore();
+  ctx.fillStyle=cfg.fill;ctx.fillText(text,cx,cy);
+  const spec=ctx.createLinearGradient(0,cy-fs,0,cy-fs*.45);
+  spec.addColorStop(0,'rgba(255,255,255,0.28)');spec.addColorStop(0.6,'rgba(255,255,255,0.07)');spec.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=spec;ctx.fillText(text,cx,cy);
+}
+
+function renderAll(){
+  document.querySelectorAll('canvas[data-text]').forEach(c=>{
+    const cfg=HEAD_CFG[c.dataset.cfg]||HEAD_CFG.about;
+    renderBold(c,c.dataset.text,cfg);
+  });
+  const hc=document.getElementById('heroCanvas');
+  if(hc){hc.style.height=Math.round(window.innerWidth*.16)+'px';renderBold(hc,'PHASE CITY',HEAD_CFG.hero);}
+}
+
+// Starfield
+(function(){
+  const c=document.createElement('canvas');
+  c.style.cssText='position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%;';
+  document.body.insertBefore(c,document.body.firstChild);
+  const ctx=c.getContext('2d'),dpr=Math.min(window.devicePixelRatio||1,2);
+  let W,H,stars=[];
+  function resize(){
+    W=window.innerWidth;H=window.innerHeight;
+    c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);
+    c.style.width=W+'px';c.style.height=H+'px';
+    ctx.setTransform(1,0,0,1,0,0);ctx.scale(dpr,dpr);
+    stars=[];
+    const n=Math.round(W*H/5500);
+    for(let i=0;i<n;i++){
+      const d=Math.random();
+      stars.push({x:Math.random()*W,y:Math.random()*H,r:.25+d*1.2,a:.08+d*.65,s:.006+Math.random()*.016,t:Math.random()*Math.PI*2,h:Math.random()<.18?(Math.random()<.5?220:280):0});
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    stars.forEach(s=>{
+      s.t+=s.s;
+      const a=s.a*(.45+.55*Math.sin(s.t));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=s.h?`hsla(${s.h},75%,88%,${a})`:`rgba(210,218,255,${a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  resize();draw();
+  window.addEventListener('resize',()=>setTimeout(resize,80));
+})();
+
+// Cursor
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function anim(){cx+=(mx-cx)*.18;cy+=(my-cy)*.18;cur2.style.left=cx+'px';cur2.style.top=cy+'px';requestAnimationFrame(anim)})();
+
+// Reveal
+const rio=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(r=>rio.observe(r));
+
+// Resize
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderAll,120)});
+
+// Copy IP
+function copyIP(){
+  navigator.clipboard.writeText('join.phasecity.net').then(()=>{
+    const btn=document.querySelector('.ip-copy');
+    btn.textContent='Copied!';btn.style.background='var(--emerald2)';
+    setTimeout(()=>{btn.textContent='Copy';btn.style.background=''},2000);
+  });
+}
+
+
+// Fade in section banners
+window.addEventListener('load', () => {
+  document.querySelectorAll('.section-banner').forEach(b => {
+    b.classList.add('loaded');
+  });
+});
+
+document.fonts.load("900 80px 'Orbitron'").then(renderAll).catch(()=>setTimeout(renderAll,800));
 </script>
-<script>var b=Object.defineProperty;var o=(e,i)=>b(e,"name",{value:i,configurable:!0});var u=Object.defineProperty,a=o((e,i)=>u(e,"name",{value:i,configurable:!0}),"a"),f=Object.defineProperty,r=a((e,i)=>f(e,"name",{value:i,configurable:!0}),"r");(function(){const e=document.querySelector(".live-strip");if(!e)return;const i=e.getAttribute("data-cfx-id");if(!i){e.classList.add("live-fallback");return}const v=e.querySelector(".live-text");let s;function c(t,n){if(typeof t!="number"||t<=0){e.classList.add("live-fallback"),v.textContent="Community online \xB7 join the Discord";return}e.classList.remove("live-fallback");const d=typeof n=="number"&&n>0?` / ${n}`:"";v.innerHTML=`<strong>${t}</strong>${d} player${t===1?"":"s"} online`}o(c,"c"),a(c,"o"),r(c,"render");function l(){document.visibilityState==="visible"&&(s&&s.abort(),s=new AbortController,fetch("https://servers-frontend.fivem.net/api/servers/single/"+i,{signal:s.signal}).then(t=>t.ok?t.json():null).then(t=>{const n=t&&t.Data;c(n?Math.max(n.clients||0,n.selfReportedClients||0):null,n&&n.sv_maxclients)}).catch(()=>{}))}o(l,"l"),a(l,"l"),r(l,"poll"),l(),setInterval(l,6e4),document.addEventListener("visibilitychange",()=>{document.visibilityState==="visible"&&l()})})();</script>
 </body>
 </html>
