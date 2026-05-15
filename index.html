@@ -134,6 +134,11 @@ nav{
 .ip-val{color:var(--sky2);letter-spacing:1px;text-shadow:0 0 10px rgba(56,189,248,.5)}
 .ip-copy{font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:2px;color:#000;background:var(--sky2);border:none;padding:6px 14px;border-radius:50px;cursor:pointer;transition:all .2s;text-transform:uppercase}
 .ip-copy:hover{background:var(--violet);box-shadow:0 0 12px rgba(139,92,246,.5)}
+.live-strip{display:inline-flex;align-items:center;gap:10px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.22);border-radius:50px;padding:8px 18px;margin:0 auto 18px;width:fit-content;position:relative;z-index:2;color:rgba(180,255,210,.8);text-decoration:none;transition:all .25s}
+.live-strip:hover{border-color:rgba(16,185,129,.55);background:rgba(16,185,129,.12);box-shadow:0 0 18px rgba(16,185,129,.3);color:#fff}
+.live-strip .live-dot{width:6px;height:6px;border-radius:50%;background:var(--emerald);box-shadow:0 0 8px var(--emerald);animation:pulse 1.8s infinite;flex-shrink:0}
+.live-strip.live-fallback .live-dot{background:var(--violet);box-shadow:0 0 8px var(--violet);animation:none}
+.live-strip .live-text strong{color:#fff;font-weight:800}
 .hero-btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;z-index:2}
 .hero-btn{font-family:'Orbitron',monospace;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;border:none;padding:13px 26px;border-radius:50px;cursor:pointer;text-decoration:none;display:inline-block;transition:all .28s}
 .btn-primary{background:linear-gradient(135deg,var(--violet),var(--sky));color:#000;box-shadow:0 0 24px rgba(139,92,246,.4),0 4px 16px rgba(0,0,0,.5)}
@@ -534,6 +539,10 @@ footer{padding:40px 8vw;border-top:1px solid var(--border);display:flex;align-it
   </div>
   <p class="hero-sub">Community-Governed &nbsp;·&nbsp; Custom Economy &nbsp;·&nbsp; Active Staff</p>
   <p class="hero-desc">A player-driven city with whitelisted factions, custom-built systems, and a community that values story over chaos. Write your story. Build your crew. Earn your name.</p>
+  <a class="live-strip" data-cfx-id="3m634r" data-loc="hero" aria-live="polite" href="https://discord.gg/NSZHK6spre" target="_blank" rel="noopener noreferrer">
+    <span class="live-dot" aria-hidden="true"></span>
+    <span class="live-text">Community online &middot; join the Discord</span>
+  </a>
   <div class="hero-ip-bar">
     <span class="ip-label">Server IP</span>
     <span class="ip-val">join.phasecity.net</span>
@@ -1261,6 +1270,39 @@ window.addEventListener('load', () => {
 });
 
 document.fonts.load("900 80px 'Orbitron'").then(renderAll).catch(()=>setTimeout(renderAll,800));
+
+// CFX live player count → live-strip
+(function(){
+  const el = document.querySelector('.live-strip');
+  if (!el) return;
+  const id = el.dataset.cfxId;
+  const txt = el.querySelector('.live-text');
+  if (!id || !txt) return;
+  const FALLBACK = 'Community online &middot; join the Discord';
+  function paint(n, max){
+    if (typeof n === 'number' && n >= 0 && max) {
+      const word = n === 1 ? 'player' : 'players';
+      txt.innerHTML = `<strong>${n}</strong> / ${max} ${word} online &middot; join the Discord`;
+      el.classList.remove('live-fallback');
+    } else {
+      txt.innerHTML = FALLBACK;
+      el.classList.add('live-fallback');
+    }
+  }
+  async function tick(){
+    try {
+      const r = await fetch(`https://servers-frontend.fivem.net/api/servers/single/${id}`, { cache: 'no-store' });
+      if (!r.ok) throw new Error('cfx ' + r.status);
+      const j = await r.json();
+      const d = j && j.Data;
+      const count = Math.max(d && d.clients || 0, d && d.selfReportedClients || 0);
+      const max = d && d.sv_maxclients;
+      paint(count, max);
+    } catch (err) { void err; paint(); }
+  }
+  tick();
+  setInterval(tick, 60000);
+})();
 </script>
 </body>
 </html>
