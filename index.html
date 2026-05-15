@@ -3,12 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Serious FiveM roleplay on Phase City. Community-governed whitelist server with custom economy, factions, and active staff.">
+<meta name="description" content="Serious FiveM roleplay on Phase City. Community-governed whitelist server with custom economy, factions, and active staff. Apply to join — decisions in 24-48 hours.">
+<meta name="author" content="Claude Crichlow">
+<meta name="robots" content="index,follow">
 <meta property="og:title" content="Phase City // Serious FiveM Roleplay">
+<meta property="og:description" content="Serious FiveM roleplay on Phase City. Community-governed whitelist server with custom economy, factions, and active staff. Apply to join — decisions in 24-48 hours.">
 <meta property="og:image" content="https://www.phasecity.net/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://www.phasecity.net">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Phase City">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Phase City // Serious FiveM Roleplay">
+<meta name="twitter:description" content="Serious FiveM roleplay on Phase City. Community-governed whitelist server with custom economy, factions, and active staff. Apply to join — decisions in 24-48 hours.">
+<meta name="twitter:image" content="https://www.phasecity.net/og-image.jpg">
+<meta name="twitter:site" content="@phasecity">
+<meta name="twitter:creator" content="@phasecity">
 <meta name="theme-color" content="#8B5CF6">
+<link rel="canonical" href="https://www.phasecity.net/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Phase City",
+  "url": "https://www.phasecity.net",
+  "logo": "https://www.phasecity.net/og-image.jpg",
+  "sameAs": [
+    "https://discord.gg/NSZHK6spre"
+  ]
+}
+</script>
 <title>Phase City // Serious FiveM Roleplay</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.cloudflare.com" crossorigin>
+<link href="https://fonts.cloudflare.com/css?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V3GHF6JTNQ"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments)}
+gtag('js',new Date);
+gtag('config','G-V3GHF6JTNQ');
+document.addEventListener('click',function(n){
+  var t=n.target.closest&&n.target.closest('a');
+  if(!t||!t.href)return;
+  var o;try{o=new URL(t.href,location.href)}catch{return}
+  var r=null;
+  if(o.hostname.indexOf('discord')>-1)r='discord';
+  else if(o.protocol==='fivem:')r='fivem_connect';
+  else if(o.hostname.indexOf('tebex')>-1)r='store_tebex';
+  else if(o.hostname.indexOf('store.phasecity')>-1||o.pathname==='/store'||o.pathname.endsWith('/store.html'))r='store';
+  else if(o.hostname&&o.hostname!==location.hostname)r='outbound_'+o.hostname;
+  if(!r)return;
+  var c=t.closest&&t.closest('[data-loc]');
+  var d=c&&c.dataset&&c.dataset.loc||'body';
+  window.gtag&&gtag('event','cta_click',{cta_destination:r,cta_location:d,link_url:t.href,page_path:location.pathname});
+},true);
+</script>
+<!-- Mouseflow session replay -->
+<script>window._mfq=window._mfq||[];(function(){var m=document.createElement("script");m.type="text/javascript";m.defer=true;m.src="//cdn.mouseflow.com/projects/4d455178-363e-4bec-983c-dec10d6ba14d.js";document.getElementsByTagName("head")[0].appendChild(m)})();</script>
 <style>
 :root{
   --bg:#060812;--bg2:#080b18;
@@ -443,7 +499,7 @@ footer{padding:40px 8vw;border-top:1px solid var(--border);display:flex;align-it
 <div id="cur"></div>
 <div id="cur2"></div>
 
-<nav>
+<nav data-loc="nav">
   <a href="#hero" class="nav-logo">
     <div style="position:relative;z-index:2;display:contents"><img src="img/v3-logo.webp" alt="Phase City">
     <span class="nav-logo-text">PHASECITY</span>
@@ -459,7 +515,7 @@ footer{padding:40px 8vw;border-top:1px solid var(--border);display:flex;align-it
     <a href="#contests"    class="nav-link">Contests</a>
     <a href="#rp-guidelines" class="nav-link">Guidelines</a>
     <a href="#fly-in"      class="nav-link">Fly In</a>
-    <a href="https://www.phasecity.net/store.html" class="nav-link store-link">🛒 Full Store</a>
+    <a href="https://store.phasecity.net" class="nav-link store-link">🛒 Full Store</a>
   </div>
   <a href="fivem://connect/join.phasecity.net" class="nav-cta">Connect</a>
 </nav>
@@ -483,7 +539,7 @@ footer{padding:40px 8vw;border-top:1px solid var(--border);display:flex;align-it
     <span class="ip-val">join.phasecity.net</span>
     <button class="ip-copy" onclick="copyIP()">Copy</button>
   </div>
-  <div class="hero-btns">
+  <div class="hero-btns" data-loc="hero">
     <a href="#how-to-join" class="hero-btn btn-primary">Apply to Join</a>
     <a href="fivem://connect/join.phasecity.net" class="hero-btn btn-green">Connect Now</a>
     <a href="#core-rules" class="hero-btn btn-outline">Server Rules</a>
@@ -962,7 +1018,7 @@ footer{padding:40px 8vw;border-top:1px solid var(--border);display:flex;align-it
       </a>
     </div>
     <div style="text-align:center;margin-top:40px" class="reveal">
-      <a href="https://www.phasecity.net/store.html" class="rules-btn rules-btn-solid" style="background:linear-gradient(135deg,var(--amber),var(--violet));box-shadow:0 0 24px rgba(245,158,11,.3)">Full Store -&gt;</a>
+      <a href="https://store.phasecity.net" class="rules-btn rules-btn-solid" style="background:linear-gradient(135deg,var(--amber),var(--violet));box-shadow:0 0 24px rgba(245,158,11,.3)">Full Store -&gt;</a>
     </div>
   </div>
 </section>
@@ -1053,14 +1109,14 @@ footer{padding:40px 8vw;border-top:1px solid var(--border);display:flex;align-it
 <img src="img/v3-logo.webp" class="fly-in-logo" alt="Phase City">
   <h2 class="fly-in-title">Ready to Fly In?</h2>
   <p class="fly-in-sub">Join our Discord to apply for whitelist, meet the community, and begin writing your story in Phase City.</p>
-  <div class="fly-in-btns">
+  <div class="fly-in-btns" data-loc="fly_in">
     <a href="https://discord.gg/NSZHK6spre" class="hero-btn btn-primary">Join Discord</a>
     <a href="fivem://connect/join.phasecity.net" class="hero-btn btn-green">Connect: Phase City</a>
   </div>
 </div>
 </section>
 
-<footer>
+<footer data-loc="footer">
   <div class="footer-logo-wrap">
     <img src="img/v3-logo.webp" class="footer-logo-img" alt="Phase City">
     <span class="footer-brand">PHASECITY</span>
