@@ -65,6 +65,15 @@ footer{padding:48px 24px;text-align:center;border-top:1px solid rgba(139,92,246,
 footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:.1em}
 .rv{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
 .rv.vis{opacity:1;transform:translateY(0)}
+.tool-section{background:rgba(255,255,255,.032);border:1px solid rgba(255,255,255,.07);border-left:3px solid rgba(255,255,255,.07);border-radius:20px;padding:32px clamp(20px,3.5vw,32px);margin:24px 0;transition:background .3s cubic-bezier(.23,1,.32,1),transform .3s cubic-bezier(.23,1,.32,1),box-shadow .3s cubic-bezier(.23,1,.32,1),border-color .3s cubic-bezier(.23,1,.32,1)}
+.tool-section:hover{background:rgba(255,255,255,.055);box-shadow:0 16px 50px rgba(0,0,0,.55)}
+.tool-section .section-label{margin-top:0;margin-bottom:24px}
+.tool-section:nth-of-type(1){border-left-color:#06b6d4}
+.tool-section:nth-of-type(2){border-left-color:#8b5cf6}
+.tool-section:nth-of-type(3){border-left-color:#f59e0b}
+.tool-section:nth-of-type(4){border-left-color:#ec4899}
+.tool-section:nth-of-type(5){border-left-color:#10b981}
+.tool-section:nth-of-type(6){border-left-color:#ef4444}
 @media(max-width:640px){
   .n-links{display:none}
   .hero{padding:110px 20px 40px}
@@ -101,7 +110,8 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 <span>PHASE<span class="ac">CITY</span></span>
 </a>
 <div class="n-links">
-<a href="/">Rules</a>
+<a href="../rules-handbook.html">Rules</a>
+<a href="../rules-handbook.html#gang-handbook">Gang Bible</a>
 <a href="../citizen-portal.html">Portal</a>
 <a href="../store.html" class="store-link">Store</a>
 </div>
@@ -123,7 +133,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 </section>
 
 <div class="wrap">
-  <div class="rv">
+  <div class="rv tool-section">
   <div class="section-label">Server Tools</div>
   <div class="grid">
     <a class="card" href="fivem-scanner.html">
@@ -141,7 +151,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
   </div>
   </div>
 
-  <div class="rv">
+  <div class="rv tool-section">
   <div class="section-label">Soul / Character Tools</div>
   <div class="grid">
     <a class="card" href="fivem-keybinds.html">
@@ -177,7 +187,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
   </div>
   </div>
 
-  <div class="rv">
+  <div class="rv tool-section">
   <div class="section-label">Business</div>
   <div class="grid">
     <a class="card" href="fivem-menu.html">
@@ -195,7 +205,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
   </div>
   </div>
 
-  <div class="rv">
+  <div class="rv tool-section">
   <div class="section-label">Streaming</div>
   <div class="grid">
     <a class="card" href="fivem-overlay.html">
@@ -207,7 +217,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
   </div>
   </div>
 
-  <div class="rv">
+  <div class="rv tool-section">
   <div class="section-label">Creative</div>
   <div class="grid">
     <a class="card" href="fivem-colors.html">
@@ -225,7 +235,7 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
   </div>
   </div>
 
-  <div class="rv">
+  <div class="rv tool-section">
   <div class="section-label">External</div>
   <div class="grid">
     <a class="card" href="https://github.com/zachisfine/fivem-cache-clear" target="_blank" rel="noopener noreferrer">
