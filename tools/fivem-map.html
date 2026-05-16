@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link rel="preconnect" href="https://fonts.cloudflare.com" crossorigin>
-<link href="https://fonts.cloudflare.com/css?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.cloudflare.com/css?family=Orbitron:wght@400;700;800;900&family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#05020f;--surface:#12121a;--border:#1e1e2e;--text:#e0e0e0;--muted:#888;--accent:#7B68EE;--cyan:#5CE1E6;--error:#ff4757;--success:#2ed573;--warn:#ffa502}
@@ -136,6 +136,15 @@ body{padding-top:76px;background:var(--bg);color:var(--text);font-family:'DM San
 .tool-footer .cp{font-family:'JetBrains Mono',monospace;font-size:10px;color:#3d3d54;letter-spacing:.1em}
 @media(max-width:640px){.tool-nav .n-links{display:none}}
 @media(prefers-reduced-motion:reduce){.star{animation:none!important}}
+.n-logo span{font-family:Orbitron,sans-serif!important;letter-spacing:.08em!important}
+.tool-nav a[href*="store"]{background:linear-gradient(135deg,#38bdf8,#8b5cf6)!important;border:1px solid rgba(196,181,253,.25)!important;color:#031021!important;text-shadow:0 1px 0 rgba(255,255,255,.2);box-shadow:0 0 22px #8b5cf652;font-weight:700!important;transition:box-shadow .2s,transform .15s}
+.tool-nav a[href*="store"]:hover{box-shadow:0 0 36px #8b5cf685!important;transform:translateY(-1px)!important;color:#031021!important}
+.live-strip{position:fixed;top:62px;left:50%;transform:translateX(-50%);z-index:99;display:inline-flex;align-items:center;gap:10px;padding:6px 16px;border:1px solid rgba(16,185,129,.4);border-radius:50px;background:rgba(16,185,129,.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);text-decoration:none;color:#10b981;font-family:Orbitron,monospace;font-size:10px;letter-spacing:1.8px;text-transform:uppercase;transition:all .25s;white-space:nowrap;max-width:calc(100vw - 24px)}
+.live-strip:hover{border-color:rgba(16,185,129,.75);box-shadow:0 0 24px rgba(16,185,129,.25);color:#34d399}
+.live-strip[data-cfx-empty="1"]{opacity:.55}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 12px #10b981;animation:livePulse 1.6s ease-in-out infinite;flex-shrink:0}
+@keyframes livePulse{0%,to{opacity:1}50%{opacity:.35}}
+@media(max-width:768px){.live-strip{display:none}}
 </style>
 </head>
 <body>
@@ -151,6 +160,10 @@ body{padding-top:76px;background:var(--bg);color:var(--text);font-family:'DM San
 <a href="../store.html">Store</a>
 </div>
 </nav>
+<a class="live-strip" data-cfx-id="3m634r" data-loc="hero" aria-live="polite" href="https://discord.gg/NSZHK6spre" target="_blank" rel="noopener noreferrer">
+<span class="live-dot" aria-hidden="true"></span>
+<span class="live-text">Community online · join the Discord</span>
+</a>
 <script>
 (typeof requestIdleCallback==='function'?requestIdleCallback:setTimeout)(function(){var e=document.getElementById('stars'),t=document.createDocumentFragment(),n=window.innerWidth<640?40:80;for(var s=0;s<n;s++){var o=document.createElement('div');o.className='star';var c=Math.random()*2+.5;o.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+c+'px;height:'+c+'px;--d:'+(Math.random()*3+2)+'s;--dl:'+Math.random()*4+'s';t.appendChild(o)}e.appendChild(t)});
 </script>
@@ -691,6 +704,7 @@ activeSoulId = souls[0].id;
 renderSoulBar();
 renderSidebar();
 document.getElementById('sidebarToggle').style.left = '260px';
+(function(){var e=document.querySelector('.live-strip');if(!e)return;var t=e.dataset.cfxId,n=e.querySelector('.live-text');if(!t||!n)return;function paint(c,m){if(typeof c!=='number'||c<0){n.textContent='Community online · join the Discord';e.dataset.cfxEmpty='1';return}delete e.dataset.cfxEmpty;n.textContent=c+(m?' / '+m:'')+' online · join the Discord'}async function tick(){try{var r=await fetch('https://servers-frontend.fivem.net/api/servers/single/'+t,{cache:'no-store'});if(!r.ok)throw 0;var j=await r.json(),d=j&&j.Data;if(!d)throw 0;var c=Math.max(d.clients||0,d.selfReportedClients||0),m=d.sv_maxclients||0;paint(c,m)}catch(err){void err;paint()}}tick();setInterval(tick,60000)})();
 </script>
 <footer class="tool-footer">
 <div class="fl">

@@ -17,7 +17,7 @@
 <meta name="twitter:description" content="FiveM tools for Phase City — server scanner, radio frequencies, keybinds, optimizer, and more.">
 <meta name="twitter:image" content="https://www.phasecity.net/og-image.jpg">
 <link rel="preconnect" href="https://fonts.cloudflare.com" crossorigin>
-<link href="https://fonts.cloudflare.com/css?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.cloudflare.com/css?family=Orbitron:wght@400;700;800;900&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 :root{--bg:#05020f;--card:rgba(139,92,246,.03);--bdr:rgba(139,92,246,.12);--bdr-h:rgba(139,92,246,.35);--t1:#e2e0ff;--t2:#a5a3c2;--tm:#6b6b87;--td:#3d3d54;--v:#8b5cf6;--vl:#c4b5fd;--cy:#06b6d4;--cl:#67e8f9}
 *,*:before,*:after{margin:0;padding:0;box-sizing:border-box}
@@ -75,9 +75,25 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
   .star{animation:none!important}
   .rv{opacity:1;transform:none;transition:none}
 }
+.n-logo span{font-family:Orbitron,sans-serif;letter-spacing:.08em;font-weight:800}
+.store-link{background:linear-gradient(135deg,#38bdf8,#8b5cf6)!important;border:1px solid rgba(196,181,253,.25)!important;color:#031021!important;text-shadow:0 1px 0 rgba(255,255,255,.2);box-shadow:0 0 22px #8b5cf652;transition:box-shadow .2s,transform .15s}
+.store-link:hover{box-shadow:0 0 36px #8b5cf685;transform:translateY(-1px)}
+.live-strip-wrap{display:flex;justify-content:center;padding:90px 24px 0;position:relative;z-index:1}
+.live-strip{display:inline-flex;align-items:center;gap:10px;padding:8px 18px;border:1px solid rgba(16,185,129,.4);border-radius:50px;background:#10b9810f;text-decoration:none;color:#10b981;font-family:Orbitron,monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;transition:all .25s}
+.live-strip:hover{border-color:#10b981bf;box-shadow:0 0 24px #10b98140;color:#34d399}
+.live-strip[data-cfx-empty="1"]{opacity:.55}
+.live-dot{width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 12px #10b981;animation:livePulse 1.6s ease-in-out infinite}
+@keyframes livePulse{0%,to{opacity:1}50%{opacity:.35}}
+.live-strip-wrap+.hero{padding-top:30px}
+#cur,#cur2{display:none}
+@media(hover:hover) and (pointer:fine){body{cursor:none}#cur{display:block;position:fixed;top:0;left:0;width:20px;height:20px;border:1.5px solid rgba(56,189,248,.7);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .12s ease-out,width .15s,height .15s,border-color .15s;mix-blend-mode:screen;will-change:transform}#cur2{display:block;position:fixed;top:0;left:0;width:5px;height:5px;background:#8b5cf6;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 12px #8b5cf6;will-change:transform}a:hover~#cur,button:hover~#cur{width:36px;height:36px;border-color:#8b5cf6d9}}
+@media(max-width:768px){nav{padding:0 14px;gap:8px}.live-strip{font-size:10px;padding:7px 14px;letter-spacing:1.5px}.live-strip-wrap{padding-top:78px}}
+@media(max-width:480px){.live-strip{font-size:9px;padding:6px 12px;gap:8px}.live-strip-wrap{padding-top:72px}}
 </style>
 </head>
 <body>
+<div id="cur" aria-hidden="true"></div>
+<div id="cur2" aria-hidden="true"></div>
 <div class="stars" id="stars"></div>
 <nav>
 <a href="/" class="n-logo">
@@ -90,6 +106,13 @@ footer .cp{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td)
 <a href="../store.html" class="store-link">Store</a>
 </div>
 </nav>
+
+<div class="live-strip-wrap">
+<a class="live-strip" data-cfx-id="3m634r" data-loc="hero" aria-live="polite" href="https://discord.gg/NSZHK6spre" target="_blank" rel="noopener noreferrer">
+<span class="live-dot" aria-hidden="true"></span>
+<span class="live-text">Community online · join the Discord</span>
+</a>
+</div>
 
 <main>
 <section class="hero">
@@ -245,6 +268,8 @@ var obs = new IntersectionObserver(function(entries) {
   });
 }, { threshold: 0.1 });
 document.querySelectorAll('.rv').forEach(function(el) { obs.observe(el); });
+(function(){var e=document.querySelector('.live-strip');if(!e)return;var t=e.dataset.cfxId,n=e.querySelector('.live-text');if(!t||!n)return;function paint(c,m){if(typeof c!=='number'||c<0){n.textContent='Community online · join the Discord';e.dataset.cfxEmpty='1';return}delete e.dataset.cfxEmpty;n.textContent=c+(m?' / '+m:'')+' online · join the Discord'}async function tick(){try{var r=await fetch('https://servers-frontend.fivem.net/api/servers/single/'+t,{cache:'no-store'});if(!r.ok)throw 0;var j=await r.json(),d=j&&j.Data;if(!d)throw 0;var c=Math.max(d.clients||0,d.selfReportedClients||0),m=d.sv_maxclients||0;paint(c,m)}catch(err){void err;paint()}}tick();setInterval(tick,60000)})();
+(function(){if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;var a=document.getElementById('cur'),b=document.getElementById('cur2');if(!a||!b)return;var x=0,y=0,fx=0,fy=0;function loop(){fx+=(x-fx)*0.22;fy+=(y-fy)*0.22;b.style.transform='translate('+(fx-2.5)+'px,'+(fy-2.5)+'px)';requestAnimationFrame(loop)}window.addEventListener('mousemove',function(ev){x=ev.clientX;y=ev.clientY;a.style.transform='translate('+(x-10)+'px,'+(y-10)+'px)'});requestAnimationFrame(loop)})();
 </script>
 </body>
 </html>
