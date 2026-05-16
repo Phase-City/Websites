@@ -67,7 +67,8 @@
         <input type="password" class="admin-input" id="admin-pw-input"
           placeholder="••••••••••••"
           onkeydown="if(event.key==='Enter')submitAdminLogin()"
-          autocomplete="current-password">
+          autocomplete="current-password"
+          data-mf-replace="**REDACTED**">
       </div>
       <div class="admin-error-msg" id="admin-error">Incorrect password. Try again.</div>
       <div class="admin-modal-btns">
@@ -79,13 +80,13 @@
     <div id="admin-changepw-section" style="display:none">
       <div class="admin-section-divider">Change Password</div>
       <div class="admin-input-wrap">
-        <input type="password" class="admin-input" id="admin-cur-pw" placeholder="Current password" style="margin-bottom:8px;display:block">
+        <input type="password" class="admin-input" id="admin-cur-pw" placeholder="Current password" style="margin-bottom:8px;display:block" data-mf-replace="**REDACTED**">
       </div>
       <div class="admin-input-wrap" style="margin-top:8px">
-        <input type="password" class="admin-input" id="admin-new-pw" placeholder="New password">
+        <input type="password" class="admin-input" id="admin-new-pw" placeholder="New password" data-mf-replace="**REDACTED**">
       </div>
       <div class="admin-input-wrap" style="margin-top:8px">
-        <input type="password" class="admin-input" id="admin-confirm-pw" placeholder="Confirm new password">
+        <input type="password" class="admin-input" id="admin-confirm-pw" placeholder="Confirm new password" data-mf-replace="**REDACTED**">
       </div>
       <div class="admin-error-msg" id="admin-change-error"></div>
       <div class="admin-modal-btns" style="margin-top:12px">

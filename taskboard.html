@@ -47,7 +47,7 @@
     <div class="lock-logo"><img src="img/logo.webp" alt="PC" width="60" height="60" onerror="this.outerHTML='<span style=font-size:26px;font-weight:900;color:#fff>PC</span>'"></div>
     <div class="lock-title">Phase City</div>
     <div class="lock-sub">// DEV TASK BOARD //</div>
-    <input id="pw-input" class="lock-input" type="password" placeholder="ENTER ACCESS CODE">
+    <input id="pw-input" class="lock-input" type="password" placeholder="ENTER ACCESS CODE" data-mf-replace="**REDACTED**">
     <button class="lock-btn" onclick="checkPW()">&#9889; ENTER</button>
     <div id="pw-err" class="lock-err">ACCESS DENIED — INVALID CODE</div>
     <div class="lock-hint">TEAM + FOUNDERS ACCESS ONLY<br>CONTACT THE OG KILLZ FOR ACCESS CODE</div>
@@ -213,7 +213,7 @@
     <div class="cfg-step"><div class="cfg-step-num">JSONBIN.IO SETUP (Team Sync)</div><p>Go to <a href="https://jsonbin.io" target="_blank" rel="noopener noreferrer">jsonbin.io</a> — create free account, get API Key, create a bin with <code>{"tasks":[]}</code></p></div>
     <div class="field"><label for="cfg-apikey" class="label">JSONbin API Key</label><input class="inp" id="cfg-apikey" placeholder="$2b$10$...your secret key..." aria-label="JSONBin API key"></div>
     <div class="field"><label for="cfg-binid" class="label">Bin ID</label><input class="inp" id="cfg-binid" placeholder="64abc123...your bin id..." aria-label="JSONBin bin ID"></div>
-    <div class="field"><label for="cfg-pw" class="label">Team Password (set / change)</label><input class="inp" id="cfg-pw" type="password" placeholder="Leave blank to keep current" aria-label="New password"></div>
+    <div class="field"><label for="cfg-pw" class="label">Team Password (set / change)</label><input class="inp" id="cfg-pw" type="password" placeholder="Leave blank to keep current" aria-label="New password" data-mf-replace="**REDACTED**"></div>
     <div class="field"><label for="cfg-members" class="label">Team Members (comma separated)</label><input class="inp" id="cfg-members" placeholder="The OG KiLLz, Mike, Dev3" aria-label="Team member list"></div>
     <div class="field"><label class="label">Discord ID Mapping (for @pings)</label><div id="cfg-discord-ids" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px"></div><div style="display:flex;gap:8px"><input class="inp" id="cfg-did-name" placeholder="username" style="flex:1" aria-label="Discord user name"><input class="inp" id="cfg-did-id" placeholder="Discord ID (e.g. 123456789012345678)" style="flex:2" aria-label="Discord user ID"><button class="btn btn-primary" onclick="addDiscordId()" style="padding:8px 14px;font-size:11px">+ ADD</button></div></div>
     <div class="rm-divider" style="margin:16px 0"></div>

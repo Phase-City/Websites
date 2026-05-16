@@ -240,7 +240,7 @@
       <div class="display text-xs font-bold uppercase tracking-[0.3em] gradient-text mb-2">Council Access</div>
       <h2 class="display text-2xl font-bold mb-1">Admin Panel</h2>
       <p class="text-zinc-500 text-sm mb-7">Enter your council password to continue.</p>
-      <input type="password" id="pw-input" class="form-input text-center tracking-widest mb-3" placeholder="••••••••" aria-label="Staff password" onkeydown="if(event.key==='Enter')doLogin()">
+      <input type="password" id="pw-input" class="form-input text-center tracking-widest mb-3" placeholder="••••••••" aria-label="Staff password" onkeydown="if(event.key==='Enter')doLogin()" data-mf-replace="**REDACTED**">
       <button onclick="doLogin()" class="gradient-purple w-full text-white display font-bold uppercase tracking-wider text-sm rounded-xl py-3 hover:scale-[1.02] transition-transform mb-3">Enter</button>
       <div id="login-error" class="text-pink-500 text-xs min-h-[16px] mb-3"></div>
       <button onclick="closeAdmin()" class="glass w-full text-zinc-400 display font-bold uppercase tracking-wider text-xs rounded-xl py-3 hover:text-white transition">Cancel</button>
