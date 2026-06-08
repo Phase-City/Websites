@@ -60,6 +60,12 @@ h1{text-align:center;font-size:1.6rem;font-weight:700;color:var(--accent);margin
 .impact-high{background:var(--error);color:#fff}
 .impact-med{background:var(--warn);color:#000}
 .impact-low{background:var(--border);color:var(--muted)}
+.crash-banner{background:linear-gradient(135deg,rgba(255,71,87,.15),rgba(255,71,87,.05));border:1px solid var(--error);border-left:4px solid var(--error);border-radius:8px;padding:14px 18px;margin-bottom:16px;animation:cb-pulse 2.4s ease-in-out infinite}
+.crash-banner h3{color:var(--error);font-size:.85rem;font-weight:700;letter-spacing:.5px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.crash-banner h3::before{content:'\26A0';font-size:1.1rem}
+.crash-banner p{font-size:.78rem;line-height:1.5;color:var(--text);margin:0}
+.crash-banner strong{color:var(--error)}
+@keyframes cb-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,71,87,.25)}50%{box-shadow:0 0 0 6px rgba(255,71,87,0)}}
 
 /* Settings list */
 .setting{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid rgba(30,30,46,.5)}
@@ -297,7 +303,7 @@ const SECTIONS = [
     id: 'ingame',
     title: 'FiveM In-Game Settings',
     relevance: a => true,
-    recWhen: a => a.issues.some(i => ['lowfps','stutter','blurry','tearing','textures'].includes(i)),
+    recWhen: a => a.issues.some(i => ['lowfps','stutter','blurry','tearing','textures','crashes'].includes(i)),
     settings: [
       { name: 'DirectX Version', value: 'DirectX 11', why: 'DX11 is the most stable and optimized for FiveM. Avoid beta DX12 unless you have a high-end GPU.', impact: 'high', tags: ['lowfps','crashes','stutter'] },
       { name: 'Shader Quality', value: 'Normal', why: 'High/Very High shader quality halves FPS with minimal visual difference.', impact: 'high', tags: ['lowfps'] },
@@ -306,15 +312,17 @@ const SECTIONS = [
       { name: 'Post FX', value: 'Normal', why: 'Higher Post FX adds motion blur, bloom, and other expensive effects.', impact: 'high', tags: ['lowfps'] },
       { name: 'Reflection Quality', value: 'Normal', why: 'High reflections render the scene twice. Massive FPS impact.', impact: 'high', tags: ['lowfps'] },
       { name: 'Particle Quality', value: 'Normal', why: 'Affects explosions, smoke, fire. High is costly in busy scenes.', impact: 'med', tags: ['lowfps','stutter'] },
-      { name: 'Distance Scaling', value: '50-75%', why: 'Huge FPS impact. Controls how far detailed objects render. Lower = more FPS.', impact: 'high', tags: ['lowfps'] },
-      { name: 'Texture Quality', value: a => (a.ram === '8' ? 'Normal' : 'Normal or High'), why: a => a.ram === '8' ? 'With 8GB RAM, keep textures at Normal to avoid memory pressure.' : 'High is fine with 16GB+ RAM. Depends on your VRAM (4GB+ recommended for High).', impact: 'med', tags: ['blurry','textures'] },
+      { name: 'Population Variety', value: '25% (slider at 1/4)', why: 'PHASE CITY TUNING. Lower variety reduces the number of unique NPC/vehicle models the engine has to stream — big stability and FPS win on a populated RP server.', impact: 'high', tags: ['lowfps','crashes','stutter'] },
+      { name: 'Population Density', value: '25% (slider at 1/4)', why: 'PHASE CITY TUNING. Caps how many NPCs/vehicles spawn around you. Other real players already fill the world — let the server handle population, not your client.', impact: 'high', tags: ['lowfps','crashes','stutter'] },
+      { name: 'Distance Scaling', value: '25% (slider at 1/4)', why: 'PHASE CITY TUNING (post-update). Per dev guidance: 1/4 is the safe sweet spot. Higher caused hard crashes after the recent FiveM/GTA update + new server-side graphics. Do NOT push past 1/4.', impact: 'high', tags: ['lowfps','crashes'] },
+      { name: 'Texture Quality', value: 'Normal', why: 'PHASE CITY TUNING. Per dev guidance, keep Texture Quality on Normal — High causes VRAM pressure on the server-side graphics pipeline.', impact: 'med', tags: ['blurry','textures'] },
       { name: 'MSAA', value: 'Off', why: 'Very expensive anti-aliasing. Use FXAA instead for nearly free smoothing.', impact: 'high', tags: ['lowfps'] },
       { name: 'FXAA', value: 'On', why: 'Fast anti-aliasing with almost no performance cost. Slight blur trade-off.', impact: 'low', tags: ['blurry'] },
       { name: 'VSync', value: 'Off', why: 'Adds input lag. Turn off unless screen tearing is unbearable.', impact: 'med', tags: ['tearing','lowfps'] },
       { name: 'Anisotropic Filtering', value: 'x8', why: 'Makes textures at angles look sharper. x8 is a great balance - minimal FPS cost.', impact: 'low', tags: ['blurry','textures'] },
       { name: 'Water Quality', value: 'Normal', why: 'High water quality reflects the environment. Costly near oceans/rivers.', impact: 'med', tags: ['lowfps'] },
-      { name: 'Extended Texture Budget', value: a => (a.ram === '8' ? 'Off' : 'On'), why: a => a.ram === '8' ? 'With 8GB RAM, keep this off to avoid running out of memory.' : 'Allows higher-res textures if you have 6GB+ VRAM.', impact: 'med', tags: ['textures','blurry'] },
-      { name: 'Extended Distance Scaling', value: 'Off or Low', why: 'Extends object draw distance beyond normal. High values crush FPS.', impact: 'med', tags: ['lowfps'] },
+      { name: 'Extended Texture Budget', value: 'About halfway up — push a little further only while the VRAM meter stays GREEN. If it turns yellow, back it off.', why: 'PHASE CITY TUNING. Per dev guidance: more budget = sharper textures, but yellow on the VRAM meter is a no-go and will crash you. Green only.', impact: 'med', tags: ['textures','blurry','crashes'] },
+      { name: 'Extended Distance Scaling', value: '0% (slider all the way to the left)', why: 'REQUIRED FOR PHASE CITY. With the new server-side graphics, this setting is the #1 cause of post-update crashes. The recent FiveM/GTA update reset everyone\'s graphics settings — turn this all the way down under Advanced Graphics.', impact: 'high', tags: ['lowfps','crashes'] },
     ]
   },
   {
@@ -368,6 +376,17 @@ function resetWizard() {
 function renderGuide() {
   const container = document.getElementById('guideCards');
   container.innerHTML = '';
+
+  // Post-update crash advisory — always shown
+  const banner = document.createElement('div');
+  banner.className = 'crash-banner';
+  const bh = document.createElement('h3');
+  bh.textContent = 'POST-UPDATE CRASH FIX (READ FIRST)';
+  const bp = document.createElement('p');
+  bp.innerHTML = 'Phase City uses <strong>server-side graphics</strong>, and the recent FiveM/GTA update <strong>reset everyone\'s settings</strong>. Per dev guidance: drop every quality slider from High → <strong>Normal</strong>, set <strong>Population Variety</strong>, <strong>Population Density</strong>, and <strong>Distance Scaling</strong> to <strong>1/4 (25%)</strong>, set <strong>Extended Distance Scaling</strong> to <strong>0%</strong>, and push <strong>Extended Texture Budget</strong> about halfway — stop the moment the VRAM meter leaves green.';
+  banner.appendChild(bh);
+  banner.appendChild(bp);
+  container.appendChild(banner);
 
   const issues = wizAnswers.issues;
   let totalSettings = 0;
