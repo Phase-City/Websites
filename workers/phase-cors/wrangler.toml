@@ -1,0 +1,9 @@
+# Optional config — only needed if you ever switch from Dashboard deploy to `wrangler deploy`.
+# Dashboard deploy ignores this file.
+
+name = "phase-cors"
+main = "index.js"
+compatibility_date = "2026-01-01"
+
+# Free .workers.dev subdomain is enabled by default — no routes block needed.
+# If you ever bind a custom domain, add a [[routes]] block here.
