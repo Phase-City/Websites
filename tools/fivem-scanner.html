@@ -270,8 +270,10 @@ tr:hover td{background:rgba(123,104,238,.04)}
 
 <script>
 const CORS_PROXIES = [
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+  url => `https://api.cors.lol/?url=${encodeURIComponent(url)}`,
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  url => `https://proxy.corsfix.com/?${encodeURIComponent(url)}`,
   url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
 
@@ -859,24 +861,33 @@ function setFindStatus(type, msg) {
 }
 
 async function proxiedFetchForFind(url, signal) {
+  const failures = [];
+
   // Try direct
   try {
-    const r = await fetch(url, { signal, ...(signal ? {} : {}) });
+    const r = await fetch(url, { signal });
     if (r.ok) return r;
+    failures.push('direct: HTTP ' + r.status);
   } catch (e) {
     if (e.name === 'AbortError') throw e;
+    failures.push('direct: ' + (e.message || 'network error'));
   }
 
   // Try proxies
   for (let i = 0; i < CORS_PROXIES.length; i++) {
+    const proxyUrl = CORS_PROXIES[i](url);
+    const host = (() => { try { return new URL(proxyUrl).hostname } catch { return 'proxy ' + (i + 1) } })();
     try {
-      const r = await fetch(CORS_PROXIES[i](url), { signal });
+      const r = await fetch(proxyUrl, { signal });
       if (r.ok) return r;
+      failures.push(host + ': HTTP ' + r.status);
     } catch (e) {
       if (e.name === 'AbortError') throw e;
+      failures.push(host + ': ' + (e.message || 'network error'));
     }
   }
-  throw new Error('All proxies failed');
+  console.warn('[findPlayer] all proxies failed:', failures);
+  throw new Error('All proxies failed (' + failures.join(' • ') + ')');
 }
 
 function scanFromFind(hash) {
